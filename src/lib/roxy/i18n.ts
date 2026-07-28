@@ -60,6 +60,7 @@ const EN: Dict = {
   'kundali.tab.dasha': 'Dasha',
   'kundali.tab.doshas': 'Doshas',
   'kundali.tab.strength': 'Strength',
+  'kundali.tab.interpretation': 'Interpretation',
   'kundali.tab.remedies': 'Remedies',
 
   'varga.title': 'Divisional Charts',
@@ -139,6 +140,19 @@ const EN: Dict = {
   'doshas.effect.career': 'Career',
   'doshas.effect.health': 'Health',
   'doshas.effect.general': 'General',
+
+  'interpretation.loading': 'Loading interpretation...',
+  'interpretation.errorFallback': 'Failed to load interpretation',
+  'interpretation.ascendantTitle': 'Ascendant Reading',
+  'interpretation.lagna': 'Lagna: {sign}',
+  'interpretation.nakshatraTitle': 'Nakshatra Reading',
+  'interpretation.nakshatraSubtitle': 'Birth-star characteristics: {name}',
+  'interpretation.yogasTitle': 'Yogas',
+  'interpretation.yogasSubtitle': 'Classical planetary combinations detected in the chart',
+  'interpretation.yogasNone': 'No classical yogas detected in this chart.',
+  'interpretation.quality.positive': 'Positive',
+  'interpretation.quality.negative': 'Negative',
+  'interpretation.quality.both': 'Mixed',
 
   'remedies.loading': 'Loading remedies...',
   'remedies.errorFallback': 'Failed to load remedies',
@@ -228,6 +242,7 @@ const HI: Dict = {
   'kundali.tab.dasha': 'दशा',
   'kundali.tab.doshas': 'दोष',
   'kundali.tab.strength': 'बल',
+  'kundali.tab.interpretation': 'व्याख्या',
   'kundali.tab.remedies': 'उपाय',
 
   'varga.title': 'विभाजित चार्ट',
@@ -307,6 +322,19 @@ const HI: Dict = {
   'doshas.effect.career': 'करियर',
   'doshas.effect.health': 'स्वास्थ्य',
   'doshas.effect.general': 'सामान्य',
+
+  'interpretation.loading': 'व्याख्या लोड हो रही है...',
+  'interpretation.errorFallback': 'व्याख्या लोड करने में विफल',
+  'interpretation.ascendantTitle': 'लग्न व्याख्या',
+  'interpretation.lagna': 'लग्न: {sign}',
+  'interpretation.nakshatraTitle': 'नक्षत्र व्याख्या',
+  'interpretation.nakshatraSubtitle': 'जन्म-नक्षत्र विशेषताएं: {name}',
+  'interpretation.yogasTitle': 'योग',
+  'interpretation.yogasSubtitle': 'चार्ट में पाए गए शास्त्रीय ग्रह संयोजन',
+  'interpretation.yogasNone': 'इस चार्ट में कोई शास्त्रीय योग नहीं पाया गया।',
+  'interpretation.quality.positive': 'सकारात्मक',
+  'interpretation.quality.negative': 'नकारात्मक',
+  'interpretation.quality.both': 'मिश्रित',
 
   'remedies.loading': 'उपाय लोड हो रहे हैं...',
   'remedies.errorFallback': 'उपाय लोड करने में विफल',
@@ -474,6 +502,14 @@ export function translateSeverity(lang: Lang, severity: 'Mild' | 'Moderate' | 'S
   const key = ({ Mild: 'doshas.severity.mild', Moderate: 'doshas.severity.moderate', Severe: 'doshas.severity.severe' } as const)[
     severity
   ];
+  return t(lang, key);
+}
+
+/** Label for a `YogaDetectResponse` yoga's `quality` value. */
+export function translateYogaQuality(lang: Lang, quality: 'Positive' | 'Negative' | 'Both'): string {
+  const key = (
+    { Positive: 'interpretation.quality.positive', Negative: 'interpretation.quality.negative', Both: 'interpretation.quality.both' } as const
+  )[quality];
   return t(lang, key);
 }
 
