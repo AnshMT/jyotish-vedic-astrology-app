@@ -1,5 +1,5 @@
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { t, translatePlanetName, translateSignName } from '@/lib/astrologyapi/i18n';
+import { t, translatePlanetName, translateSignName, translateNakshatra } from '@/lib/astrologyapi/i18n';
 import type { Lang } from '@/lib/lang';
 import type { AstrologyApiKpPlanet, AstrologyApiKpHouseCusp } from '@/lib/astrologyapi/types';
 
@@ -29,7 +29,7 @@ export function AstrologyApiKpPlanetsTable({ data, lang }: { data: AstrologyApiK
                 <td className="py-2 font-medium text-foreground">{translatePlanetName(lang, p.planet_name)}</td>
                 <td className="py-2 text-muted-foreground">{translateSignName(lang, p.sign)}</td>
                 <td className="py-2 tabular-nums text-muted-foreground">{p.house}</td>
-                <td className="py-2 text-muted-foreground">{p.nakshatra}</td>
+                <td className="py-2 text-muted-foreground">{translateNakshatra(lang, p.nakshatra)}</td>
                 <td className="py-2 text-muted-foreground">{translatePlanetName(lang, p.sub_lord)}</td>
                 <td className="py-2 text-muted-foreground">{translatePlanetName(lang, p.sub_sub_lord)}</td>
               </tr>
@@ -66,7 +66,7 @@ export function AstrologyApiKpCuspsTable({ data, lang }: { data: AstrologyApiKpH
                 <td className="py-2 font-medium text-foreground">{c.house_id}</td>
                 <td className="py-2 tabular-nums text-muted-foreground">{c.formatted_degree}</td>
                 <td className="py-2 text-muted-foreground">{translateSignName(lang, c.sign)}</td>
-                <td className="py-2 text-muted-foreground">{c.nakshatra}</td>
+                <td className="py-2 text-muted-foreground">{translateNakshatra(lang, c.nakshatra)}</td>
                 <td className="py-2 text-muted-foreground">{translatePlanetName(lang, c.sub_lord)}</td>
                 <td className="py-2 text-muted-foreground">{translatePlanetName(lang, c.sub_sub_lord)}</td>
               </tr>

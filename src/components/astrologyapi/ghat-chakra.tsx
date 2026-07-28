@@ -1,5 +1,5 @@
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { t } from '@/lib/astrologyapi/i18n';
+import { t, translateNakshatra } from '@/lib/astrologyapi/i18n';
 import type { Lang } from '@/lib/lang';
 import type { AstrologyApiGhatChakra } from '@/lib/astrologyapi/types';
 
@@ -15,8 +15,9 @@ const FIELDS = [
 ] as const;
 
 /**
- * Birth-moment anga snapshot from `POST /ghat_chakra`. Rendered as raw vendor strings — the endpoint's own
- * field values (month/tithi/day names) aren't a closed enough vocabulary to safely hand-translate.
+ * Birth-moment anga snapshot from `POST /ghat_chakra`. Most fields are rendered as raw vendor strings — the
+ * month/tithi/day values aren't a closed enough vocabulary to safely hand-translate — except `nakshatra`,
+ * which reuses the same 27-name dictionary as every other nakshatra field in this app.
  */
 export function AstrologyApiGhatChakraCard({ data, lang }: { data: AstrologyApiGhatChakra; lang: Lang }) {
   return (
@@ -29,7 +30,9 @@ export function AstrologyApiGhatChakraCard({ data, lang }: { data: AstrologyApiG
         {FIELDS.map(([key, labelKey]) => (
           <div key={key} className="rounded-lg border border-border bg-muted/30 p-3 text-center">
             <p className="text-xs text-muted-foreground">{t(lang, labelKey)}</p>
-            <p className="font-medium text-foreground">{data[key]}</p>
+            <p className="font-medium text-foreground">
+              {key === 'nakshatra' ? translateNakshatra(lang, data.nakshatra) : data[key]}
+            </p>
           </div>
         ))}
       </CardContent>

@@ -1,6 +1,6 @@
 import { Badge } from '@/components/ui/badge';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { t } from '@/lib/astrologyapi/i18n';
+import { t, translateGemName, translateMetal, translateFinger, translateWeekday } from '@/lib/astrologyapi/i18n';
 import type { Lang } from '@/lib/lang';
 import type {
   AstrologyApiGemSuggestion,
@@ -27,16 +27,16 @@ export function AstrologyApiGemSuggestionGrid({ data, lang }: { data: AstrologyA
           return (
             <div key={key} className="rounded-lg border border-border bg-muted/30 p-3">
               <p className="text-xs text-muted-foreground">{t(lang, labelKey)}</p>
-              <p className="mt-1 font-medium text-foreground">{gem.name}</p>
+              <p className="mt-1 font-medium text-foreground">{translateGemName(lang, gem.name)}</p>
               <p className="mt-1 text-xs text-muted-foreground">{t(lang, descKey)}</p>
               <dl className="mt-3 space-y-1 text-xs text-muted-foreground">
                 <div className="flex justify-between">
                   <dt>{t(lang, 'gem.metal')}</dt>
-                  <dd className="text-foreground">{gem.wear_metal}</dd>
+                  <dd className="text-foreground">{translateMetal(lang, gem.wear_metal)}</dd>
                 </div>
                 <div className="flex justify-between">
                   <dt>{t(lang, 'gem.finger')}</dt>
-                  <dd className="text-foreground">{gem.wear_finger}</dd>
+                  <dd className="text-foreground">{translateFinger(lang, gem.wear_finger)}</dd>
                 </div>
                 <div className="flex justify-between">
                   <dt>{t(lang, 'gem.weight')}</dt>
@@ -44,11 +44,11 @@ export function AstrologyApiGemSuggestionGrid({ data, lang }: { data: AstrologyA
                 </div>
                 <div className="flex justify-between">
                   <dt>{t(lang, 'gem.day')}</dt>
-                  <dd className="text-foreground">{gem.wear_day}</dd>
+                  <dd className="text-foreground">{translateWeekday(lang, gem.wear_day)}</dd>
                 </div>
                 <div className="flex justify-between">
                   <dt>{t(lang, 'gem.alternative')}</dt>
-                  <dd className="text-foreground">{gem.semi_gem}</dd>
+                  <dd className="text-foreground">{translateGemName(lang, gem.semi_gem)}</dd>
                 </div>
               </dl>
             </div>

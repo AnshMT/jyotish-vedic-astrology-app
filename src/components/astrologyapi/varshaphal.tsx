@@ -69,7 +69,7 @@ export function AstrologyApiVarshaphalSection({ birth, lang }: { birth: BirthInp
           <Card>
             <CardContent className="flex flex-wrap gap-6 pt-6 text-sm">
               <p>
-                <span className="text-muted-foreground">{t(lang, 'varshaphal.yearLord', { planet: result.yearChart.year_lord })}</span>
+                <span className="text-muted-foreground">{t(lang, 'varshaphal.yearLord', { planet: translatePlanetName(lang, result.yearChart.year_lord) })}</span>
               </p>
               <p className="text-muted-foreground">{t(lang, 'varshaphal.date', { date: result.yearChart.varshaphal_date })}</p>
               <p className="text-muted-foreground">{t(lang, 'varshaphal.munthaDesc', { sign: translateSignName(lang, result.muntha) })}</p>

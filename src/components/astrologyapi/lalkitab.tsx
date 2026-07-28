@@ -4,7 +4,7 @@ import { useState, useTransition } from 'react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { PlanetSelect } from '@/components/astrologyapi/planet-select';
-import { t, translatePlanetName, translateOrdinalHouse } from '@/lib/astrologyapi/i18n';
+import { t, translatePlanetName, translateOrdinalHouse, translateSignName, translateLalkitabPosition } from '@/lib/astrologyapi/i18n';
 import type { Lang } from '@/lib/lang';
 import type { BirthInput } from '@/lib/astrologyapi/params';
 import type { AstrologyApiLalkitabDebt, AstrologyApiLalkitabHouse, AstrologyApiLalkitabPlanet } from '@/lib/astrologyapi/types';
@@ -76,9 +76,9 @@ export function AstrologyApiLalkitabPlanetsTable({ data, lang }: { data: Astrolo
             {data.map((p) => (
               <tr key={p.planet} className="border-b border-border/50 last:border-0">
                 <td className="py-2 font-medium text-foreground">{translatePlanetName(lang, p.planet)}</td>
-                <td className="py-2 text-muted-foreground">{p.rashi}</td>
+                <td className="py-2 text-muted-foreground">{translateSignName(lang, p.rashi)}</td>
                 <td className="py-2 text-muted-foreground">{p.soya ? t(lang, 'lalkitab.sleeping') : t(lang, 'lalkitab.awake')}</td>
-                <td className="py-2 text-muted-foreground">{p.position}</td>
+                <td className="py-2 text-muted-foreground">{translateLalkitabPosition(lang, p.position)}</td>
                 <td className="py-2">
                   <Badge variant={p.nature === 'Malefic' ? 'destructive' : 'secondary'}>
                     {p.nature === 'Malefic' ? t(lang, 'lalkitab.natureMalefic') : t(lang, 'lalkitab.natureBenefic')}

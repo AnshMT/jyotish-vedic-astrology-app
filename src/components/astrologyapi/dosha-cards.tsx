@@ -1,6 +1,6 @@
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
-import { t, translateSignName } from '@/lib/astrologyapi/i18n';
+import { t, translateSignName, translateKalsarpaName, translateKalsarpaType } from '@/lib/astrologyapi/i18n';
 import type { Lang } from '@/lib/lang';
 import type { AstrologyApiKalsarpaDosha, AstrologyApiSadhesati } from '@/lib/astrologyapi/types';
 
@@ -11,10 +11,12 @@ export function AstrologyApiKalsarpaCard({ data, lang }: { data: AstrologyApiKal
         <div className="flex items-center justify-between">
           <CardTitle>{t(lang, 'kalsarpa.title')}</CardTitle>
           <Badge variant={data.present ? 'destructive' : 'secondary'}>
-            {data.present ? data.type : t(lang, 'common.notPresent')}
+            {data.present ? translateKalsarpaType(lang, data.type) : t(lang, 'common.notPresent')}
           </Badge>
         </div>
-        {data.present && <CardDescription>{t(lang, 'kalsarpa.yog', { name: data.name })}</CardDescription>}
+        {data.present && (
+          <CardDescription>{t(lang, 'kalsarpa.yog', { name: translateKalsarpaName(lang, data.name) })}</CardDescription>
+        )}
       </CardHeader>
       <CardContent>
         <p className="text-sm text-muted-foreground">{data.one_line}</p>
