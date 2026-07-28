@@ -6,7 +6,6 @@ import {
   RoxyVedicPlanetsTable,
   RoxyDivisionalChart,
   RoxyDashaTimeline,
-  RoxyDoshaCard,
   RoxyAshtakavargaGrid,
   RoxyShadbalaTable,
   type RoxyDivisionalChartProps,
@@ -25,6 +24,7 @@ import {
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { CitySearch } from '@/components/city-search';
 import { RoxyRemediesView } from '@/components/roxy/remedies';
+import { RoxyManglikCard, RoxyKalsarpaCard, RoxySadhesatiCard } from '@/components/roxy/dosha-cards';
 import { DEFAULT_CITY, todayString, type City, type Coords } from '@/lib/location';
 import { findMoonPlacement, findWeakestPlanet } from '@/lib/roxy/remedies';
 import type { Lang } from '@/lib/lang';
@@ -214,9 +214,9 @@ export function KundaliClient({ lang }: { lang: Lang }) {
           </TabsContent>
 
           <TabsContent value="doshas" className="mt-6 space-y-6">
-            <RoxyDoshaCard type="manglik" data={result.manglik} />
-            <RoxyDoshaCard type="kalsarpa" data={result.kalsarpa} />
-            <RoxyDoshaCard type="sadhesati" data={result.sadhesati} />
+            <RoxyManglikCard data={result.manglik} lang={lang} />
+            <RoxyKalsarpaCard data={result.kalsarpa} lang={lang} />
+            <RoxySadhesatiCard data={result.sadhesati} lang={lang} />
           </TabsContent>
 
           <TabsContent value="strength" className="mt-6 space-y-6">
