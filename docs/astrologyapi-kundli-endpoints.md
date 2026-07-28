@@ -2,6 +2,8 @@
 
 Source: `src/app/astrologyapi/kundli/actions.ts`.
 
+A ready-to-import Postman collection with the same requests (plus a `D9` example alongside `D1` for the Varga/divisional-chart endpoints) lives at [`astrologyapi-kundli.postman_collection.json`](./astrologyapi-kundli.postman_collection.json) — set the collection's `astrologyApiKey` variable to a real access token after importing.
+
 - **Base URL:** `https://json.astrologyapi.com/v1`
 - **Auth header:** `x-astrologyapi-key: <ASTROLOGYAPI_KEY>`
 - **Content type:** `application/x-www-form-urlencoded` for every request — all requests are `POST`, even the reference-style ones

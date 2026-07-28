@@ -2,6 +2,8 @@
 
 Source: `src/app/kundali/actions.ts`, `src/lib/roxy/remedies.ts`, `src/lib/roxy/client.ts`.
 
+A ready-to-import Postman collection with the same 11 requests lives at [`roxyapi-kundli.postman_collection.json`](./roxyapi-kundli.postman_collection.json) — set the collection's `roxyApiKey` variable to a real key after importing.
+
 - **Base URL:** `https://roxyapi.com/api/v2`
 - **Auth header:** `X-API-Key: <ROXYAPI_KEY>`
 - **Content type:** `application/json` for every `POST` body

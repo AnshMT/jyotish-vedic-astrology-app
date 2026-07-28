@@ -1,0 +1,417 @@
+{
+  "info": {
+    "name": "Jyotish Kundali — RoxyAPI",
+    "description": "Every RoxyAPI endpoint used by the Kundali page (src/app/kundali/actions.ts, src/lib/roxy/remedies.ts) in the jyotish-vedic-astrology-app repo. See docs/roxyapi-kundli-endpoints.md for the full write-up.\n\nSet the `roxyApiKey` collection variable to a real RoxyAPI key before sending requests.",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "auth": {
+    "type": "apikey",
+    "apikey": [
+      {
+        "key": "key",
+        "value": "X-API-Key",
+        "type": "string"
+      },
+      {
+        "key": "value",
+        "value": "{{roxyApiKey}}",
+        "type": "string"
+      },
+      {
+        "key": "in",
+        "value": "header",
+        "type": "string"
+      }
+    ]
+  },
+  "variable": [
+    {
+      "key": "baseUrl",
+      "value": "https://roxyapi.com/api/v2",
+      "type": "string"
+    },
+    {
+      "key": "roxyApiKey",
+      "value": "YOUR_ROXYAPI_KEY",
+      "type": "string"
+    }
+  ],
+  "item": [
+    {
+      "name": "1. Birth chart (D1 Rashi)",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json",
+            "type": "text"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"date\": \"1990-05-10\",\n  \"time\": \"19:55:00\",\n  \"latitude\": 19.2,\n  \"longitude\": 72.88,\n  \"timezone\": 5.5\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "{{baseUrl}}/vedic-astrology/birth-chart?lang=en",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "vedic-astrology",
+            "birth-chart"
+          ],
+          "query": [
+            {
+              "key": "lang",
+              "value": "en"
+            }
+          ]
+        },
+        "description": "Powers RoxyVedicKundli and RoxyVedicPlanetsTable (Rashi (D1) tab, Planets tab)."
+      },
+      "response": []
+    },
+    {
+      "name": "2. Divisional (varga) chart",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json",
+            "type": "text"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"date\": \"1990-05-10\",\n  \"time\": \"19:55:00\",\n  \"latitude\": 19.2,\n  \"longitude\": 72.88,\n  \"timezone\": 5.5,\n  \"division\": 9\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "{{baseUrl}}/vedic-astrology/divisional-chart",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "vedic-astrology",
+            "divisional-chart"
+          ]
+        },
+        "description": "Powers the Varga tab. generateKundali calls this eagerly with division 9 (Navamsa); fetchDivisionalChart calls it again for any of 2,3,4,7,9,10,12,16,20,24,27,30,40,45,60. The app does not forward lang here even though the endpoint accepts it."
+      },
+      "response": []
+    },
+    {
+      "name": "3. Vimshottari major dashas",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json",
+            "type": "text"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"date\": \"1990-05-10\",\n  \"time\": \"19:55:00\",\n  \"latitude\": 19.2,\n  \"longitude\": 72.88,\n  \"timezone\": 5.5\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "{{baseUrl}}/vedic-astrology/dasha/major?lang=en",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "vedic-astrology",
+            "dasha",
+            "major"
+          ],
+          "query": [
+            {
+              "key": "lang",
+              "value": "en"
+            }
+          ]
+        },
+        "description": "Powers RoxyDashaTimeline (Dasha tab)."
+      },
+      "response": []
+    },
+    {
+      "name": "4. Manglik dosha",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json",
+            "type": "text"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"date\": \"1990-05-10\",\n  \"time\": \"19:55:00\",\n  \"latitude\": 19.2,\n  \"longitude\": 72.88,\n  \"timezone\": 5.5\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "{{baseUrl}}/vedic-astrology/dosha/manglik",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "vedic-astrology",
+            "dosha",
+            "manglik"
+          ]
+        },
+        "description": "Powers RoxyDoshaCard type=\"manglik\" (Doshas tab). No lang query — numbers and remedy strings only."
+      },
+      "response": []
+    },
+    {
+      "name": "5. Kalsarpa dosha",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json",
+            "type": "text"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"date\": \"1990-05-10\",\n  \"time\": \"19:55:00\",\n  \"latitude\": 19.2,\n  \"longitude\": 72.88,\n  \"timezone\": 5.5\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "{{baseUrl}}/vedic-astrology/dosha/kalsarpa",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "vedic-astrology",
+            "dosha",
+            "kalsarpa"
+          ]
+        },
+        "description": "Powers RoxyDoshaCard type=\"kalsarpa\" (Doshas tab)."
+      },
+      "response": []
+    },
+    {
+      "name": "6. Sadhesati (Sade Sati)",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json",
+            "type": "text"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"date\": \"1990-05-10\",\n  \"time\": \"19:55:00\",\n  \"latitude\": 19.2,\n  \"longitude\": 72.88,\n  \"timezone\": 5.5\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "{{baseUrl}}/vedic-astrology/dosha/sadhesati",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "vedic-astrology",
+            "dosha",
+            "sadhesati"
+          ]
+        },
+        "description": "Powers RoxyDoshaCard type=\"sadhesati\" (Doshas tab)."
+      },
+      "response": []
+    },
+    {
+      "name": "7. Ashtakavarga",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json",
+            "type": "text"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"date\": \"1990-05-10\",\n  \"time\": \"19:55:00\",\n  \"latitude\": 19.2,\n  \"longitude\": 72.88,\n  \"timezone\": 5.5\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "{{baseUrl}}/vedic-astrology/ashtakavarga",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "vedic-astrology",
+            "ashtakavarga"
+          ]
+        },
+        "description": "Powers RoxyAshtakavargaGrid (Strength tab)."
+      },
+      "response": []
+    },
+    {
+      "name": "8. Shadbala",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json",
+            "type": "text"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"date\": \"1990-05-10\",\n  \"time\": \"19:55:00\",\n  \"latitude\": 19.2,\n  \"longitude\": 72.88,\n  \"timezone\": 5.5\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "{{baseUrl}}/vedic-astrology/shadbala",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "vedic-astrology",
+            "shadbala"
+          ]
+        },
+        "description": "Powers RoxyShadbalaTable (Strength tab). Also used by the app (findWeakestPlanet) to pick the relativeRank 7 planet for the Remedies tab."
+      },
+      "response": []
+    },
+    {
+      "name": "9. Nakshatra reference (birth-star remedies)",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{baseUrl}}/vedic-astrology/nakshatras/anuradha?lang=en",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "vedic-astrology",
+            "nakshatras",
+            "anuradha"
+          ],
+          "query": [
+            {
+              "key": "lang",
+              "value": "en"
+            }
+          ]
+        },
+        "description": "Powers the Remedies tab's Birth Nakshatra card. id is one of the 27 lowercase-hyphenated nakshatra slugs (ashwini ... revati), derived from the Moon's nakshatra.key in the birth chart's meta lookup. Reference data — no birth params needed."
+      },
+      "response": []
+    },
+    {
+      "name": "10. Crystals by zodiac sign",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{baseUrl}}/crystals/zodiac/scorpio?lang=en&limit=6",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "crystals",
+            "zodiac",
+            "scorpio"
+          ],
+          "query": [
+            {
+              "key": "lang",
+              "value": "en"
+            },
+            {
+              "key": "limit",
+              "value": "6"
+            }
+          ]
+        },
+        "description": "Powers the Remedies tab's \"Crystals for your Moon sign\" grid. sign is the Moon's rashi from the birth chart."
+      },
+      "response": []
+    },
+    {
+      "name": "11. Crystals by planet",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{baseUrl}}/crystals?planet=Saturn&lang=en&limit=6",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "crystals"
+          ],
+          "query": [
+            {
+              "key": "planet",
+              "value": "Saturn"
+            },
+            {
+              "key": "lang",
+              "value": "en"
+            },
+            {
+              "key": "limit",
+              "value": "6"
+            }
+          ]
+        },
+        "description": "Powers the Remedies tab's \"Crystals for your weakest planet\" grid. planet is a partial, case-insensitive match against the Shadbala relativeRank 7 planet."
+      },
+      "response": []
+    }
+  ]
+}
