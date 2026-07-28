@@ -29,7 +29,7 @@ afterEach(() => {
 });
 
 describe('generateAstrologyApiKundli', () => {
-  it('fans out to all seven endpoints with split day/month/year params', async () => {
+  it('fans out to all sixteen endpoints with split day/month/year params', async () => {
     const { generateAstrologyApiKundli } = await import('@/app/astrologyapi/kundli/actions');
 
     await generateAstrologyApiKundli(birth);
@@ -44,8 +44,18 @@ describe('generateAstrologyApiKundli', () => {
         'https://json.astrologyapi.com/v1/sadhesati_current_status',
         'https://json.astrologyapi.com/v1/sarvashtak',
         'https://json.astrologyapi.com/v1/shadbala',
+        'https://json.astrologyapi.com/v1/general_ascendant_report',
+        'https://json.astrologyapi.com/v1/general_nakshatra_report',
+        'https://json.astrologyapi.com/v1/pitra_dosha_report',
+        'https://json.astrologyapi.com/v1/basic_gem_suggestion',
+        'https://json.astrologyapi.com/v1/puja_suggestion',
+        'https://json.astrologyapi.com/v1/rudraksha_suggestion',
+        'https://json.astrologyapi.com/v1/sadhesati_remedies',
+        'https://json.astrologyapi.com/v1/lalkitab_horoscope',
+        'https://json.astrologyapi.com/v1/lalkitab_debts',
       ]),
     );
+    expect(fetchMock.mock.calls).toHaveLength(16);
 
     const [, options] = fetchMock.mock.calls[0];
     expect(options.headers['x-astrologyapi-key']).toBe('test-token');
@@ -66,6 +76,35 @@ describe('generateAstrologyApiKundli', () => {
     fetchMock.mockResolvedValue(jsonResponse({ status: false, msg: 'boom' }, false));
     const { generateAstrologyApiKundli } = await import('@/app/astrologyapi/kundli/actions');
     await expect(generateAstrologyApiKundli(birth)).rejects.toThrow('boom');
+  });
+});
+
+describe('fetchAstrologyApiPlanetReport', () => {
+  it('calls the rashi and house report endpoints with the given planet path segment', async () => {
+    const { fetchAstrologyApiPlanetReport } = await import('@/app/astrologyapi/kundli/actions');
+
+    await fetchAstrologyApiPlanetReport({ ...birth, planet: 'moon' });
+
+    const calledPaths = fetchMock.mock.calls.map((call: unknown[]) => call[0]);
+    expect(calledPaths).toEqual(
+      expect.arrayContaining([
+        'https://json.astrologyapi.com/v1/general_rashi_report/moon',
+        'https://json.astrologyapi.com/v1/general_house_report/moon',
+      ]),
+    );
+  });
+});
+
+describe('fetchAstrologyApiLalkitabRemedy', () => {
+  it('calls the lalkitab_remedies endpoint with the given planet path segment', async () => {
+    const { fetchAstrologyApiLalkitabRemedy } = await import('@/app/astrologyapi/kundli/actions');
+
+    await fetchAstrologyApiLalkitabRemedy({ ...birth, planet: 'saturn' });
+
+    const calledPaths = fetchMock.mock.calls.map((call: unknown[]) => call[0]);
+    expect(calledPaths).toEqual(
+      expect.arrayContaining(['https://json.astrologyapi.com/v1/lalkitab_remedies/saturn']),
+    );
   });
 });
 

@@ -12,6 +12,22 @@ import { AstrologyApiPlanetsTable } from '@/components/astrologyapi/planets-tabl
 import { AstrologyApiDashaTimeline } from '@/components/astrologyapi/dasha-timeline';
 import { AstrologyApiKalsarpaCard, AstrologyApiSadhesatiCard } from '@/components/astrologyapi/dosha-cards';
 import { AstrologyApiAshtakavargaGrid, AstrologyApiShadbalaTable } from '@/components/astrologyapi/strength';
+import {
+  AstrologyApiAscendantCard,
+  AstrologyApiNakshatraCard,
+  AstrologyApiPitraDoshaCard,
+  AstrologyApiPlanetReportSection,
+} from '@/components/astrologyapi/interpretation';
+import {
+  AstrologyApiGemSuggestionGrid,
+  AstrologyApiPujaSuggestionList,
+  AstrologyApiRudrakshaCard,
+  AstrologyApiSadhesatiRemediesCard,
+} from '@/components/astrologyapi/remedies';
+import {
+  AstrologyApiLalkitabDebtsList,
+  AstrologyApiLalkitabRemedySection,
+} from '@/components/astrologyapi/lalkitab';
 import { DEFAULT_CITY, todayString, type City, type Coords } from '@/lib/location';
 import { generateAstrologyApiKundli } from './actions';
 
@@ -29,6 +45,8 @@ export function AstrologyApiKundliClient() {
   const [result, setResult] = useState<Kundli | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [pending, startTransition] = useTransition();
+
+  const birth = { date, time, ...coords };
 
   function onCity(city: City) {
     setCoords({ latitude: city.latitude, longitude: city.longitude, timezone: city.utcOffset });
@@ -89,13 +107,18 @@ export function AstrologyApiKundliClient() {
 
       {result && (
         <Tabs defaultValue="chart">
-          <TabsList className="w-full">
-            <TabsTrigger value="chart">Rashi (D1)</TabsTrigger>
-            <TabsTrigger value="planets">Planets</TabsTrigger>
-            <TabsTrigger value="dasha">Dasha</TabsTrigger>
-            <TabsTrigger value="doshas">Doshas</TabsTrigger>
-            <TabsTrigger value="strength">Strength</TabsTrigger>
-          </TabsList>
+          <div className="overflow-x-auto">
+            <TabsList className="w-full min-w-max">
+              <TabsTrigger value="chart">Rashi (D1)</TabsTrigger>
+              <TabsTrigger value="planets">Planets</TabsTrigger>
+              <TabsTrigger value="dasha">Dasha</TabsTrigger>
+              <TabsTrigger value="doshas">Doshas</TabsTrigger>
+              <TabsTrigger value="strength">Strength</TabsTrigger>
+              <TabsTrigger value="interpretation">Interpretation</TabsTrigger>
+              <TabsTrigger value="remedies">Remedies</TabsTrigger>
+              <TabsTrigger value="lalkitab">Lal Kitab</TabsTrigger>
+            </TabsList>
+          </div>
 
           <TabsContent value="chart" className="mt-6">
             <AstrologyApiChart houses={result.chart} />
@@ -117,6 +140,26 @@ export function AstrologyApiKundliClient() {
           <TabsContent value="strength" className="mt-6 space-y-6">
             <AstrologyApiAshtakavargaGrid data={result.ashtakavarga} />
             <AstrologyApiShadbalaTable data={result.shadbala} />
+          </TabsContent>
+
+          <TabsContent value="interpretation" className="mt-6 space-y-6">
+            <AstrologyApiAscendantCard data={result.ascendantReport} />
+            <AstrologyApiNakshatraCard data={result.nakshatraReport} />
+            <AstrologyApiPlanetReportSection birth={birth} />
+            <AstrologyApiPitraDoshaCard data={result.pitraDosha} />
+          </TabsContent>
+
+          <TabsContent value="remedies" className="mt-6 space-y-6">
+            <AstrologyApiGemSuggestionGrid data={result.gemSuggestion} />
+            <AstrologyApiPujaSuggestionList data={result.pujaSuggestion} />
+            <AstrologyApiRudrakshaCard data={result.rudrakshaSuggestion} />
+            <AstrologyApiSadhesatiRemediesCard data={result.sadhesatiRemedies} />
+          </TabsContent>
+
+          <TabsContent value="lalkitab" className="mt-6 space-y-6">
+            <AstrologyApiChart houses={result.lalkitabChart} />
+            <AstrologyApiLalkitabDebtsList data={result.lalkitabDebts} />
+            <AstrologyApiLalkitabRemedySection birth={birth} />
           </TabsContent>
         </Tabs>
       )}

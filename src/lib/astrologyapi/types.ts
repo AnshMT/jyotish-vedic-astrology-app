@@ -202,3 +202,100 @@ export interface AstrologyApiTropicalTransitsMonthly {
   retrogrades: Array<{ planet: string; start: string; end: string }>;
   moon_phase: Array<{ date: string; phase: string }>;
 }
+
+/** `POST /general_ascendant_report`: a prose reading of the Lagna. */
+export interface AstrologyApiAscendantReport {
+  asc_report: { ascendant: string; report: string };
+}
+
+/** `POST /general_nakshatra_report`: prose readings of the birth star, grouped by life area. Each value is one or more paragraphs. */
+export interface AstrologyApiNakshatraReport {
+  physical: string[];
+  character: string[];
+  education: string[];
+  family: string[];
+  health: string[];
+}
+
+/** `POST /general_rashi_report/:planet_name`: a prose reading of that planet's sign placement. Absent for Rahu/Ketu, which have no owned sign. */
+export interface AstrologyApiRashiReport {
+  planet: string;
+  rashi_report?: string;
+}
+
+/** `POST /general_house_report/:planet_name`: a prose reading of that planet's house placement. */
+export interface AstrologyApiHouseReport {
+  planet: string;
+  house_report: string;
+}
+
+export interface AstrologyApiPitraDosha {
+  what_is_pitri_dosha: string;
+  is_pitri_dosha_present: boolean;
+  rules_matched: string[];
+  conclusion: string;
+  remedies: string[];
+}
+
+interface GemRecommendation {
+  name: string;
+  gem_key: string;
+  semi_gem: string;
+  wear_finger: string;
+  weight_caret: string;
+  wear_metal: string;
+  wear_day: string;
+  gem_deity: string;
+}
+
+/** `POST /basic_gem_suggestion`: recommended gemstones for life strength, benefic support, and general luck. */
+export interface AstrologyApiGemSuggestion {
+  LIFE: GemRecommendation;
+  BENEFIC: GemRecommendation;
+  LUCKY: GemRecommendation;
+}
+
+interface PujaSuggestionItem {
+  status: boolean;
+  priority: number;
+  title: string;
+  puja_id: string;
+  summary: string;
+  one_line: string;
+}
+
+/** `POST /puja_suggestion`: recommended pujas based on doshas and planetary combinations present in the chart. */
+export interface AstrologyApiPujaSuggestion {
+  summary: string;
+  suggestions: PujaSuggestionItem[];
+}
+
+/** `POST /rudraksha_suggestion`: the one recommended rudraksha mukhi for the chart. */
+export interface AstrologyApiRudrakshaSuggestion {
+  img_url: string;
+  rudraksha_key: string;
+  name: string;
+  recommend: string;
+  detail: string;
+}
+
+/** `POST /sadhesati_remedies`: general remedies for Sadhe Sati, independent of whether it's currently active. */
+export interface AstrologyApiSadhesatiRemedies {
+  what_is_sadhesati: string;
+  remedies: string[];
+}
+
+/** `POST /lalkitab_debts`: the Lal Kitab "Rin" (karmic debt) readings that apply to the chart. */
+export interface AstrologyApiLalkitabDebt {
+  debt_name: string;
+  indications: string;
+  events: string;
+}
+
+/** `POST /lalkitab_remedies/:planet_name`: that planet's Lal Kitab house placement and remedies. */
+export interface AstrologyApiLalkitabRemedy {
+  planet: string;
+  house: string;
+  lal_kitab_desc: string;
+  lal_kitab_remedies: string[];
+}
