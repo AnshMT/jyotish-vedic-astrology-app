@@ -5,6 +5,13 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/ui/select';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { CitySearch } from '@/components/city-search';
 import { AstrologyApiChart } from '@/components/astrologyapi/chart';
@@ -32,9 +39,28 @@ import {
 import { DEFAULT_CITY, todayString, type City, type Coords } from '@/lib/location';
 import { t } from '@/lib/astrologyapi/i18n';
 import type { Lang } from '@/lib/lang';
-import { generateAstrologyApiKundli } from './actions';
+import { generateAstrologyApiKundli, fetchAstrologyApiDivisionalChart } from './actions';
 
 type Kundli = Awaited<ReturnType<typeof generateAstrologyApiKundli>>;
+type DivisionalChart = Awaited<ReturnType<typeof fetchAstrologyApiDivisionalChart>>;
+
+const VARGA_CHARTS = [
+  { division: 9, name: 'D9 Navamsa', desc: 'Marriage and dharma' },
+  { division: 2, name: 'D2 Hora', desc: 'Wealth' },
+  { division: 3, name: 'D3 Drekkana', desc: 'Siblings' },
+  { division: 4, name: 'D4 Chaturthamsa', desc: 'Property' },
+  { division: 7, name: 'D7 Saptamsa', desc: 'Children' },
+  { division: 10, name: 'D10 Dasamsa', desc: 'Career' },
+  { division: 12, name: 'D12 Dwadasamsa', desc: 'Parents' },
+  { division: 16, name: 'D16 Shodasamsa', desc: 'Vehicles' },
+  { division: 20, name: 'D20 Vimsamsa', desc: 'Spirituality' },
+  { division: 24, name: 'D24 Chaturvimsamsa', desc: 'Education' },
+  { division: 27, name: 'D27 Bhamsa', desc: 'Strengths' },
+  { division: 30, name: 'D30 Trimsamsa', desc: 'Misfortunes' },
+  { division: 40, name: 'D40 Khavedamsa', desc: 'Maternal legacy' },
+  { division: 45, name: 'D45 Akshavedamsa', desc: 'Character' },
+  { division: 60, name: 'D60 Shashtiamsa', desc: 'Past karma' },
+] as const;
 
 /**
  * AstrologyAPI-backed Kundli generator. Same shape as `@/app/kundali/kundali-client`: a Server Action fans
@@ -50,6 +76,10 @@ export function AstrologyApiKundliClient({ lang }: { lang: Lang }) {
   const [error, setError] = useState<string | null>(null);
   const [pending, startTransition] = useTransition();
 
+  const [division, setDivision] = useState(9);
+  const [varga, setVarga] = useState<DivisionalChart | null>(null);
+  const [vargaPending, startVarga] = useTransition();
+
   const birth = { date, time, ...coords };
 
   function onCity(city: City) {
@@ -61,10 +91,24 @@ export function AstrologyApiKundliClient({ lang }: { lang: Lang }) {
     setError(null);
     startTransition(async () => {
       try {
-        setResult(await generateAstrologyApiKundli({ date, time, ...coords }));
+        const data = await generateAstrologyApiKundli({ date, time, ...coords });
+        setResult(data);
+        setVarga(data.navamsa);
+        setDivision(9);
       } catch (err) {
         setError(err instanceof Error ? err.message : t(lang, 'kundli.errorFallback'));
         setResult(null);
+      }
+    });
+  }
+
+  function loadVarga(next: number) {
+    setDivision(next);
+    startVarga(async () => {
+      try {
+        setVarga(await fetchAstrologyApiDivisionalChart({ ...birth, division: next }));
+      } catch {
+        setVarga(null);
       }
     });
   }
@@ -113,6 +157,7 @@ export function AstrologyApiKundliClient({ lang }: { lang: Lang }) {
             <TabsList className="w-full min-w-max">
               <TabsTrigger value="chart">{t(lang, 'kundli.tab.chart')}</TabsTrigger>
               <TabsTrigger value="planets">{t(lang, 'kundli.tab.planets')}</TabsTrigger>
+              <TabsTrigger value="varga">{t(lang, 'kundli.tab.varga')}</TabsTrigger>
               <TabsTrigger value="dasha">{t(lang, 'kundli.tab.dasha')}</TabsTrigger>
               <TabsTrigger value="doshas">{t(lang, 'kundli.tab.doshas')}</TabsTrigger>
               <TabsTrigger value="strength">{t(lang, 'kundli.tab.strength')}</TabsTrigger>
@@ -129,6 +174,42 @@ export function AstrologyApiKundliClient({ lang }: { lang: Lang }) {
 
           <TabsContent value="planets" className="mt-6">
             <AstrologyApiPlanetsTable planets={result.planets} lang={lang} />
+          </TabsContent>
+
+          <TabsContent value="varga" className="mt-6 space-y-6">
+            <Card>
+              <CardHeader>
+                <CardTitle>{t(lang, 'varga.title')}</CardTitle>
+                <CardDescription>{t(lang, 'varga.subtitle')}</CardDescription>
+              </CardHeader>
+              <CardContent>
+                <div className="w-full max-w-xs space-y-2">
+                  <Label>{t(lang, 'varga.select')}</Label>
+                  <Select value={String(division)} onValueChange={(v) => loadVarga(Number(v))}>
+                    <SelectTrigger>
+                      <SelectValue />
+                    </SelectTrigger>
+                    <SelectContent>
+                      {VARGA_CHARTS.map((v) => (
+                        <SelectItem key={v.division} value={String(v.division)}>
+                          {v.name} - {v.desc}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                </div>
+              </CardContent>
+            </Card>
+            {vargaPending ? (
+              <p className="py-8 text-center text-muted-foreground">{t(lang, 'varga.loading')}</p>
+            ) : (
+              varga && (
+                <>
+                  <AstrologyApiChartImage data={varga.chartImage} />
+                  <AstrologyApiChart houses={varga.chart} lang={lang} />
+                </>
+              )
+            )}
           </TabsContent>
 
           <TabsContent value="dasha" className="mt-6">
