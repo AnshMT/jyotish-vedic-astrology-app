@@ -6,7 +6,7 @@ import type {
   GetCrystalsResponse,
 } from '@roxyapi/sdk';
 import type { Lang } from '@/lib/lang';
-import { t } from '@/lib/roxy/i18n';
+import { t, translatePlanetName, translateSignName } from '@/lib/roxy/i18n';
 
 /** The fields both `GET /crystals/zodiac/:sign` and `GET /crystals` summaries share (the latter also has `chakras`, unused here). */
 interface CrystalSummary {
@@ -71,7 +71,7 @@ export function RoxyRemediesView({
           <CardTitle>{t(lang, 'remedies.birthNakshatra', { name: nakshatra.name })}</CardTitle>
           <CardDescription>
             {t(lang, 'remedies.ruledBy', {
-              lord: nakshatra.lord,
+              lord: translatePlanetName(lang, nakshatra.lord),
               deity: nakshatra.deity,
               symbol: nakshatra.symbol,
             })}
@@ -100,7 +100,10 @@ export function RoxyRemediesView({
         <CardHeader>
           <CardTitle>
             {t(lang, 'remedies.crystalsForMoon', {
-              sign: moonSignCrystals.sign.charAt(0).toUpperCase() + moonSignCrystals.sign.slice(1),
+              sign: translateSignName(
+                lang,
+                moonSignCrystals.sign.charAt(0).toUpperCase() + moonSignCrystals.sign.slice(1),
+              ),
             })}
           </CardTitle>
           <CardDescription>{t(lang, 'remedies.crystalsForMoonDesc')}</CardDescription>
@@ -112,8 +115,10 @@ export function RoxyRemediesView({
 
       <Card>
         <CardHeader>
-          <CardTitle>{t(lang, 'remedies.crystalsForPlanet', { planet: weakPlanet })}</CardTitle>
-          <CardDescription>{t(lang, 'remedies.weakestPlanetDesc', { planet: weakPlanet })}</CardDescription>
+          <CardTitle>{t(lang, 'remedies.crystalsForPlanet', { planet: translatePlanetName(lang, weakPlanet) })}</CardTitle>
+          <CardDescription>
+            {t(lang, 'remedies.weakestPlanetDesc', { planet: translatePlanetName(lang, weakPlanet) })}
+          </CardDescription>
         </CardHeader>
         <CardContent>
           <CrystalGrid crystals={planetCrystals.crystals} lang={lang} />

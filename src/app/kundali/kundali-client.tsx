@@ -1,15 +1,6 @@
 'use client';
 
 import { useState, useTransition } from 'react';
-import {
-  RoxyVedicKundli,
-  RoxyVedicPlanetsTable,
-  RoxyDivisionalChart,
-  RoxyDashaTimeline,
-  RoxyAshtakavargaGrid,
-  RoxyShadbalaTable,
-  type RoxyDivisionalChartProps,
-} from '@roxyapi/ui-react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
@@ -25,6 +16,10 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { CitySearch } from '@/components/city-search';
 import { RoxyRemediesView } from '@/components/roxy/remedies';
 import { RoxyManglikCard, RoxyKalsarpaCard, RoxySadhesatiCard } from '@/components/roxy/dosha-cards';
+import { RoxyChartGrid } from '@/components/roxy/chart-grid';
+import { RoxyPlanetsTable } from '@/components/roxy/planets-table';
+import { RoxyDashaTimeline } from '@/components/roxy/dasha-timeline';
+import { RoxyAshtakavargaGrid, RoxyShadbalaTable } from '@/components/roxy/strength';
 import { DEFAULT_CITY, todayString, type City, type Coords } from '@/lib/location';
 import { findMoonPlacement, findWeakestPlanet } from '@/lib/roxy/remedies';
 import type { Lang } from '@/lib/lang';
@@ -64,7 +59,7 @@ export function KundaliClient({ lang }: { lang: Lang }) {
   const [pending, startTransition] = useTransition();
 
   const [division, setDivision] = useState(9);
-  const [varga, setVarga] = useState<RoxyDivisionalChartProps['data']>(undefined);
+  const [varga, setVarga] = useState<Awaited<ReturnType<typeof fetchDivisionalChart>> | undefined>(undefined);
   const [vargaPending, startVarga] = useTransition();
 
   const [remedies, setRemedies] = useState<Awaited<ReturnType<typeof fetchRoxyRemedies>> | null>(null);
@@ -171,11 +166,11 @@ export function KundaliClient({ lang }: { lang: Lang }) {
           </div>
 
           <TabsContent value="chart" className="mt-6">
-            <RoxyVedicKundli data={result.chart} />
+            <RoxyChartGrid meta={result.chart.meta} lang={lang} />
           </TabsContent>
 
           <TabsContent value="planets" className="mt-6">
-            <RoxyVedicPlanetsTable data={result.chart} />
+            <RoxyPlanetsTable meta={result.chart.meta} lang={lang} />
           </TabsContent>
 
           <TabsContent value="varga" className="mt-6 space-y-6">
@@ -205,12 +200,12 @@ export function KundaliClient({ lang }: { lang: Lang }) {
             {vargaPending ? (
               <p className="py-8 text-center text-muted-foreground">{t(lang, 'varga.loading')}</p>
             ) : (
-              varga && <RoxyDivisionalChart data={varga} />
+              varga && <RoxyChartGrid meta={varga.chart.meta} lang={lang} />
             )}
           </TabsContent>
 
           <TabsContent value="dasha" className="mt-6">
-            <RoxyDashaTimeline data={result.dashas} />
+            <RoxyDashaTimeline data={result.dashas} lang={lang} />
           </TabsContent>
 
           <TabsContent value="doshas" className="mt-6 space-y-6">
@@ -220,8 +215,8 @@ export function KundaliClient({ lang }: { lang: Lang }) {
           </TabsContent>
 
           <TabsContent value="strength" className="mt-6 space-y-6">
-            <RoxyAshtakavargaGrid data={result.ashtakavarga} />
-            <RoxyShadbalaTable data={result.shadbala} />
+            <RoxyAshtakavargaGrid data={result.ashtakavarga} lang={lang} />
+            <RoxyShadbalaTable data={result.shadbala} lang={lang} />
           </TabsContent>
 
           <TabsContent value="remedies" className="mt-6 space-y-6">
