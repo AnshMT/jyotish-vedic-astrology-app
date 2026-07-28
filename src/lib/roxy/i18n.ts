@@ -91,6 +91,27 @@ const EN: Dict = {
   'varga.d60.name': 'D60 Shashtiamsa',
   'varga.d60.desc': 'Past karma',
 
+  'doshas.manglik.title': 'Mangal Dosha',
+  'doshas.kalsarpa.title': 'Kaal Sarp Dosha',
+  'doshas.sadhesati.title': 'Sade Sati',
+  'doshas.present': 'Present',
+  'doshas.absent': 'Absent',
+  'doshas.type': 'Type',
+  'doshas.currentPhase': 'Current phase',
+  'doshas.remedies': 'Remedies',
+  'doshas.exceptions': 'Exceptions',
+  'doshas.severity.mild': 'Mild',
+  'doshas.severity.moderate': 'Moderate',
+  'doshas.severity.severe': 'Severe',
+  'doshas.effect.marriage': 'Marriage',
+  'doshas.effect.personality': 'Personality',
+  'doshas.effect.timing': 'Timing',
+  'doshas.effect.relationships': 'Relationships',
+  'doshas.effect.duration': 'Duration',
+  'doshas.effect.career': 'Career',
+  'doshas.effect.health': 'Health',
+  'doshas.effect.general': 'General',
+
   'remedies.loading': 'Loading remedies...',
   'remedies.errorFallback': 'Failed to load remedies',
   'remedies.birthNakshatra': 'Birth Nakshatra: {name}',
@@ -209,6 +230,27 @@ const HI: Dict = {
   'varga.d45.desc': 'चरित्र',
   'varga.d60.name': 'D60 षष्ट्यंश',
   'varga.d60.desc': 'पूर्व कर्म',
+
+  'doshas.manglik.title': 'मंगल दोष',
+  'doshas.kalsarpa.title': 'कालसर्प दोष',
+  'doshas.sadhesati.title': 'साढ़ेसाती',
+  'doshas.present': 'मौजूद',
+  'doshas.absent': 'अनुपस्थित',
+  'doshas.type': 'प्रकार',
+  'doshas.currentPhase': 'वर्तमान चरण',
+  'doshas.remedies': 'उपाय',
+  'doshas.exceptions': 'अपवाद',
+  'doshas.severity.mild': 'हल्का',
+  'doshas.severity.moderate': 'मध्यम',
+  'doshas.severity.severe': 'गंभीर',
+  'doshas.effect.marriage': 'विवाह',
+  'doshas.effect.personality': 'व्यक्तित्व',
+  'doshas.effect.timing': 'समय',
+  'doshas.effect.relationships': 'रिश्ते',
+  'doshas.effect.duration': 'अवधि',
+  'doshas.effect.career': 'करियर',
+  'doshas.effect.health': 'स्वास्थ्य',
+  'doshas.effect.general': 'सामान्य',
 
   'remedies.loading': 'उपाय लोड हो रहे हैं...',
   'remedies.errorFallback': 'उपाय लोड करने में विफल',
@@ -340,4 +382,41 @@ const ASPECT_NAMES_HI: Dict = {
 export function translateAspect(lang: Lang, name: string): string {
   if (dictLang(lang) !== 'hi') return name;
   return ASPECT_NAMES_HI[name.toLowerCase()] ?? name;
+}
+
+const SADHESATI_PHASE_NAMES_HI: Dict = {
+  Rising: 'उदय',
+  Peak: 'चरम',
+  Setting: 'अस्त',
+};
+
+/** Translates the `sadhesati` response's phase name (its `type` field, or an `effects.phases` key), e.g. `"Peak"`. */
+export function translateSadhesatiPhase(lang: Lang, name: string): string {
+  if (dictLang(lang) !== 'hi') return name;
+  return SADHESATI_PHASE_NAMES_HI[name] ?? name;
+}
+
+/** English label for a `ManglikResponse`/`KalsarpaResponse`/`SadhesatiResponse` severity value. */
+export function translateSeverity(lang: Lang, severity: 'Mild' | 'Moderate' | 'Severe'): string {
+  const key = ({ Mild: 'doshas.severity.mild', Moderate: 'doshas.severity.moderate', Severe: 'doshas.severity.severe' } as const)[
+    severity
+  ];
+  return t(lang, key);
+}
+
+const EFFECT_LABEL_KEYS: Record<string, keyof typeof EN> = {
+  marriage: 'doshas.effect.marriage',
+  personality: 'doshas.effect.personality',
+  timing: 'doshas.effect.timing',
+  relationships: 'doshas.effect.relationships',
+  duration: 'doshas.effect.duration',
+  career: 'doshas.effect.career',
+  health: 'doshas.effect.health',
+  general: 'doshas.effect.general',
+};
+
+/** Translates a dosha `effects` object's field name (e.g. `"marriage"`, from `ManglikResponse.effects`). */
+export function translateEffectLabel(lang: Lang, key: string): string {
+  const dictKey = EFFECT_LABEL_KEYS[key];
+  return dictKey ? t(lang, dictKey) : key;
 }
