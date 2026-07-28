@@ -18,6 +18,20 @@ export function formatTimeRange(
   return `${formatTime(start)} to ${formatTime(end)}`;
 }
 
+/** Format a plain `HH:MM:SS` (or `HH:MM`) clock string, as AstrologyAPI returns, to 12-hour display. */
+export function formatClockTime(time: string | null | undefined): string {
+  if (!time) return '--';
+  const [hh, mm] = time.split(':');
+  const h = parseInt(hh, 10);
+  return `${h % 12 || 12}:${mm} ${h >= 12 ? 'pm' : 'am'}`;
+}
+
+/** Format an AstrologyAPI time range string like `"06:13:51 - 19:15:58"` to 12-hour display. */
+export function formatClockRange(range: string): string {
+  const [start, end] = range.split(' - ');
+  return `${formatClockTime(start)} to ${formatClockTime(end)}`;
+}
+
 /** Format an ISO date string to a readable long date. */
 export function formatDate(dateStr: string): string {
   return new Date(dateStr + 'T00:00:00').toLocaleDateString('en-IN', {
