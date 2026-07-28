@@ -141,6 +141,32 @@ const EN: Dict = {
   'doshas.effect.health': 'Health',
   'doshas.effect.general': 'General',
 
+  'kundliFlow.title': 'Kundli Flow',
+  'kundliFlow.subtitle': 'Enter your birth details for an instant Vedic chart, current dasha, doshas, and birth panchang',
+  'kundliFlow.name': 'Name',
+  'kundliFlow.namePlaceholder': 'Your name',
+  'kundliFlow.placeOfBirth': 'Place of Birth',
+  'kundliFlow.placePlaceholder': 'e.g. New Delhi, India',
+  'kundliFlow.resolvedLocation': 'Resolved to {city}, {country} (lat {lat}, lon {lon}, UTC{offset})',
+  'kundliFlow.chartTitle': 'Birth Chart (D1)',
+  'kundliFlow.dashaTitle': 'Current Dasha',
+  'kundliFlow.doshasTitle': 'Doshas',
+  'kundliFlow.panchangTitle': 'Birth Panchang',
+  'kundliFlow.dasha.mahadasha': 'Mahadasha',
+  'kundliFlow.dasha.antardasha': 'Antardasha',
+  'kundliFlow.dasha.pratyantardasha': 'Pratyantardasha',
+  'kundliFlow.dasha.remaining': '{years}y {months}m {days}d remaining',
+  'kundliFlow.panchang.tithi': 'Tithi',
+  'kundliFlow.panchang.nakshatra': 'Nakshatra',
+  'kundliFlow.panchang.yoga': 'Yoga',
+  'kundliFlow.panchang.karana': 'Karana',
+  'kundliFlow.panchang.paksha.shukla': 'Shukla Paksha',
+  'kundliFlow.panchang.paksha.krishna': 'Krishna Paksha',
+  'kundliFlow.panchang.deity': 'Deity',
+  'kundliFlow.panchang.lord': 'Lord',
+  'kundliFlow.panchang.rulingPlanet': 'Ruling planet',
+  'kundliFlow.panchang.pada': 'pada {n}',
+
   'interpretation.loading': 'Loading interpretation...',
   'interpretation.errorFallback': 'Failed to load interpretation',
   'interpretation.ascendantTitle': 'Ascendant Reading',
@@ -322,6 +348,32 @@ const HI: Dict = {
   'doshas.effect.career': 'करियर',
   'doshas.effect.health': 'स्वास्थ्य',
   'doshas.effect.general': 'सामान्य',
+
+  'kundliFlow.title': 'कुंडली फ़्लो',
+  'kundliFlow.subtitle': 'तुरन्त वैदिक कुंडली, वर्तमान दशा, दोष और जन्म पंचांग के लिए अपना जन्म विवरण दर्ज करें',
+  'kundliFlow.name': 'नाम',
+  'kundliFlow.namePlaceholder': 'आपका नाम',
+  'kundliFlow.placeOfBirth': 'जन्म स्थान',
+  'kundliFlow.placePlaceholder': 'उदा. नई दिल्ली, भारत',
+  'kundliFlow.resolvedLocation': '{city}, {country} से मिलान (अक्षांश {lat}, देशांतर {lon}, UTC{offset})',
+  'kundliFlow.chartTitle': 'जन्म कुंडली (D1)',
+  'kundliFlow.dashaTitle': 'वर्तमान दशा',
+  'kundliFlow.doshasTitle': 'दोष',
+  'kundliFlow.panchangTitle': 'जन्म पंचांग',
+  'kundliFlow.dasha.mahadasha': 'महादशा',
+  'kundliFlow.dasha.antardasha': 'अंतर्दशा',
+  'kundliFlow.dasha.pratyantardasha': 'प्रत्यंतर्दशा',
+  'kundliFlow.dasha.remaining': '{years} वर्ष {months} माह {days} दिन शेष',
+  'kundliFlow.panchang.tithi': 'तिथि',
+  'kundliFlow.panchang.nakshatra': 'नक्षत्र',
+  'kundliFlow.panchang.yoga': 'योग',
+  'kundliFlow.panchang.karana': 'करण',
+  'kundliFlow.panchang.paksha.shukla': 'शुक्ल पक्ष',
+  'kundliFlow.panchang.paksha.krishna': 'कृष्ण पक्ष',
+  'kundliFlow.panchang.deity': 'देवता',
+  'kundliFlow.panchang.lord': 'स्वामी',
+  'kundliFlow.panchang.rulingPlanet': 'शासक ग्रह',
+  'kundliFlow.panchang.pada': 'पद {n}',
 
   'interpretation.loading': 'व्याख्या लोड हो रही है...',
   'interpretation.errorFallback': 'व्याख्या लोड करने में विफल',
@@ -528,4 +580,9 @@ const EFFECT_LABEL_KEYS: Record<string, keyof typeof EN> = {
 export function translateEffectLabel(lang: Lang, key: string): string {
   const dictKey = EFFECT_LABEL_KEYS[key];
   return dictKey ? t(lang, dictKey) : key;
+}
+
+/** Label for a basic-panchang `tithi.paksha` value. */
+export function translatePaksha(lang: Lang, paksha: 'Shukla' | 'Krishna'): string {
+  return t(lang, paksha === 'Shukla' ? 'kundliFlow.panchang.paksha.shukla' : 'kundliFlow.panchang.paksha.krishna');
 }

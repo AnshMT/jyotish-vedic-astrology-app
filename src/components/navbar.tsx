@@ -22,6 +22,7 @@ export function Navbar({ lang }: { lang: Lang }) {
     { href: '/', label: t(lang, 'nav.panchang') },
     { href: '/choghadiya', label: t(lang, 'nav.choghadiya') },
     { href: '/kundali', label: t(lang, 'nav.kundali') },
+    { href: '/kundli-flow', label: t(lang, 'nav.kundliFlow') },
     { href: '/matching', label: t(lang, 'nav.matching') },
     { href: '/transits', label: t(lang, 'nav.transits') },
   ];
