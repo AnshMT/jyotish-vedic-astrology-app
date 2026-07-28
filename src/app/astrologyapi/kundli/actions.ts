@@ -28,10 +28,10 @@ import type {
 /**
  * Fans out one birth input to AstrologyAPI's kundli-equivalent endpoints in parallel: planets, the D1
  * birth chart (both the JSON house data and a rendered SVG diagram via `horo_chart_image`, matching the
- * visual chart RoxyAPI's `RoxyVedicKundli` renders), Vimshottari major dashas, kalsarpa and sadhesati
- * dosha, sarvashtakavarga, shadbala, the Lagna/nakshatra/pitra-dosha prose readings, the
- * gemstone/puja/rudraksha/sadhesati remedy suggestions, and the Lal Kitab chart and debts. Mirrors
- * `@/app/kundali/actions`'s `generateKundali`, sourced from AstrologyAPI instead of RoxyAPI.
+ * visual chart RoxyAPI's `RoxyVedicKundli` renders), the D9 navamsa (so the Varga tab has something to show
+ * before a division is picked, mirroring `@/app/kundali/actions`'s eager navamsa fetch), Vimshottari major
+ * dashas, kalsarpa and sadhesati dosha, sarvashtakavarga, shadbala, the Lagna/nakshatra/pitra-dosha prose
+ * readings, the gemstone/puja/rudraksha/sadhesati remedy suggestions, and the Lal Kitab chart and debts.
  */
 export async function generateAstrologyApiKundli(input: BirthInput) {
   const params = toDateParams(input);
@@ -40,6 +40,7 @@ export async function generateAstrologyApiKundli(input: BirthInput) {
     planets,
     chart,
     chartImage,
+    navamsa,
     dashas,
     kalsarpa,
     sadhesati,
@@ -58,6 +59,7 @@ export async function generateAstrologyApiKundli(input: BirthInput) {
     unwrap(() => astrologyApiRequest<AstrologyApiPlanet[]>('planets', params)),
     unwrap(() => astrologyApiRequest<AstrologyApiChartHouse[]>('horo_chart/D1', params)),
     unwrap(() => astrologyApiRequest<AstrologyApiChartImage>('horo_chart_image/D1', { ...params, chartType: 'north' })),
+    fetchAstrologyApiDivisionalChart({ ...input, division: 9 }),
     unwrap(() => astrologyApiRequest<AstrologyApiDashaPeriod[]>('major_vdasha', params)),
     unwrap(() => astrologyApiRequest<AstrologyApiKalsarpaDosha>('kalsarpa_details', params)),
     unwrap(() => astrologyApiRequest<AstrologyApiSadhesati>('sadhesati_current_status', params)),
@@ -78,6 +80,7 @@ export async function generateAstrologyApiKundli(input: BirthInput) {
     planets,
     chart,
     chartImage,
+    navamsa,
     dashas,
     kalsarpa,
     sadhesati,
@@ -117,4 +120,22 @@ export async function fetchAstrologyApiLalkitabRemedy(input: BirthInput & { plan
   const { planet, ...birth } = input;
   const params = toDateParams(birth);
   return unwrap(() => astrologyApiRequest<AstrologyApiLalkitabRemedy>(`lalkitab_remedies/${planet}`, params));
+}
+
+/**
+ * Loads a single divisional (varga) chart on demand, both the JSON house data and the rendered SVG diagram
+ * — the same `horo_chart`/`horo_chart_image` endpoints as the D1 chart, just with a different `chartId`
+ * (e.g. `D9` for navamsa). Mirrors `@/app/kundali/actions`'s `fetchDivisionalChart`.
+ */
+export async function fetchAstrologyApiDivisionalChart(input: BirthInput & { division: number }) {
+  const { division, ...birth } = input;
+  const params = toDateParams(birth);
+  const chartId = `D${division}`;
+
+  const [chart, chartImage] = await Promise.all([
+    unwrap(() => astrologyApiRequest<AstrologyApiChartHouse[]>(`horo_chart/${chartId}`, params)),
+    unwrap(() => astrologyApiRequest<AstrologyApiChartImage>(`horo_chart_image/${chartId}`, { ...params, chartType: 'north' })),
+  ]);
+
+  return { chart, chartImage };
 }
