@@ -11,6 +11,8 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { CitySearch } from '@/components/city-search';
 import type { City } from '@/lib/location';
+import type { Lang } from '@/lib/lang';
+import { t } from '@/lib/i18n/common';
 
 /**
  * Date + city picker for the read pages (panchang, choghadiya). The selection is encoded in the URL query string and pushed with the router, which re-runs the Server Component on the same route so it re-fetches with the new inputs. Keeping state in the URL makes every view shareable and back-button friendly with no client data store.
@@ -18,9 +20,11 @@ import type { City } from '@/lib/location';
 export function DateLocationControls({
   date: initialDate,
   label: initialLabel,
+  lang,
 }: {
   date: string;
   label: string;
+  lang: Lang;
 }) {
   const router = useRouter();
   const pathname = usePathname();
@@ -44,7 +48,7 @@ export function DateLocationControls({
       <CardContent className="overflow-visible pt-6">
         <div className="flex flex-col gap-4 sm:flex-row sm:items-end">
           <div className="flex-shrink-0">
-            <Label htmlFor="date-input">Date</Label>
+            <Label htmlFor="date-input">{t(lang, 'date')}</Label>
             <Input
               id="date-input"
               type="date"
@@ -54,13 +58,13 @@ export function DateLocationControls({
             />
           </div>
           <div className="min-w-0 flex-1">
-            <Label>City</Label>
+            <Label>{t(lang, 'city')}</Label>
             <div className="mt-1.5">
-              <CitySearch onSelect={setCity} defaultValue={initialLabel} />
+              <CitySearch onSelect={setCity} defaultValue={initialLabel} lang={lang} />
             </div>
           </div>
           <Button onClick={update} disabled={pending}>
-            {pending ? 'Loading...' : 'Update'}
+            {pending ? t(lang, 'loading') : t(lang, 'update')}
           </Button>
         </div>
       </CardContent>

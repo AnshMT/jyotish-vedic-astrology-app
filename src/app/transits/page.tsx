@@ -1,12 +1,14 @@
 import type { Metadata } from 'next';
 import { roxy, hasApiKey } from '@/lib/roxy/client';
 import { tryUnwrap } from '@/lib/roxy/guard';
+import { getLang } from '@/lib/lang.server';
 import { DEFAULT_CITY } from '@/lib/location';
 import { ApiKeyMissing } from '@/components/api-key-missing';
 import { PageHeader } from '@/components/page-header';
 import { DataError } from '@/components/data-error';
 import { MonthYearControls } from '@/components/month-year-controls';
 import { TransitsView } from '@/components/transits-view';
+import { t } from '@/lib/roxy/i18n';
 
 export const metadata: Metadata = {
   title: 'Planetary Transits',
@@ -28,7 +30,8 @@ export default async function TransitsPage({
 }: {
   searchParams: Promise<Record<string, string | string[] | undefined>>;
 }) {
-  if (!hasApiKey) return <ApiKeyMissing />;
+  const lang = await getLang();
+  if (!hasApiKey) return <ApiKeyMissing lang={lang} />;
 
   const now = new Date();
   const params = await searchParams;
@@ -43,17 +46,14 @@ export default async function TransitsPage({
 
   return (
     <div className="space-y-8">
-      <PageHeader
-        title="Planetary Transits"
-        subtitle="Monthly sign changes and aspects for all nine planets"
-      />
-      <MonthYearControls month={month} year={year} />
+      <PageHeader title={t(lang, 'transits.pageTitle')} subtitle={t(lang, 'transits.pageSubtitle')} />
+      <MonthYearControls month={month} year={year} lang={lang} />
       {'error' in transits ? (
-        <DataError message={transits.error} />
+        <DataError message={transits.error} lang={lang} />
       ) : 'error' in aspects ? (
-        <DataError message={aspects.error} />
+        <DataError message={aspects.error} lang={lang} />
       ) : (
-        <TransitsView transits={transits.data} aspects={aspects.data} />
+        <TransitsView transits={transits.data} aspects={aspects.data} lang={lang} />
       )}
     </div>
   );

@@ -1,6 +1,7 @@
 import type { Metadata } from 'next';
 import { roxy, hasApiKey } from '@/lib/roxy/client';
 import { tryUnwrap } from '@/lib/roxy/guard';
+import { getLang } from '@/lib/lang.server';
 import { resolveDateAndLocation } from '@/lib/location';
 import { formatDate } from '@/lib/format';
 import { ApiKeyMissing } from '@/components/api-key-missing';
@@ -10,6 +11,7 @@ import { DataError } from '@/components/data-error';
 import { Separator } from '@/components/ui/separator';
 import { ChoghadiyaView } from '@/components/roxy/choghadiya';
 import { HoraTable } from '@/components/hora-table';
+import { t } from '@/lib/roxy/i18n';
 
 export const metadata: Metadata = {
   title: 'Choghadiya and Hora',
@@ -25,7 +27,8 @@ export default async function ChoghadiyaPage({
 }: {
   searchParams: Promise<Record<string, string | string[] | undefined>>;
 }) {
-  if (!hasApiKey) return <ApiKeyMissing />;
+  const lang = await getLang();
+  if (!hasApiKey) return <ApiKeyMissing lang={lang} />;
 
   const { date, label, coords } = resolveDateAndLocation(await searchParams);
   const body = { date, ...coords };
@@ -38,21 +41,23 @@ export default async function ChoghadiyaPage({
 
   return (
     <div className="space-y-8">
-      <DateLocationControls date={date} label={label} />
-      <PageHeader title="Choghadiya and Hora" subtitle={formatDate(date)} badge={label} />
+      <DateLocationControls date={date} label={label} lang={lang} />
+      <PageHeader title={t(lang, 'choghadiya.pageTitle')} subtitle={formatDate(date)} badge={label} />
       {'error' in choghadiya ? (
-        <DataError message={choghadiya.error} />
+        <DataError message={choghadiya.error} lang={lang} />
       ) : (
         <div className="space-y-6">
           <div>
-            <h2 className="mb-2 text-xl font-semibold text-foreground">Choghadiya</h2>
-            <p className="mb-4 text-sm text-muted-foreground">
-              8 muhurta periods each for day and night, marking auspicious and inauspicious windows
-            </p>
+            <h2 className="mb-2 text-xl font-semibold text-foreground">{t(lang, 'choghadiya.heading')}</h2>
+            <p className="mb-4 text-sm text-muted-foreground">{t(lang, 'choghadiya.subtitle')}</p>
             <ChoghadiyaView data={choghadiya.data} />
           </div>
           <Separator />
-          {'error' in hora ? <DataError message={hora.error} /> : <HoraTable data={hora.data} />}
+          {'error' in hora ? (
+            <DataError message={hora.error} lang={lang} />
+          ) : (
+            <HoraTable data={hora.data} lang={lang} />
+          )}
         </div>
       )}
     </div>

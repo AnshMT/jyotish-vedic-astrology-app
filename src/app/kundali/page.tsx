@@ -14,7 +14,7 @@ export const metadata: Metadata = {
  * Kundali route. Server Component boundary: it checks the key and reads the active language, then hands off to the client form. The form submit runs a Server Action that fans out to every Vedic endpoint.
  */
 export default async function KundaliPage() {
-  if (!hasApiKey) return <ApiKeyMissing />;
   const lang = await getLang();
+  if (!hasApiKey) return <ApiKeyMissing lang={lang} />;
   return <KundaliClient lang={lang} />;
 }

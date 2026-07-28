@@ -16,7 +16,7 @@ export const metadata: Metadata = {
  * parameter on these endpoints, so `lang` only drives this app's own labels (see `@/lib/astrologyapi/i18n`).
  */
 export default async function AstrologyApiKundliPage() {
-  if (!hasAstrologyApiKey) return <AstrologyApiKeyMissing />;
   const lang = await getLang();
+  if (!hasAstrologyApiKey) return <AstrologyApiKeyMissing lang={lang} />;
   return <AstrologyApiKundliClient lang={lang} />;
 }

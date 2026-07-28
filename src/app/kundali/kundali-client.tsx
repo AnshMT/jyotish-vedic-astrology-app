@@ -28,26 +28,28 @@ import { RoxyRemediesView } from '@/components/roxy/remedies';
 import { DEFAULT_CITY, todayString, type City, type Coords } from '@/lib/location';
 import { findMoonPlacement, findWeakestPlanet } from '@/lib/roxy/remedies';
 import type { Lang } from '@/lib/lang';
+import { t } from '@/lib/roxy/i18n';
+import { t as tCommon } from '@/lib/i18n/common';
 import { generateKundali, fetchDivisionalChart, fetchRoxyRemedies } from './actions';
 
 type Kundali = Awaited<ReturnType<typeof generateKundali>>;
 
 const VARGA_CHARTS = [
-  { division: 9, name: 'D9 Navamsa', desc: 'Marriage and dharma' },
-  { division: 2, name: 'D2 Hora', desc: 'Wealth' },
-  { division: 3, name: 'D3 Drekkana', desc: 'Siblings' },
-  { division: 4, name: 'D4 Chaturthamsa', desc: 'Property' },
-  { division: 7, name: 'D7 Saptamsa', desc: 'Children' },
-  { division: 10, name: 'D10 Dasamsa', desc: 'Career' },
-  { division: 12, name: 'D12 Dwadasamsa', desc: 'Parents' },
-  { division: 16, name: 'D16 Shodasamsa', desc: 'Vehicles' },
-  { division: 20, name: 'D20 Vimsamsa', desc: 'Spirituality' },
-  { division: 24, name: 'D24 Chaturvimsamsa', desc: 'Education' },
-  { division: 27, name: 'D27 Bhamsa', desc: 'Strengths' },
-  { division: 30, name: 'D30 Trimsamsa', desc: 'Misfortunes' },
-  { division: 40, name: 'D40 Khavedamsa', desc: 'Maternal legacy' },
-  { division: 45, name: 'D45 Akshavedamsa', desc: 'Character' },
-  { division: 60, name: 'D60 Shashtiamsa', desc: 'Past karma' },
+  { division: 9, nameKey: 'varga.d9.name', descKey: 'varga.d9.desc' },
+  { division: 2, nameKey: 'varga.d2.name', descKey: 'varga.d2.desc' },
+  { division: 3, nameKey: 'varga.d3.name', descKey: 'varga.d3.desc' },
+  { division: 4, nameKey: 'varga.d4.name', descKey: 'varga.d4.desc' },
+  { division: 7, nameKey: 'varga.d7.name', descKey: 'varga.d7.desc' },
+  { division: 10, nameKey: 'varga.d10.name', descKey: 'varga.d10.desc' },
+  { division: 12, nameKey: 'varga.d12.name', descKey: 'varga.d12.desc' },
+  { division: 16, nameKey: 'varga.d16.name', descKey: 'varga.d16.desc' },
+  { division: 20, nameKey: 'varga.d20.name', descKey: 'varga.d20.desc' },
+  { division: 24, nameKey: 'varga.d24.name', descKey: 'varga.d24.desc' },
+  { division: 27, nameKey: 'varga.d27.name', descKey: 'varga.d27.desc' },
+  { division: 30, nameKey: 'varga.d30.name', descKey: 'varga.d30.desc' },
+  { division: 40, nameKey: 'varga.d40.name', descKey: 'varga.d40.desc' },
+  { division: 45, nameKey: 'varga.d45.name', descKey: 'varga.d45.desc' },
+  { division: 60, nameKey: 'varga.d60.name', descKey: 'varga.d60.desc' },
 ] as const;
 
 /**
@@ -85,7 +87,7 @@ export function KundaliClient({ lang }: { lang: Lang }) {
         setRemedies(null);
         setRemediesError(null);
       } catch (err) {
-        setError(err instanceof Error ? err.message : 'Failed to generate kundali');
+        setError(err instanceof Error ? err.message : t(lang, 'kundali.errorFallback'));
         setResult(null);
       }
     });
@@ -111,7 +113,7 @@ export function KundaliClient({ lang }: { lang: Lang }) {
         const weakPlanet = findWeakestPlanet(result.shadbala);
         setRemedies(await fetchRoxyRemedies({ nakshatraKey, moonSign, weakPlanet, lang }));
       } catch (err) {
-        setRemediesError(err instanceof Error ? err.message : 'Failed to load remedies');
+        setRemediesError(err instanceof Error ? err.message : t(lang, 'remedies.errorFallback'));
       }
     });
   }
@@ -119,36 +121,34 @@ export function KundaliClient({ lang }: { lang: Lang }) {
   return (
     <div className="space-y-10">
       <div className="text-center">
-        <h1 className="text-3xl font-semibold tracking-tight text-foreground">Kundali</h1>
-        <p className="mt-2 text-muted-foreground">
-          Vedic birth chart with planetary positions, dashas, doshas, and strengths
-        </p>
+        <h1 className="text-3xl font-semibold tracking-tight text-foreground">{t(lang, 'kundali.title')}</h1>
+        <p className="mt-2 text-muted-foreground">{t(lang, 'kundali.subtitle')}</p>
       </div>
 
       <Card className="overflow-visible">
         <CardHeader>
-          <CardTitle>Birth Details</CardTitle>
-          <CardDescription>Enter your date, time, and place of birth</CardDescription>
+          <CardTitle>{t(lang, 'kundali.birthDetailsTitle')}</CardTitle>
+          <CardDescription>{t(lang, 'kundali.birthDetailsDesc')}</CardDescription>
         </CardHeader>
         <CardContent>
           <form onSubmit={submit}>
             <div className="grid grid-cols-1 gap-5 sm:grid-cols-3">
               <div className="space-y-2">
-                <Label htmlFor="date">Date of Birth</Label>
+                <Label htmlFor="date">{t(lang, 'kundali.dateOfBirth')}</Label>
                 <Input id="date" type="date" value={date} onChange={(e) => setDate(e.target.value)} required />
               </div>
               <div className="space-y-2">
-                <Label htmlFor="time">Time of Birth</Label>
+                <Label htmlFor="time">{t(lang, 'kundali.timeOfBirth')}</Label>
                 <Input id="time" type="time" value={time} onChange={(e) => setTime(e.target.value)} required />
               </div>
               <div className="space-y-2">
-                <Label>City</Label>
-                <CitySearch onSelect={onCity} defaultValue={DEFAULT_CITY.label} />
+                <Label>{tCommon(lang, 'city')}</Label>
+                <CitySearch onSelect={onCity} defaultValue={DEFAULT_CITY.label} lang={lang} />
               </div>
             </div>
             <div className="mt-6">
               <Button type="submit" size="lg" disabled={pending} className="w-full sm:w-auto">
-                {pending ? 'Generating...' : 'Generate Kundali'}
+                {pending ? t(lang, 'kundali.generating') : t(lang, 'kundali.generate')}
               </Button>
             </div>
             {error && <p className="mt-4 text-sm text-destructive">{error}</p>}
@@ -160,13 +160,13 @@ export function KundaliClient({ lang }: { lang: Lang }) {
         <Tabs defaultValue="chart" onValueChange={onTabChange}>
           <div className="overflow-x-auto">
             <TabsList className="w-full min-w-max">
-              <TabsTrigger value="chart">Rashi (D1)</TabsTrigger>
-              <TabsTrigger value="planets">Planets</TabsTrigger>
-              <TabsTrigger value="varga">Varga</TabsTrigger>
-              <TabsTrigger value="dasha">Dasha</TabsTrigger>
-              <TabsTrigger value="doshas">Doshas</TabsTrigger>
-              <TabsTrigger value="strength">Strength</TabsTrigger>
-              <TabsTrigger value="remedies">Remedies</TabsTrigger>
+              <TabsTrigger value="chart">{t(lang, 'kundali.tab.chart')}</TabsTrigger>
+              <TabsTrigger value="planets">{t(lang, 'kundali.tab.planets')}</TabsTrigger>
+              <TabsTrigger value="varga">{t(lang, 'kundali.tab.varga')}</TabsTrigger>
+              <TabsTrigger value="dasha">{t(lang, 'kundali.tab.dasha')}</TabsTrigger>
+              <TabsTrigger value="doshas">{t(lang, 'kundali.tab.doshas')}</TabsTrigger>
+              <TabsTrigger value="strength">{t(lang, 'kundali.tab.strength')}</TabsTrigger>
+              <TabsTrigger value="remedies">{t(lang, 'kundali.tab.remedies')}</TabsTrigger>
             </TabsList>
           </div>
 
@@ -181,12 +181,12 @@ export function KundaliClient({ lang }: { lang: Lang }) {
           <TabsContent value="varga" className="mt-6 space-y-6">
             <Card>
               <CardHeader>
-                <CardTitle>Divisional Charts</CardTitle>
-                <CardDescription>Select a varga chart to analyze a specific life area</CardDescription>
+                <CardTitle>{t(lang, 'varga.title')}</CardTitle>
+                <CardDescription>{t(lang, 'varga.subtitle')}</CardDescription>
               </CardHeader>
               <CardContent>
                 <div className="w-full max-w-xs space-y-2">
-                  <Label>Divisional chart</Label>
+                  <Label>{t(lang, 'varga.select')}</Label>
                   <Select value={String(division)} onValueChange={(v) => loadVarga(Number(v))}>
                     <SelectTrigger>
                       <SelectValue />
@@ -194,7 +194,7 @@ export function KundaliClient({ lang }: { lang: Lang }) {
                     <SelectContent>
                       {VARGA_CHARTS.map((v) => (
                         <SelectItem key={v.division} value={String(v.division)}>
-                          {v.name} - {v.desc}
+                          {t(lang, v.nameKey)} - {t(lang, v.descKey)}
                         </SelectItem>
                       ))}
                     </SelectContent>
@@ -203,7 +203,7 @@ export function KundaliClient({ lang }: { lang: Lang }) {
               </CardContent>
             </Card>
             {vargaPending ? (
-              <p className="py-8 text-center text-muted-foreground">Loading chart...</p>
+              <p className="py-8 text-center text-muted-foreground">{t(lang, 'varga.loading')}</p>
             ) : (
               varga && <RoxyDivisionalChart data={varga} />
             )}
@@ -225,7 +225,7 @@ export function KundaliClient({ lang }: { lang: Lang }) {
           </TabsContent>
 
           <TabsContent value="remedies" className="mt-6 space-y-6">
-            {remediesPending && <p className="py-8 text-center text-muted-foreground">Loading remedies...</p>}
+            {remediesPending && <p className="py-8 text-center text-muted-foreground">{t(lang, 'remedies.loading')}</p>}
             {remediesError && <p className="text-center text-sm text-destructive">{remediesError}</p>}
             {remedies && (
               <RoxyRemediesView
@@ -233,6 +233,7 @@ export function KundaliClient({ lang }: { lang: Lang }) {
                 moonSignCrystals={remedies.moonSignCrystals}
                 planetCrystals={remedies.planetCrystals}
                 weakPlanet={findWeakestPlanet(result.shadbala)}
+                lang={lang}
               />
             )}
           </TabsContent>

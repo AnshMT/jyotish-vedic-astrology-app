@@ -1,9 +1,12 @@
-export function Footer() {
+import type { Lang } from '@/lib/lang';
+import { t } from '@/lib/i18n/common';
+
+export function Footer({ lang }: { lang: Lang }) {
   return (
     <footer className="border-t border-border/40 bg-background">
       <div className="mx-auto flex max-w-6xl flex-col items-center gap-4 px-4 py-8 text-sm text-muted-foreground sm:flex-row sm:justify-between">
         <p>
-          Powered by{' '}
+          {t(lang, 'footer.poweredBy')}{' '}
           <a
             href="https://roxyapi.com"
             target="_blank"
@@ -28,7 +31,7 @@ export function Footer() {
             rel="noopener noreferrer"
             className="underline-offset-4 transition-colors hover:text-foreground hover:underline"
           >
-            Docs
+            {t(lang, 'footer.docs')}
           </a>
           <a
             href="https://roxyapi.com/pricing"
@@ -36,7 +39,7 @@ export function Footer() {
             rel="noopener noreferrer"
             className="underline-offset-4 transition-colors hover:text-foreground hover:underline"
           >
-            Get API Key
+            {t(lang, 'footer.getApiKey')}
           </a>
           <a
             href="https://github.com/RoxyAPI/jyotish-vedic-astrology-app"

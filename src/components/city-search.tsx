@@ -3,6 +3,8 @@
 import { useEffect, useRef, useState } from 'react';
 import { Input } from '@/components/ui/input';
 import type { City } from '@/lib/location';
+import type { Lang } from '@/lib/lang';
+import { t } from '@/lib/i18n/common';
 
 /**
  * Debounced city autocomplete. Fetches through the server `/api/cities` route so the secret key stays server-side. Emits the selected {@link City} (with `latitude`, `longitude`, and `utcOffset`) to the parent, which feeds it into a chart or panchang request.
@@ -10,9 +12,11 @@ import type { City } from '@/lib/location';
 export function CitySearch({
   onSelect,
   defaultValue = '',
+  lang,
 }: {
   onSelect: (city: City) => void;
   defaultValue?: string;
+  lang: Lang;
 }) {
   const [query, setQuery] = useState(defaultValue);
   const [results, setResults] = useState<City[]>([]);
@@ -66,7 +70,7 @@ export function CitySearch({
     <div ref={containerRef} className="relative">
       <Input
         type="text"
-        placeholder="Search city..."
+        placeholder={t(lang, 'searchCity')}
         value={query}
         onChange={(e) => handleChange(e.target.value)}
         onFocus={() => results.length > 0 && setOpen(true)}

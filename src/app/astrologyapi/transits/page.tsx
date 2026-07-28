@@ -34,9 +34,9 @@ export default async function AstrologyApiTransitsPage({
 }: {
   searchParams: Promise<Record<string, string | string[] | undefined>>;
 }) {
-  if (!hasAstrologyApiKey) return <AstrologyApiKeyMissing />;
-
   const lang = await getLang();
+  if (!hasAstrologyApiKey) return <AstrologyApiKeyMissing lang={lang} />;
+
   const now = new Date();
   const params = await searchParams;
   const month = intParam(params.month, now.getMonth() + 1);
@@ -58,9 +58,9 @@ export default async function AstrologyApiTransitsPage({
   return (
     <div className="space-y-8">
       <PageHeader title={t(lang, 'transits.title')} subtitle={t(lang, 'transits.subtitle')} />
-      <MonthYearControls month={month} year={year} />
+      <MonthYearControls month={month} year={year} lang={lang} />
       {'error' in transits ? (
-        <AstrologyApiDataError message={transits.error} />
+        <AstrologyApiDataError message={transits.error} lang={lang} />
       ) : (
         <AstrologyApiTransitsView data={transits.data} lang={lang} />
       )}

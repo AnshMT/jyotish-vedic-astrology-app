@@ -9,6 +9,7 @@ import { DateLocationControls } from '@/components/date-location-controls';
 import { PageHeader } from '@/components/page-header';
 import { DataError } from '@/components/data-error';
 import { PanchangView } from '@/components/roxy/panchang';
+import { t } from '@/lib/roxy/i18n';
 
 export const metadata: Metadata = {
   title: 'Panchang',
@@ -24,9 +25,9 @@ export default async function PanchangPage({
 }: {
   searchParams: Promise<Record<string, string | string[] | undefined>>;
 }) {
-  if (!hasApiKey) return <ApiKeyMissing />;
-
   const lang = await getLang();
+  if (!hasApiKey) return <ApiKeyMissing lang={lang} />;
+
   const { date, label, coords } = resolveDateAndLocation(await searchParams);
 
   const panchang = await tryUnwrap(
@@ -35,10 +36,10 @@ export default async function PanchangPage({
 
   return (
     <div className="space-y-8">
-      <DateLocationControls date={date} label={label} />
-      <PageHeader title="Panchang" subtitle={formatDate(date)} badge={label} />
+      <DateLocationControls date={date} label={label} lang={lang} />
+      <PageHeader title={t(lang, 'panchang.title')} subtitle={formatDate(date)} badge={label} />
       {'error' in panchang ? (
-        <DataError message={panchang.error} />
+        <DataError message={panchang.error} lang={lang} />
       ) : (
         <PanchangView data={panchang.data} />
       )}

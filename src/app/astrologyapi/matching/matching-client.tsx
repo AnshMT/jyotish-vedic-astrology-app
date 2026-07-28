@@ -60,7 +60,7 @@ function PersonForm({
         </div>
         <div className="space-y-2">
           <Label>{t(lang, 'common.city')}</Label>
-          <CitySearch onSelect={onCity} defaultValue={defaultCity} />
+          <CitySearch onSelect={onCity} defaultValue={defaultCity} lang={lang} />
         </div>
       </CardContent>
     </Card>
@@ -100,14 +100,14 @@ export function AstrologyApiMatchingClient({ lang }: { lang: Lang }) {
       <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
         <PersonForm
           label={t(lang, 'matching.person1')}
-          defaultCity="Mumbai, India"
+          defaultCity={t(lang, 'matching.defaultCity1')}
           value={person1}
           onChange={setPerson1}
           lang={lang}
         />
         <PersonForm
           label={t(lang, 'matching.person2')}
-          defaultCity="Delhi, India"
+          defaultCity={t(lang, 'matching.defaultCity2')}
           value={person2}
           onChange={setPerson2}
           lang={lang}

@@ -68,7 +68,7 @@ export default async function RootLayout({
           <main className="flex-1">
             <div className="mx-auto max-w-6xl px-4 py-8">{children}</div>
           </main>
-          <Footer />
+          <Footer lang={lang} />
         </ThemeProvider>
       </body>
     </html>

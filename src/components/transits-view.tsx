@@ -6,6 +6,8 @@ import { Badge } from '@/components/ui/badge';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Separator } from '@/components/ui/separator';
 import { formatDateShort } from '@/lib/format';
+import type { Lang } from '@/lib/lang';
+import { t, translatePlanetName, translateSignName, translateAspect } from '@/lib/roxy/i18n';
 
 type Transits = PostVedicAstrologyTransitMonthlyResponse;
 type Aspects = PostVedicAstrologyAspectsMonthlyResponse;
@@ -24,10 +26,16 @@ function titleCase(value: string): string {
   return value.charAt(0).toUpperCase() + value.slice(1).replace(/-/g, ' ');
 }
 
+/** Title-cased English fallback for aspect names outside the closed Hindi vocabulary `translateAspect` covers. */
+function aspectLabel(lang: Lang, aspect: string): string {
+  const translated = translateAspect(lang, aspect);
+  return translated === aspect ? titleCase(aspect) : translated;
+}
+
 /**
  * Monthly Vedic transit and aspect renderer. There is no dedicated Roxy UI component for Vedic monthly transits (`RoxyTransitsTable` is Western), so this small table renders the typed response directly. Server component, no client cost.
  */
-export function TransitsView({ transits, aspects }: { transits: Transits; aspects: Aspects }) {
+export function TransitsView({ transits, aspects, lang }: { transits: Transits; aspects: Aspects; lang: Lang }) {
   const signChanges = groupByDate(transits.transitEvents);
   const aspectDays = groupByDate(aspects.events);
 
@@ -35,7 +43,7 @@ export function TransitsView({ transits, aspects }: { transits: Transits; aspect
     <div className="space-y-6">
       <Card>
         <CardHeader>
-          <CardTitle>Starting Positions</CardTitle>
+          <CardTitle>{t(lang, 'transitsView.startingPositions')}</CardTitle>
         </CardHeader>
         <CardContent>
           <div className="grid grid-cols-2 gap-3 sm:grid-cols-3">
@@ -44,8 +52,8 @@ export function TransitsView({ transits, aspects }: { transits: Transits; aspect
                 key={pos.planet}
                 className="flex items-center justify-between rounded-lg bg-muted px-3 py-2"
               >
-                <span className="text-sm font-medium text-foreground">{pos.planet}</span>
-                <span className="text-xs text-muted-foreground">{pos.sign}</span>
+                <span className="text-sm font-medium text-foreground">{translatePlanetName(lang, pos.planet)}</span>
+                <span className="text-xs text-muted-foreground">{translateSignName(lang, pos.sign)}</span>
               </div>
             ))}
           </div>
@@ -55,9 +63,9 @@ export function TransitsView({ transits, aspects }: { transits: Transits; aspect
       <Separator />
 
       <section className="space-y-4">
-        <h2 className="text-lg font-semibold text-foreground">Sign Changes</h2>
+        <h2 className="text-lg font-semibold text-foreground">{t(lang, 'transitsView.signChanges')}</h2>
         {signChanges.length === 0 ? (
-          <p className="py-8 text-center text-muted-foreground">No sign changes this month.</p>
+          <p className="py-8 text-center text-muted-foreground">{t(lang, 'transitsView.noSignChanges')}</p>
         ) : (
           signChanges.map(([date, events]) => (
             <Card key={date}>
@@ -69,13 +77,15 @@ export function TransitsView({ transits, aspects }: { transits: Transits; aspect
               <CardContent className="space-y-3">
                 {events.map((e, i) => (
                   <div key={`${e.planet}-${e.toSign}-${i}`} className="flex items-center gap-3">
-                    <Badge>{e.planet}</Badge>
+                    <Badge>{translatePlanetName(lang, e.planet)}</Badge>
                     <p className="flex-1 text-sm text-foreground">
-                      {e.fromSign} <span className="text-muted-foreground">to</span> {e.toSign}
+                      {translateSignName(lang, e.fromSign)}{' '}
+                      <span className="text-muted-foreground">{t(lang, 'transitsView.to')}</span>{' '}
+                      {translateSignName(lang, e.toSign)}
                     </p>
                     {e.isRetrograde && (
                       <Badge variant="outline" className="text-xs">
-                        Rx
+                        {t(lang, 'transitsView.retrograde')}
                       </Badge>
                     )}
                     <span className="text-xs tabular-nums text-muted-foreground">{e.time}</span>
@@ -91,7 +101,7 @@ export function TransitsView({ transits, aspects }: { transits: Transits; aspect
         <>
           <Separator />
           <section className="space-y-4">
-            <h2 className="text-lg font-semibold text-foreground">Planetary Aspects</h2>
+            <h2 className="text-lg font-semibold text-foreground">{t(lang, 'transitsView.planetaryAspects')}</h2>
             {aspectDays.map(([date, events]) => (
               <Card key={date}>
                 <CardHeader className="pb-0">
@@ -105,11 +115,11 @@ export function TransitsView({ transits, aspects }: { transits: Transits; aspect
                       key={`${e.planet1}-${e.planet2}-${e.aspect}-${i}`}
                       className="flex items-center gap-3"
                     >
-                      <Badge>{e.planet1}</Badge>
-                      <Badge variant="outline">{titleCase(e.aspect)}</Badge>
-                      <Badge>{e.planet2}</Badge>
+                      <Badge>{translatePlanetName(lang, e.planet1)}</Badge>
+                      <Badge variant="outline">{aspectLabel(lang, e.aspect)}</Badge>
+                      <Badge>{translatePlanetName(lang, e.planet2)}</Badge>
                       <span className="ml-auto text-xs text-muted-foreground">
-                        {e.orb.toFixed(2)} orb
+                        {e.orb.toFixed(2)} {t(lang, 'transitsView.orb')}
                       </span>
                       <span className="text-xs tabular-nums text-muted-foreground">{e.time}</span>
                     </div>
