@@ -33,6 +33,11 @@ const EN: Dict = {
 
   'kundli.title': 'Kundli',
   'kundli.subtitle': 'Vedic birth chart with planetary positions, dasha, doshas, and strength — via AstrologyAPI',
+
+  'kundliFlow.title': 'Kundli Flow (AstrologyAPI)',
+  'kundliFlow.subtitle': 'One continuous report — chart, all varga charts, dasha, doshas, strength, interpretation, remedies, and Lal Kitab',
+  'kundliFlow.name': 'Name',
+  'kundliFlow.namePlaceholder': 'Your name',
   'kundli.birthDetailsTitle': 'Birth Details',
   'kundli.birthDetailsDesc': 'Enter your date, time, and place of birth',
   'kundli.generate': 'Generate Kundli',
@@ -257,6 +262,11 @@ const HI: Dict = {
 
   'kundli.title': 'कुंडली',
   'kundli.subtitle': 'ग्रह स्थिति, दशा, दोष और बल के साथ वैदिक जन्म कुंडली — AstrologyAPI द्वारा',
+
+  'kundliFlow.title': 'कुंडली फ़्लो (AstrologyAPI)',
+  'kundliFlow.subtitle': 'एक सतत रिपोर्ट — कुंडली, सभी वर्ग चार्ट, दशा, दोष, बल, व्याख्या, उपाय और लाल किताब',
+  'kundliFlow.name': 'नाम',
+  'kundliFlow.namePlaceholder': 'आपका नाम',
   'kundli.birthDetailsTitle': 'जन्म विवरण',
   'kundli.birthDetailsDesc': 'अपनी जन्म तिथि, समय और स्थान दर्ज करें',
   'kundli.generate': 'कुंडली बनाएं',

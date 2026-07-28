@@ -32,6 +32,7 @@ export function Navbar({ lang }: { lang: Lang }) {
     { href: '/astrologyapi/panchang', label: t(lang, 'nav.panchang') },
     { href: '/astrologyapi/choghadiya', label: t(lang, 'nav.choghadiya') },
     { href: '/astrologyapi/kundli', label: t(lang, 'nav.kundli') },
+    { href: '/kundliflow-astroapi', label: t(lang, 'nav.kundliFlow') },
     { href: '/astrologyapi/matching', label: t(lang, 'nav.matching') },
     { href: '/astrologyapi/transits', label: t(lang, 'nav.transits') },
   ];
