@@ -229,76 +229,7 @@
       "response": []
     },
     {
-      "name": "3. Rendered chart diagram (SVG)",
-      "request": {
-        "method": "POST",
-        "header": [],
-        "body": {
-          "mode": "urlencoded",
-          "urlencoded": [
-            {
-              "key": "day",
-              "value": "10",
-              "type": "text"
-            },
-            {
-              "key": "month",
-              "value": "5",
-              "type": "text"
-            },
-            {
-              "key": "year",
-              "value": "1990",
-              "type": "text"
-            },
-            {
-              "key": "hour",
-              "value": "19",
-              "type": "text"
-            },
-            {
-              "key": "min",
-              "value": "55",
-              "type": "text"
-            },
-            {
-              "key": "lat",
-              "value": "19.20",
-              "type": "text"
-            },
-            {
-              "key": "lon",
-              "value": "72.88",
-              "type": "text"
-            },
-            {
-              "key": "tzone",
-              "value": "5.5",
-              "type": "text"
-            },
-            {
-              "key": "chartType",
-              "value": "north",
-              "type": "text"
-            }
-          ]
-        },
-        "url": {
-          "raw": "{{baseUrl}}/horo_chart_image/D1",
-          "host": [
-            "{{baseUrl}}"
-          ],
-          "path": [
-            "horo_chart_image",
-            "D1"
-          ]
-        },
-        "description": "Powers AstrologyApiChartImage. Returns {\"svg\": \"<svg ...>\"} — a complete North/South Indian diamond-chart diagram. chartType can be north, south, or east."
-      },
-      "response": []
-    },
-    {
-      "name": "4. Vimshottari major dashas",
+      "name": "3. Vimshottari major dashas",
       "request": {
         "method": "POST",
         "header": [],
@@ -361,7 +292,7 @@
       "response": []
     },
     {
-      "name": "5. Kalsarpa dosha",
+      "name": "4. Kalsarpa dosha",
       "request": {
         "method": "POST",
         "header": [],
@@ -424,7 +355,7 @@
       "response": []
     },
     {
-      "name": "6. Sadhesati current status",
+      "name": "5. Sadhesati current status",
       "request": {
         "method": "POST",
         "header": [],
@@ -487,7 +418,7 @@
       "response": []
     },
     {
-      "name": "7. Sarvashtakavarga",
+      "name": "6. Sarvashtakavarga",
       "request": {
         "method": "POST",
         "header": [],
@@ -550,7 +481,7 @@
       "response": []
     },
     {
-      "name": "8. Shadbala",
+      "name": "7. Shadbala",
       "request": {
         "method": "POST",
         "header": [],
@@ -613,7 +544,7 @@
       "response": []
     },
     {
-      "name": "9. Ascendant reading",
+      "name": "8. Ascendant reading",
       "request": {
         "method": "POST",
         "header": [],
@@ -676,7 +607,7 @@
       "response": []
     },
     {
-      "name": "10. Nakshatra reading",
+      "name": "9. Nakshatra reading",
       "request": {
         "method": "POST",
         "header": [],
@@ -739,7 +670,7 @@
       "response": []
     },
     {
-      "name": "11. Rashi (sign placement) reading, by planet",
+      "name": "10. Rashi (sign placement) reading, by planet",
       "request": {
         "method": "POST",
         "header": [],
@@ -803,7 +734,7 @@
       "response": []
     },
     {
-      "name": "12. House placement reading, by planet",
+      "name": "11. House placement reading, by planet",
       "request": {
         "method": "POST",
         "header": [],
@@ -867,7 +798,7 @@
       "response": []
     },
     {
-      "name": "13. Pitra dosha",
+      "name": "12. Pitra dosha",
       "request": {
         "method": "POST",
         "header": [],
@@ -930,7 +861,7 @@
       "response": []
     },
     {
-      "name": "14. Gemstone suggestion",
+      "name": "13. Gemstone suggestion",
       "request": {
         "method": "POST",
         "header": [],
@@ -993,7 +924,7 @@
       "response": []
     },
     {
-      "name": "15. Puja suggestion",
+      "name": "14. Puja suggestion",
       "request": {
         "method": "POST",
         "header": [],
@@ -1056,7 +987,7 @@
       "response": []
     },
     {
-      "name": "16. Rudraksha suggestion",
+      "name": "15. Rudraksha suggestion",
       "request": {
         "method": "POST",
         "header": [],
@@ -1119,7 +1050,7 @@
       "response": []
     },
     {
-      "name": "17. Sadhesati remedies",
+      "name": "16. Sadhesati remedies",
       "request": {
         "method": "POST",
         "header": [],
@@ -1182,7 +1113,7 @@
       "response": []
     },
     {
-      "name": "18. Lal Kitab chart",
+      "name": "17. Lal Kitab chart",
       "request": {
         "method": "POST",
         "header": [],
@@ -1245,7 +1176,7 @@
       "response": []
     },
     {
-      "name": "19. Lal Kitab debts (Rin)",
+      "name": "18. Lal Kitab debts (Rin)",
       "request": {
         "method": "POST",
         "header": [],
@@ -1308,7 +1239,7 @@
       "response": []
     },
     {
-      "name": "20. Lal Kitab remedies, by planet",
+      "name": "19. Lal Kitab remedies, by planet",
       "request": {
         "method": "POST",
         "header": [],

@@ -31,11 +31,6 @@ export interface AstrologyApiChartHouse {
   planet_small: string[];
 }
 
-/** `POST /horo_chart_image/:chartId`: a rendered North/South Indian chart diagram as an inline SVG string. */
-export interface AstrologyApiChartImage {
-  svg: string;
-}
-
 /** One period from `POST /major_vdasha`. `start`/`end` are `"D-M-YYYY  H:MM"` strings. */
 export interface AstrologyApiDashaPeriod {
   planet: string;

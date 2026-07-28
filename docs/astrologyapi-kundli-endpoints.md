@@ -14,25 +14,24 @@ A ready-to-import Postman collection with the same requests (plus a `D9` example
 | # | Endpoint | Used for |
 |---|----------|----------|
 | 1 | `POST /planets` | Planets tab |
-| 2 | `POST /horo_chart/:chartId` | Rashi (D1) tab, Varga tab (D9 eagerly, any division on demand), Lal Kitab tab (`lalkitab_horoscope` instead) |
-| 3 | `POST /horo_chart_image/:chartId` | Same tabs as above — the rendered SVG diagram |
-| 4 | `POST /major_vdasha` | Dasha tab |
-| 5 | `POST /kalsarpa_details` | Doshas tab |
-| 6 | `POST /sadhesati_current_status` | Doshas tab |
-| 7 | `POST /sarvashtak` | Strength tab |
-| 8 | `POST /shadbala` | Strength tab |
-| 9 | `POST /general_ascendant_report` | Interpretation tab |
-| 10 | `POST /general_nakshatra_report` | Interpretation tab |
-| 11 | `POST /general_rashi_report/:planet_name` | Interpretation tab, on demand per planet |
-| 12 | `POST /general_house_report/:planet_name` | Interpretation tab, on demand per planet |
-| 13 | `POST /pitra_dosha_report` | Interpretation tab |
-| 14 | `POST /basic_gem_suggestion` | Remedies tab |
-| 15 | `POST /puja_suggestion` | Remedies tab |
-| 16 | `POST /rudraksha_suggestion` | Remedies tab |
-| 17 | `POST /sadhesati_remedies` | Remedies tab |
-| 18 | `POST /lalkitab_horoscope` | Lal Kitab tab |
-| 19 | `POST /lalkitab_debts` | Lal Kitab tab |
-| 20 | `POST /lalkitab_remedies/:planet_name` | Lal Kitab tab, on demand per planet |
+| 2 | `POST /horo_chart/:chartId` | Rashi (D1) tab, Varga tab (D9 eagerly, any division on demand), Lal Kitab tab (`lalkitab_horoscope` instead) — house data drives a hand-drawn North Indian chart diagram (`@/components/astrologyapi/chart-diagram`), not the vendor's rendered SVG (`horo_chart_image`, dropped since it has no `lang` parameter and bakes English planet abbreviations into the image) |
+| 3 | `POST /major_vdasha` | Dasha tab |
+| 4 | `POST /kalsarpa_details` | Doshas tab |
+| 5 | `POST /sadhesati_current_status` | Doshas tab |
+| 6 | `POST /sarvashtak` | Strength tab |
+| 7 | `POST /shadbala` | Strength tab |
+| 8 | `POST /general_ascendant_report` | Interpretation tab |
+| 9 | `POST /general_nakshatra_report` | Interpretation tab |
+| 10 | `POST /general_rashi_report/:planet_name` | Interpretation tab, on demand per planet |
+| 11 | `POST /general_house_report/:planet_name` | Interpretation tab, on demand per planet |
+| 12 | `POST /pitra_dosha_report` | Interpretation tab |
+| 13 | `POST /basic_gem_suggestion` | Remedies tab |
+| 14 | `POST /puja_suggestion` | Remedies tab |
+| 15 | `POST /rudraksha_suggestion` | Remedies tab |
+| 16 | `POST /sadhesati_remedies` | Remedies tab |
+| 17 | `POST /lalkitab_horoscope` | Lal Kitab tab |
+| 18 | `POST /lalkitab_debts` | Lal Kitab tab |
+| 19 | `POST /lalkitab_remedies/:planet_name` | Lal Kitab tab, on demand per planet |
 
 ---
 
@@ -48,7 +47,7 @@ curl -s -X POST "https://json.astrologyapi.com/v1/planets" \
 
 ## 2. Birth chart (D1 Rashi / any varga)
 
-Powers `AstrologyApiChart`. `chartId` is `D1` for the main chart or any of `D2, D3, D4, D7, D9, D10, D12, D16, D20, D24, D27, D30, D40, D45, D60` for the Varga tab (verified live — each division returns genuinely distinct data, not a silent fallback to D1). Returns 12 houses ordered from the ascendant, each with the occupied sign and the planets in it.
+Powers `AstrologyApiChartDiagram`, a hand-drawn North Indian chart diagram. `chartId` is `D1` for the main chart or any of `D2, D3, D4, D7, D9, D10, D12, D16, D20, D24, D27, D30, D40, D45, D60` for the Varga tab (verified live — each division returns genuinely distinct data, not a silent fallback to D1). Returns 12 houses ordered from the ascendant, each with the occupied sign and the planets in it.
 
 ```bash
 curl -s -X POST "https://json.astrologyapi.com/v1/horo_chart/D1" \
@@ -61,17 +60,7 @@ curl -s -X POST "https://json.astrologyapi.com/v1/horo_chart/D9" \
   -d "day=10&month=5&year=1990&hour=19&min=55&lat=19.20&lon=72.88&tzone=5.5"
 ```
 
-## 3. Rendered chart diagram (SVG)
-
-Powers `AstrologyApiChartImage`. Same `chartId` values as above, plus `chartType` (`north`, `south`, or `east`). Returns `{"svg": "<svg ...>...</svg>"}` — a complete, self-contained North/South Indian diamond-chart diagram ready to render inline.
-
-```bash
-curl -s -X POST "https://json.astrologyapi.com/v1/horo_chart_image/D1" \
-  -H "x-astrologyapi-key: $ASTROLOGYAPI_KEY" \
-  -d "day=10&month=5&year=1990&hour=19&min=55&lat=19.20&lon=72.88&tzone=5.5&chartType=north"
-```
-
-## 4. Vimshottari major dashas
+## 3. Vimshottari major dashas
 
 Powers `AstrologyApiDashaTimeline`. Returns each mahadasha planet with `start`/`end` as `"D-M-YYYY  H:MM"` strings.
 
@@ -81,7 +70,7 @@ curl -s -X POST "https://json.astrologyapi.com/v1/major_vdasha" \
   -d "day=10&month=5&year=1990&hour=19&min=55&lat=19.20&lon=72.88&tzone=5.5"
 ```
 
-## 5. Kalsarpa dosha
+## 4. Kalsarpa dosha
 
 Powers `AstrologyApiKalsarpaCard`.
 
@@ -91,7 +80,7 @@ curl -s -X POST "https://json.astrologyapi.com/v1/kalsarpa_details" \
   -d "day=10&month=5&year=1990&hour=19&min=55&lat=19.20&lon=72.88&tzone=5.5"
 ```
 
-## 6. Sadhesati current status
+## 5. Sadhesati current status
 
 Powers `AstrologyApiSadhesatiCard`.
 
@@ -101,7 +90,7 @@ curl -s -X POST "https://json.astrologyapi.com/v1/sadhesati_current_status" \
   -d "day=10&month=5&year=1990&hour=19&min=55&lat=19.20&lon=72.88&tzone=5.5"
 ```
 
-## 7. Sarvashtakavarga
+## 6. Sarvashtakavarga
 
 Powers `AstrologyApiAshtakavargaGrid`. Returns total bindu points (max 337) for all 12 signs.
 
@@ -111,7 +100,7 @@ curl -s -X POST "https://json.astrologyapi.com/v1/sarvashtak" \
   -d "day=10&month=5&year=1990&hour=19&min=55&lat=19.20&lon=72.88&tzone=5.5"
 ```
 
-## 8. Shadbala
+## 7. Shadbala
 
 Powers `AstrologyApiShadbalaTable`.
 
@@ -121,7 +110,7 @@ curl -s -X POST "https://json.astrologyapi.com/v1/shadbala" \
   -d "day=10&month=5&year=1990&hour=19&min=55&lat=19.20&lon=72.88&tzone=5.5"
 ```
 
-## 9. Ascendant reading
+## 8. Ascendant reading
 
 Powers `AstrologyApiAscendantCard` (Interpretation tab). A full prose paragraph on the Lagna sign.
 
@@ -131,7 +120,7 @@ curl -s -X POST "https://json.astrologyapi.com/v1/general_ascendant_report" \
   -d "day=10&month=5&year=1990&hour=19&min=55&lat=19.20&lon=72.88&tzone=5.5"
 ```
 
-## 10. Nakshatra reading
+## 9. Nakshatra reading
 
 Powers `AstrologyApiNakshatraCard`. Returns prose grouped by life area: `physical`, `character`, `education`, `family`, `health`.
 
@@ -141,7 +130,7 @@ curl -s -X POST "https://json.astrologyapi.com/v1/general_nakshatra_report" \
   -d "day=10&month=5&year=1990&hour=19&min=55&lat=19.20&lon=72.88&tzone=5.5"
 ```
 
-## 11. Rashi (sign placement) reading, by planet
+## 10. Rashi (sign placement) reading, by planet
 
 Powers `AstrologyApiPlanetReportSection` — fetched on demand when a planet is picked from the selector, not eagerly (nine planets eagerly would mean nine extra round trips per generation). `planet_name` is lowercase (`sun`, `moon`, `mars`, `mercury`, `jupiter`, `venus`, `saturn`, `rahu`, `ketu`). Rahu/Ketu return no `rashi_report` field — they have no owned sign in classical Vedic astrology.
 
@@ -151,9 +140,9 @@ curl -s -X POST "https://json.astrologyapi.com/v1/general_rashi_report/moon" \
   -d "day=10&month=5&year=1990&hour=19&min=55&lat=19.20&lon=72.88&tzone=5.5"
 ```
 
-## 12. House placement reading, by planet
+## 11. House placement reading, by planet
 
-Powers `AstrologyApiPlanetReportSection`, same on-demand fetch as #11. Rahu/Ketu return `"house_report": "Not available"` rather than an error.
+Powers `AstrologyApiPlanetReportSection`, same on-demand fetch as #10. Rahu/Ketu return `"house_report": "Not available"` rather than an error.
 
 ```bash
 curl -s -X POST "https://json.astrologyapi.com/v1/general_house_report/moon" \
@@ -161,7 +150,7 @@ curl -s -X POST "https://json.astrologyapi.com/v1/general_house_report/moon" \
   -d "day=10&month=5&year=1990&hour=19&min=55&lat=19.20&lon=72.88&tzone=5.5"
 ```
 
-## 13. Pitra dosha
+## 12. Pitra dosha
 
 Powers `AstrologyApiPitraDoshaCard`.
 
@@ -171,7 +160,7 @@ curl -s -X POST "https://json.astrologyapi.com/v1/pitra_dosha_report" \
   -d "day=10&month=5&year=1990&hour=19&min=55&lat=19.20&lon=72.88&tzone=5.5"
 ```
 
-## 14. Gemstone suggestion
+## 13. Gemstone suggestion
 
 Powers `AstrologyApiGemSuggestionGrid`. Returns three fixed categories: `LIFE`, `BENEFIC`, `LUCKY`.
 
@@ -181,7 +170,7 @@ curl -s -X POST "https://json.astrologyapi.com/v1/basic_gem_suggestion" \
   -d "day=10&month=5&year=1990&hour=19&min=55&lat=19.20&lon=72.88&tzone=5.5"
 ```
 
-## 15. Puja suggestion
+## 14. Puja suggestion
 
 Powers `AstrologyApiPujaSuggestionList`.
 
@@ -191,7 +180,7 @@ curl -s -X POST "https://json.astrologyapi.com/v1/puja_suggestion" \
   -d "day=10&month=5&year=1990&hour=19&min=55&lat=19.20&lon=72.88&tzone=5.5"
 ```
 
-## 16. Rudraksha suggestion
+## 15. Rudraksha suggestion
 
 Powers `AstrologyApiRudrakshaCard`.
 
@@ -201,9 +190,9 @@ curl -s -X POST "https://json.astrologyapi.com/v1/rudraksha_suggestion" \
   -d "day=10&month=5&year=1990&hour=19&min=55&lat=19.20&lon=72.88&tzone=5.5"
 ```
 
-## 17. Sadhesati remedies
+## 16. Sadhesati remedies
 
-Powers `AstrologyApiSadhesatiRemediesCard`. General remedies, independent of whether Sadhesati is currently active (unlike #6).
+Powers `AstrologyApiSadhesatiRemediesCard`. General remedies, independent of whether Sadhesati is currently active (unlike #5).
 
 ```bash
 curl -s -X POST "https://json.astrologyapi.com/v1/sadhesati_remedies" \
@@ -211,9 +200,9 @@ curl -s -X POST "https://json.astrologyapi.com/v1/sadhesati_remedies" \
   -d "day=10&month=5&year=1990&hour=19&min=55&lat=19.20&lon=72.88&tzone=5.5"
 ```
 
-## 18. Lal Kitab chart
+## 17. Lal Kitab chart
 
-Powers the Lal Kitab tab's chart grid (reuses `AstrologyApiChart`). Same house-array shape as `horo_chart`, but Lal Kitab always shows Aries as house 1 regardless of ascendant — a defining characteristic of the Lal Kitab system, not a bug in how the grid labels houses.
+Powers the Lal Kitab tab's chart diagram (reuses `AstrologyApiChartDiagram`). Same house-array shape as `horo_chart`, but Lal Kitab always shows Aries as house 1 regardless of ascendant — a defining characteristic of the Lal Kitab system, not a bug in how the diagram labels houses.
 
 ```bash
 curl -s -X POST "https://json.astrologyapi.com/v1/lalkitab_horoscope" \
@@ -221,7 +210,7 @@ curl -s -X POST "https://json.astrologyapi.com/v1/lalkitab_horoscope" \
   -d "day=10&month=5&year=1990&hour=19&min=55&lat=19.20&lon=72.88&tzone=5.5"
 ```
 
-## 19. Lal Kitab debts (Rin)
+## 18. Lal Kitab debts (Rin)
 
 Powers `AstrologyApiLalkitabDebtsList`.
 
@@ -231,9 +220,9 @@ curl -s -X POST "https://json.astrologyapi.com/v1/lalkitab_debts" \
   -d "day=10&month=5&year=1990&hour=19&min=55&lat=19.20&lon=72.88&tzone=5.5"
 ```
 
-## 20. Lal Kitab remedies, by planet
+## 19. Lal Kitab remedies, by planet
 
-Powers `AstrologyApiLalkitabRemedySection` — fetched on demand per planet, same reasoning as #11/#12. Returns the planet's Lal Kitab house placement (as an ordinal, e.g. `"Third"`) plus a description and a remedies list.
+Powers `AstrologyApiLalkitabRemedySection` — fetched on demand per planet, same reasoning as #10/#11. Returns the planet's Lal Kitab house placement (as an ordinal, e.g. `"Third"`) plus a description and a remedies list.
 
 ```bash
 curl -s -X POST "https://json.astrologyapi.com/v1/lalkitab_remedies/saturn" \

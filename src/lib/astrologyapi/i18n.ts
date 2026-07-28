@@ -29,6 +29,7 @@ const EN: Dict = {
   'common.pada': 'pada {n}',
   'common.retrograde': 'Rx',
   'common.orb': 'orb',
+  'common.ascendant': 'Asc',
 
   'kundli.title': 'Kundli',
   'kundli.subtitle': 'Vedic birth chart with planetary positions, dasha, doshas, and strength — via AstrologyAPI',
@@ -252,6 +253,7 @@ const HI: Dict = {
   'common.pada': 'पद {n}',
   'common.retrograde': 'वक्री',
   'common.orb': 'ऑर्ब',
+  'common.ascendant': 'लग्न',
 
   'kundli.title': 'कुंडली',
   'kundli.subtitle': 'ग्रह स्थिति, दशा, दोष और बल के साथ वैदिक जन्म कुंडली — AstrologyAPI द्वारा',
@@ -502,6 +504,23 @@ const PLANET_NAMES_HI: Dict = {
 export function translatePlanetName(lang: Lang, name: string): string {
   if (dictLang(lang) !== 'hi') return name;
   return PLANET_NAMES_HI[name] ?? name;
+}
+
+const PLANET_ABBR_EN: Dict = {
+  Sun: 'Su', Moon: 'Mo', Mars: 'Ma', Mercury: 'Me', Jupiter: 'Ju',
+  Venus: 'Ve', Saturn: 'Sa', Rahu: 'Ra', Ketu: 'Ke', Ascendant: 'As',
+};
+
+const PLANET_ABBR_HI: Dict = {
+  Sun: 'सू', Moon: 'चं', Mars: 'मं', Mercury: 'बु', Jupiter: 'गु',
+  Venus: 'शु', Saturn: 'श', Rahu: 'रा', Ketu: 'के', Ascendant: 'ला',
+};
+
+/** Short (1-2 character) planet label for tight chart-diagram cells, e.g. `"Su"` / `"सू"`. */
+export function translatePlanetAbbr(lang: Lang, name: string): string {
+  const dict = dictLang(lang) === 'hi' ? PLANET_ABBR_HI : PLANET_ABBR_EN;
+  const titleCase = name.charAt(0).toUpperCase() + name.slice(1).toLowerCase();
+  return dict[titleCase] ?? titleCase.slice(0, 2);
 }
 
 const SIGN_NAMES_HI: Dict = {

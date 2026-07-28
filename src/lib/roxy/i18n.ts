@@ -393,6 +393,22 @@ export function translatePlanetName(lang: Lang, name: string): string {
   return PLANET_NAMES_HI[name] ?? name;
 }
 
+const PLANET_ABBR_EN: Dict = {
+  Sun: 'Su', Moon: 'Mo', Mars: 'Ma', Mercury: 'Me', Jupiter: 'Ju',
+  Venus: 'Ve', Saturn: 'Sa', Rahu: 'Ra', Ketu: 'Ke', Lagna: 'As',
+};
+
+const PLANET_ABBR_HI: Dict = {
+  Sun: 'सू', Moon: 'चं', Mars: 'मं', Mercury: 'बु', Jupiter: 'गु',
+  Venus: 'शु', Saturn: 'श', Rahu: 'रा', Ketu: 'के', Lagna: 'ला',
+};
+
+/** Short (1-2 character) planet label for tight chart-diagram cells, e.g. `"Su"` / `"सू"`. */
+export function translatePlanetAbbr(lang: Lang, name: string): string {
+  const dict = dictLang(lang) === 'hi' ? PLANET_ABBR_HI : PLANET_ABBR_EN;
+  return dict[name] ?? name.slice(0, 2);
+}
+
 const SIGN_NAMES_HI: Dict = {
   Aries: 'मेष',
   Taurus: 'वृषभ',

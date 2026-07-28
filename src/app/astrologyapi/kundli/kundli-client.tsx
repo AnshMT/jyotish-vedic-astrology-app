@@ -14,8 +14,7 @@ import {
 } from '@/components/ui/select';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { CitySearch } from '@/components/city-search';
-import { AstrologyApiChart } from '@/components/astrologyapi/chart';
-import { AstrologyApiChartImage } from '@/components/astrologyapi/chart-image';
+import { AstrologyApiChartDiagram } from '@/components/astrologyapi/chart-diagram';
 import { AstrologyApiPlanetsTable } from '@/components/astrologyapi/planets-table';
 import { AstrologyApiDashaTimeline } from '@/components/astrologyapi/dasha-timeline';
 import { AstrologyApiKalsarpaCard, AstrologyApiSadhesatiCard } from '@/components/astrologyapi/dosha-cards';
@@ -168,8 +167,7 @@ export function AstrologyApiKundliClient({ lang }: { lang: Lang }) {
           </div>
 
           <TabsContent value="chart" className="mt-6 space-y-6">
-            <AstrologyApiChartImage data={result.chartImage} />
-            <AstrologyApiChart houses={result.chart} lang={lang} />
+            <AstrologyApiChartDiagram houses={result.chart} lang={lang} />
           </TabsContent>
 
           <TabsContent value="planets" className="mt-6">
@@ -203,12 +201,7 @@ export function AstrologyApiKundliClient({ lang }: { lang: Lang }) {
             {vargaPending ? (
               <p className="py-8 text-center text-muted-foreground">{t(lang, 'varga.loading')}</p>
             ) : (
-              varga && (
-                <>
-                  <AstrologyApiChartImage data={varga.chartImage} />
-                  <AstrologyApiChart houses={varga.chart} lang={lang} />
-                </>
-              )
+              varga && <AstrologyApiChartDiagram houses={varga.chart} lang={lang} />
             )}
           </TabsContent>
 
@@ -241,7 +234,7 @@ export function AstrologyApiKundliClient({ lang }: { lang: Lang }) {
           </TabsContent>
 
           <TabsContent value="lalkitab" className="mt-6 space-y-6">
-            <AstrologyApiChart houses={result.lalkitabChart} lang={lang} />
+            <AstrologyApiChartDiagram houses={result.lalkitabChart} lang={lang} />
             <AstrologyApiLalkitabDebtsList data={result.lalkitabDebts} lang={lang} />
             <AstrologyApiLalkitabRemedySection birth={birth} lang={lang} />
           </TabsContent>
