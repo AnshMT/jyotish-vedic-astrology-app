@@ -1,6 +1,8 @@
 'use client';
 
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { translatePlanetName } from '@/lib/astrologyapi/i18n';
+import type { Lang } from '@/lib/lang';
 
 /** The nine grahas AstrologyAPI's `:planet_name`-keyed endpoints accept. Rahu/Ketu return placeholder text for some reports (they have no owned sign), which callers should render as-is rather than treat as an error. */
 export const PLANETS = [
@@ -19,10 +21,12 @@ export function PlanetSelect({
   value,
   onChange,
   disabled,
+  lang,
 }: {
   value: string;
   onChange: (value: string) => void;
   disabled?: boolean;
+  lang: Lang;
 }) {
   return (
     <Select value={value} onValueChange={onChange} disabled={disabled}>
@@ -32,7 +36,7 @@ export function PlanetSelect({
       <SelectContent>
         {PLANETS.map((p) => (
           <SelectItem key={p.value} value={p.value}>
-            {p.label}
+            {translatePlanetName(lang, p.label)}
           </SelectItem>
         ))}
       </SelectContent>

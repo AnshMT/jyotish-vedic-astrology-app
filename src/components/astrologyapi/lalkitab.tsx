@@ -3,20 +3,22 @@
 import { useState, useTransition } from 'react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { PlanetSelect } from '@/components/astrologyapi/planet-select';
+import { t, translatePlanetName, translateOrdinalHouse } from '@/lib/astrologyapi/i18n';
+import type { Lang } from '@/lib/lang';
 import type { BirthInput } from '@/lib/astrologyapi/params';
 import type { AstrologyApiLalkitabDebt } from '@/lib/astrologyapi/types';
 import { fetchAstrologyApiLalkitabRemedy } from '@/app/astrologyapi/kundli/actions';
 
-export function AstrologyApiLalkitabDebtsList({ data }: { data: AstrologyApiLalkitabDebt[] }) {
+export function AstrologyApiLalkitabDebtsList({ data, lang }: { data: AstrologyApiLalkitabDebt[]; lang: Lang }) {
   return (
     <Card>
       <CardHeader>
-        <CardTitle>Lal Kitab Debts (Rin)</CardTitle>
-        <CardDescription>Karmic debts indicated by the chart&apos;s planetary combinations</CardDescription>
+        <CardTitle>{t(lang, 'lalkitab.debtsTitle')}</CardTitle>
+        <CardDescription>{t(lang, 'lalkitab.debtsSubtitle')}</CardDescription>
       </CardHeader>
       <CardContent>
         {data.length === 0 ? (
-          <p className="text-sm text-muted-foreground">No Rin (karmic debt) combinations found.</p>
+          <p className="text-sm text-muted-foreground">{t(lang, 'lalkitab.noDebts')}</p>
         ) : (
           <div className="space-y-4">
             {data.map((debt) => (
@@ -34,7 +36,7 @@ export function AstrologyApiLalkitabDebtsList({ data }: { data: AstrologyApiLalk
 }
 
 /** One planet's Lal Kitab house placement and remedies, fetched on demand (`lalkitab_remedies/:planet_name`). */
-export function AstrologyApiLalkitabRemedySection({ birth }: { birth: BirthInput }) {
+export function AstrologyApiLalkitabRemedySection({ birth, lang }: { birth: BirthInput; lang: Lang }) {
   const [planet, setPlanet] = useState('saturn');
   const [result, setResult] = useState<Awaited<ReturnType<typeof fetchAstrologyApiLalkitabRemedy>> | null>(null);
   const [error, setError] = useState<string | null>(null);
@@ -48,7 +50,7 @@ export function AstrologyApiLalkitabRemedySection({ birth }: { birth: BirthInput
         setResult(await fetchAstrologyApiLalkitabRemedy({ ...birth, planet: nextPlanet }));
       } catch (err) {
         setResult(null);
-        setError(err instanceof Error ? err.message : 'Failed to load Lal Kitab remedy');
+        setError(err instanceof Error ? err.message : t(lang, 'lalkitab.errorFallback'));
       }
     });
   }
@@ -56,21 +58,25 @@ export function AstrologyApiLalkitabRemedySection({ birth }: { birth: BirthInput
   return (
     <Card>
       <CardHeader>
-        <CardTitle>Lal Kitab Remedies</CardTitle>
-        <CardDescription>House placement and remedies, by planet</CardDescription>
+        <CardTitle>{t(lang, 'lalkitab.remediesTitle')}</CardTitle>
+        <CardDescription>{t(lang, 'lalkitab.remediesSubtitle')}</CardDescription>
       </CardHeader>
       <CardContent className="space-y-4">
-        <PlanetSelect value={planet} onChange={load} disabled={pending} />
-        {pending && <p className="text-sm text-muted-foreground">Loading...</p>}
+        <PlanetSelect value={planet} onChange={load} disabled={pending} lang={lang} />
+        {pending && <p className="text-sm text-muted-foreground">{t(lang, 'common.loading')}</p>}
         {error && <p className="text-sm text-destructive">{error}</p>}
         {!pending && !error && (
           <>
             {!result ? (
-              <p className="text-sm text-muted-foreground">Pick a planet to see its Lal Kitab remedies.</p>
+              <p className="text-sm text-muted-foreground">{t(lang, 'lalkitab.pick')}</p>
             ) : (
               <div className="space-y-3">
                 <p className="text-sm text-muted-foreground">
-                  {result.planet} in the {result.house} house: {result.lal_kitab_desc}
+                  {t(lang, 'lalkitab.placement', {
+                    planet: translatePlanetName(lang, result.planet),
+                    house: translateOrdinalHouse(lang, result.house),
+                    desc: result.lal_kitab_desc,
+                  })}
                 </p>
                 {result.lal_kitab_remedies.length > 0 && (
                   <ul className="list-inside list-disc space-y-1 text-sm text-muted-foreground">

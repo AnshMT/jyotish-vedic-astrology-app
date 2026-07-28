@@ -1,5 +1,7 @@
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { formatClockTime } from '@/lib/format';
+import { t, translateSignName, translateWeekday } from '@/lib/astrologyapi/i18n';
+import type { Lang } from '@/lib/lang';
 import type { AstrologyApiAdvancedPanchang } from '@/lib/astrologyapi/types';
 
 function Fact({ label, value }: { label: string; value: string }) {
@@ -11,41 +13,46 @@ function Fact({ label, value }: { label: string; value: string }) {
   );
 }
 
-/** Advanced Panchang view from `POST /advanced_panchang`: the five angas, sun/moon data, and the day's muhurta windows. */
-export function AstrologyApiPanchangView({ data }: { data: AstrologyApiAdvancedPanchang }) {
+/**
+ * Advanced Panchang view from `POST /advanced_panchang`: the five angas, sun/moon data, and the day's
+ * muhurta windows. Tithi/Nakshatra/Yog/Karan names are proper nouns the vendor returns only in English (27+
+ * nakshatra and multiple tithi/yog/karan names each), so only the day-of-week and sun/moon sign are
+ * translated (small closed vocabularies) alongside this app's own field labels.
+ */
+export function AstrologyApiPanchangView({ data, lang }: { data: AstrologyApiAdvancedPanchang; lang: Lang }) {
   return (
     <div className="space-y-6">
       <Card>
         <CardHeader>
-          <CardTitle>Panchang</CardTitle>
-          <CardDescription>{data.day}</CardDescription>
+          <CardTitle>{t(lang, 'panchang.title')}</CardTitle>
+          <CardDescription>{translateWeekday(lang, data.day)}</CardDescription>
         </CardHeader>
         <CardContent className="grid grid-cols-2 gap-3 sm:grid-cols-3">
-          <Fact label="Tithi" value={data.tithi.details.tithi_name} />
-          <Fact label="Nakshatra" value={data.nakshatra.details.nak_name} />
-          <Fact label="Yog" value={data.yog.details.yog_name} />
-          <Fact label="Karan" value={data.karan.details.karan_name} />
-          <Fact label="Paksha" value={data.paksha} />
-          <Fact label="Ritu" value={data.ritu} />
-          <Fact label="Sun sign" value={data.sun_sign} />
-          <Fact label="Moon sign" value={data.moon_sign} />
-          <Fact label="Ayana" value={data.ayana} />
-          <Fact label="Sunrise" value={formatClockTime(data.sunrise)} />
-          <Fact label="Sunset" value={formatClockTime(data.sunset)} />
-          <Fact label="Moonrise" value={formatClockTime(data.moonrise)} />
+          <Fact label={t(lang, 'panchangView.tithi')} value={data.tithi.details.tithi_name} />
+          <Fact label={t(lang, 'panchangView.nakshatra')} value={data.nakshatra.details.nak_name} />
+          <Fact label={t(lang, 'panchangView.yog')} value={data.yog.details.yog_name} />
+          <Fact label={t(lang, 'panchangView.karan')} value={data.karan.details.karan_name} />
+          <Fact label={t(lang, 'panchangView.paksha')} value={data.paksha} />
+          <Fact label={t(lang, 'panchangView.ritu')} value={data.ritu} />
+          <Fact label={t(lang, 'panchangView.sunSign')} value={translateSignName(lang, data.sun_sign)} />
+          <Fact label={t(lang, 'panchangView.moonSign')} value={translateSignName(lang, data.moon_sign)} />
+          <Fact label={t(lang, 'panchangView.ayana')} value={data.ayana} />
+          <Fact label={t(lang, 'panchangView.sunrise')} value={formatClockTime(data.sunrise)} />
+          <Fact label={t(lang, 'panchangView.sunset')} value={formatClockTime(data.sunset)} />
+          <Fact label={t(lang, 'panchangView.moonrise')} value={formatClockTime(data.moonrise)} />
         </CardContent>
       </Card>
 
       <Card>
         <CardHeader>
-          <CardTitle>Muhurta Windows</CardTitle>
-          <CardDescription>Auspicious and inauspicious periods for the day</CardDescription>
+          <CardTitle>{t(lang, 'panchangView.muhurtaWindows')}</CardTitle>
+          <CardDescription>{t(lang, 'panchangView.muhurtaSubtitle')}</CardDescription>
         </CardHeader>
         <CardContent className="grid grid-cols-2 gap-3 sm:grid-cols-4">
-          <Fact label="Abhijit" value={`${data.abhijit_muhurta.start} - ${data.abhijit_muhurta.end}`} />
-          <Fact label="Rahukaal" value={`${data.rahukaal.start} - ${data.rahukaal.end}`} />
-          <Fact label="Gulikaal" value={`${data.guliKaal.start} - ${data.guliKaal.end}`} />
-          <Fact label="Yamghant Kaal" value={`${data.yamghant_kaal.start} - ${data.yamghant_kaal.end}`} />
+          <Fact label={t(lang, 'panchangView.abhijit')} value={`${data.abhijit_muhurta.start} - ${data.abhijit_muhurta.end}`} />
+          <Fact label={t(lang, 'panchangView.rahukaal')} value={`${data.rahukaal.start} - ${data.rahukaal.end}`} />
+          <Fact label={t(lang, 'panchangView.gulikaal')} value={`${data.guliKaal.start} - ${data.guliKaal.end}`} />
+          <Fact label={t(lang, 'panchangView.yamghantKaal')} value={`${data.yamghant_kaal.start} - ${data.yamghant_kaal.end}`} />
         </CardContent>
       </Card>
     </div>

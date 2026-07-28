@@ -1,0 +1,478 @@
+import type { Lang } from '@/lib/lang';
+
+/**
+ * Static-string localization for the AstrologyAPI pages, English and Hindi only.
+ *
+ * @remarks AstrologyAPI's JSON endpoints have no `lang` parameter at all (only its PDF report endpoints
+ * accept one, for a feature this app doesn't use), unlike RoxyAPI's i18n-aware endpoints. So this only
+ * translates strings this app itself renders — labels, headings, buttons, table headers — plus a handful
+ * of closed, enumerable vendor vocabularies (planet names, zodiac signs, weekdays, choghadiya muhurta
+ * names) that are safe to map by hand. Free-form vendor prose (interpretation reports, remedies,
+ * conclusions, koota attribute names, planetary "avastha" states) is returned only in English by the
+ * vendor and is rendered as-is in every language.
+ */
+
+type Dict = Record<string, string>;
+
+const EN: Dict = {
+  'common.city': 'City',
+  'common.dateOfBirth': 'Date of Birth',
+  'common.timeOfBirth': 'Time of Birth',
+  'common.birthDate': 'Birth Date',
+  'common.birthTime': 'Birth Time',
+  'common.loading': 'Loading...',
+  'common.present': 'Present',
+  'common.notPresent': 'Not present',
+  'common.strong': 'Strong',
+  'common.weak': 'Weak',
+  'common.house': 'House {n}',
+  'common.pada': 'pada {n}',
+  'common.retrograde': 'Rx',
+  'common.orb': 'orb',
+
+  'kundli.title': 'Kundli',
+  'kundli.subtitle': 'Vedic birth chart with planetary positions, dasha, doshas, and strength — via AstrologyAPI',
+  'kundli.birthDetailsTitle': 'Birth Details',
+  'kundli.birthDetailsDesc': 'Enter your date, time, and place of birth',
+  'kundli.generate': 'Generate Kundli',
+  'kundli.generating': 'Generating...',
+  'kundli.errorFallback': 'Failed to generate kundli',
+  'kundli.tab.chart': 'Rashi (D1)',
+  'kundli.tab.planets': 'Planets',
+  'kundli.tab.dasha': 'Dasha',
+  'kundli.tab.doshas': 'Doshas',
+  'kundli.tab.strength': 'Strength',
+  'kundli.tab.interpretation': 'Interpretation',
+  'kundli.tab.remedies': 'Remedies',
+  'kundli.tab.lalkitab': 'Lal Kitab',
+
+  'matching.title': 'Kundli Matching',
+  'matching.subtitle': 'Ashtakoot Gun Milan compatibility — via AstrologyAPI',
+  'matching.person1': 'Person 1',
+  'matching.person2': 'Person 2',
+  'matching.enterBirthDetails': 'Enter birth details',
+  'matching.check': 'Check Compatibility',
+  'matching.calculating': 'Calculating...',
+  'matching.errorFallback': 'Failed to calculate compatibility',
+
+  'panchang.title': 'Panchang',
+  'choghadiya.title': 'Choghadiya',
+  'transits.title': 'Transits',
+  'transits.subtitle': 'Monthly tropical transit-to-natal aspects, relative to noon on the 1st at the default city',
+
+  'planetsTable.planet': 'Planet',
+  'planetsTable.sign': 'Sign',
+  'planetsTable.house': 'House',
+  'planetsTable.nakshatra': 'Nakshatra',
+  'planetsTable.degree': 'Degree',
+
+  'dasha.title': 'Vimshottari Mahadasha',
+  'dasha.subtitle': 'Major planetary periods across the lifetime',
+
+  'kalsarpa.title': 'Kalsarpa Dosha',
+  'kalsarpa.yog': '{name} Kaal Sarp Yog',
+  'sadhesati.title': 'Sadhesati',
+  'sadhesati.inProgress': 'In progress',
+  'sadhesati.notInProgress': 'Not in progress',
+  'sadhesati.moonSaturn': 'Moon in {moon}, Saturn in {saturn}',
+  'sadhesati.retrogradeSuffix': ' (retrograde)',
+
+  'ashtakavarga.title': 'Sarvashtakavarga',
+  'ashtakavarga.subtitle': 'Total bindu strength points by sign (max 337 across the zodiac)',
+  'shadbala.title': 'Shadbala',
+  'shadbala.subtitle': 'Six-fold planetary strength vs. the minimum required',
+  'shadbala.planet': 'Planet',
+  'shadbala.strength': 'Strength (virupa)',
+  'shadbala.minimum': 'Minimum required',
+  'shadbala.percentOfMinimum': '% of minimum',
+  'shadbala.verdict': 'Verdict',
+
+  'ascendant.title': 'Ascendant Reading',
+  'ascendant.lagna': 'Lagna: {sign}',
+  'nakshatraReport.title': 'Nakshatra Reading',
+  'nakshatraReport.subtitle': 'Birth-star interpretation by life area',
+  'nakshatraReport.physical': 'Physical',
+  'nakshatraReport.character': 'Character',
+  'nakshatraReport.education': 'Education & Career',
+  'nakshatraReport.family': 'Family',
+  'nakshatraReport.health': 'Health',
+  'pitraDosha.title': 'Pitra Dosha',
+  'planetReport.title': 'Rashi & House Reading',
+  'planetReport.subtitle': 'Sign and house placement interpretation, by planet',
+  'planetReport.pick': 'Pick a planet to see its reading.',
+  'planetReport.signPlacement': 'Sign placement',
+  'planetReport.housePlacement': 'House placement',
+  'planetReport.noReading': 'No reading available for this placement.',
+  'planetReport.errorFallback': 'Failed to load planet reading',
+
+  'lalkitab.debtsTitle': 'Lal Kitab Debts (Rin)',
+  'lalkitab.debtsSubtitle': "Karmic debts indicated by the chart's planetary combinations",
+  'lalkitab.noDebts': 'No Rin (karmic debt) combinations found.',
+  'lalkitab.remediesTitle': 'Lal Kitab Remedies',
+  'lalkitab.remediesSubtitle': 'House placement and remedies, by planet',
+  'lalkitab.pick': 'Pick a planet to see its Lal Kitab remedies.',
+  'lalkitab.placement': '{planet} in the {house} house: {desc}',
+  'lalkitab.errorFallback': 'Failed to load Lal Kitab remedy',
+
+  'gem.title': 'Gemstone Suggestions',
+  'gem.life': 'Life stone',
+  'gem.lifeDesc': 'Strengthens the chart’s primary ruling planet',
+  'gem.benefic': 'Benefic stone',
+  'gem.beneficDesc': 'Supports the most benefic planet in the chart',
+  'gem.lucky': 'Lucky stone',
+  'gem.luckyDesc': 'General luck and well-being',
+  'gem.metal': 'Metal',
+  'gem.finger': 'Finger',
+  'gem.weight': 'Weight',
+  'gem.day': 'Day',
+  'gem.alternative': 'Alternative',
+  'puja.title': 'Puja Suggestions',
+  'puja.none': 'No puja recommendations for this chart.',
+  'puja.priority': 'Priority {n}',
+  'rudraksha.title': 'Rudraksha Suggestion',
+  'sadhesatiRemedies.title': 'Sadhesati Remedies',
+
+  'match.ashtakootScore': 'Ashtakoot Score',
+  'match.goodMatch': 'Good match',
+  'match.belowMinimum': 'Below recommended minimum',
+  'match.kootaBreakdown': 'Koota Breakdown',
+  'match.koota': 'Koota',
+  'match.groom': 'Groom',
+  'match.bride': 'Bride',
+  'match.points': 'Points',
+  'match.manglikGroom': 'Manglik – Groom',
+  'match.manglikBride': 'Manglik – Bride',
+  'match.overallConclusion': 'Overall Conclusion',
+  'match.rajjuDosha': 'Rajju Dosha {status}',
+  'match.vedhaDosha': 'Vedha Dosha {status}',
+  'match.present': 'present',
+  'match.absent': 'absent',
+  'match.koot.varna': 'Varna',
+  'match.koot.vashya': 'Vashya',
+  'match.koot.tara': 'Tara',
+  'match.koot.yoni': 'Yoni',
+  'match.koot.maitri': 'Maitri',
+  'match.koot.gan': 'Gan',
+  'match.koot.bhakut': 'Bhakut',
+  'match.koot.nadi': 'Nadi',
+
+  'panchangView.tithi': 'Tithi',
+  'panchangView.nakshatra': 'Nakshatra',
+  'panchangView.yog': 'Yog',
+  'panchangView.karan': 'Karan',
+  'panchangView.paksha': 'Paksha',
+  'panchangView.ritu': 'Ritu',
+  'panchangView.sunSign': 'Sun sign',
+  'panchangView.moonSign': 'Moon sign',
+  'panchangView.ayana': 'Ayana',
+  'panchangView.sunrise': 'Sunrise',
+  'panchangView.sunset': 'Sunset',
+  'panchangView.moonrise': 'Moonrise',
+  'panchangView.muhurtaWindows': 'Muhurta Windows',
+  'panchangView.muhurtaSubtitle': 'Auspicious and inauspicious periods for the day',
+  'panchangView.abhijit': 'Abhijit',
+  'panchangView.rahukaal': 'Rahukaal',
+  'panchangView.gulikaal': 'Gulikaal',
+  'panchangView.yamghantKaal': 'Yamghant Kaal',
+
+  'choghadiya.dayTitle': 'Day Choghadiya',
+  'choghadiya.daySubtitle': 'Sunrise to sunset',
+  'choghadiya.nightTitle': 'Night Choghadiya',
+  'choghadiya.nightSubtitle': 'Sunset to next sunrise',
+  'choghadiya.auspicious': 'Auspicious',
+  'choghadiya.avoid': 'Avoid',
+
+  'transitsView.ascendant': 'Ascendant: {sign}',
+  'transitsView.none': 'No transit aspects this month.',
+};
+
+const HI: Dict = {
+  'common.city': 'शहर',
+  'common.dateOfBirth': 'जन्म तिथि',
+  'common.timeOfBirth': 'जन्म समय',
+  'common.birthDate': 'जन्म तिथि',
+  'common.birthTime': 'जन्म समय',
+  'common.loading': 'लोड हो रहा है...',
+  'common.present': 'मौजूद',
+  'common.notPresent': 'अनुपस्थित',
+  'common.strong': 'मज़बूत',
+  'common.weak': 'कमज़ोर',
+  'common.house': 'भवन {n}',
+  'common.pada': 'पद {n}',
+  'common.retrograde': 'वक्री',
+  'common.orb': 'ऑर्ब',
+
+  'kundli.title': 'कुंडली',
+  'kundli.subtitle': 'ग्रह स्थिति, दशा, दोष और बल के साथ वैदिक जन्म कुंडली — AstrologyAPI द्वारा',
+  'kundli.birthDetailsTitle': 'जन्म विवरण',
+  'kundli.birthDetailsDesc': 'अपनी जन्म तिथि, समय और स्थान दर्ज करें',
+  'kundli.generate': 'कुंडली बनाएं',
+  'kundli.generating': 'बन रही है...',
+  'kundli.errorFallback': 'कुंडली बनाने में विफल',
+  'kundli.tab.chart': 'राशि (D1)',
+  'kundli.tab.planets': 'ग्रह',
+  'kundli.tab.dasha': 'दशा',
+  'kundli.tab.doshas': 'दोष',
+  'kundli.tab.strength': 'बल',
+  'kundli.tab.interpretation': 'व्याख्या',
+  'kundli.tab.remedies': 'उपाय',
+  'kundli.tab.lalkitab': 'लाल किताब',
+
+  'matching.title': 'कुंडली मिलान',
+  'matching.subtitle': 'अष्टकूट गुण मिलान अनुकूलता — AstrologyAPI द्वारा',
+  'matching.person1': 'व्यक्ति 1',
+  'matching.person2': 'व्यक्ति 2',
+  'matching.enterBirthDetails': 'जन्म विवरण दर्ज करें',
+  'matching.check': 'अनुकूलता जांचें',
+  'matching.calculating': 'गणना हो रही है...',
+  'matching.errorFallback': 'अनुकूलता की गणना करने में विफल',
+
+  'panchang.title': 'पंचांग',
+  'choghadiya.title': 'चौघड़िया',
+  'transits.title': 'गोचर',
+  'transits.subtitle': 'मासिक ट्रॉपिकल गोचर-से-नैटल पहलू, डिफ़ॉल्ट शहर में महीने की 1 तारीख के दोपहर के सापेक्ष',
+
+  'planetsTable.planet': 'ग्रह',
+  'planetsTable.sign': 'राशि',
+  'planetsTable.house': 'भवन',
+  'planetsTable.nakshatra': 'नक्षत्र',
+  'planetsTable.degree': 'अंश',
+
+  'dasha.title': 'विंशोत्तरी महादशा',
+  'dasha.subtitle': 'जीवनभर के प्रमुख ग्रह काल',
+
+  'kalsarpa.title': 'कालसर्प दोष',
+  'kalsarpa.yog': '{name} काल सर्प योग',
+  'sadhesati.title': 'साढ़ेसाती',
+  'sadhesati.inProgress': 'चल रही है',
+  'sadhesati.notInProgress': 'नहीं चल रही है',
+  'sadhesati.moonSaturn': 'चंद्रमा {moon} में, शनि {saturn} में',
+  'sadhesati.retrogradeSuffix': ' (वक्री)',
+
+  'ashtakavarga.title': 'सर्वाष्टकवर्ग',
+  'ashtakavarga.subtitle': 'राशि अनुसार कुल बिंदु शक्ति अंक (राशिचक्र में अधिकतम 337)',
+  'shadbala.title': 'षड्बल',
+  'shadbala.subtitle': 'न्यूनतम आवश्यकता की तुलना में छह-गुना ग्रह शक्ति',
+  'shadbala.planet': 'ग्रह',
+  'shadbala.strength': 'शक्ति (विरुपा)',
+  'shadbala.minimum': 'न्यूनतम आवश्यक',
+  'shadbala.percentOfMinimum': 'न्यूनतम का %',
+  'shadbala.verdict': 'निर्णय',
+
+  'ascendant.title': 'लग्न व्याख्या',
+  'ascendant.lagna': 'लग्न: {sign}',
+  'nakshatraReport.title': 'नक्षत्र व्याख्या',
+  'nakshatraReport.subtitle': 'जीवन क्षेत्र अनुसार जन्म-नक्षत्र व्याख्या',
+  'nakshatraReport.physical': 'शारीरिक',
+  'nakshatraReport.character': 'चरित्र',
+  'nakshatraReport.education': 'शिक्षा और करियर',
+  'nakshatraReport.family': 'पारिवारिक',
+  'nakshatraReport.health': 'स्वास्थ्य',
+  'pitraDosha.title': 'पितृ दोष',
+  'planetReport.title': 'राशि और भाव व्याख्या',
+  'planetReport.subtitle': 'ग्रह अनुसार राशि और भाव स्थिति की व्याख्या',
+  'planetReport.pick': 'व्याख्या देखने के लिए एक ग्रह चुनें।',
+  'planetReport.signPlacement': 'राशि स्थिति',
+  'planetReport.housePlacement': 'भाव स्थिति',
+  'planetReport.noReading': 'इस स्थिति के लिए कोई व्याख्या उपलब्ध नहीं है।',
+  'planetReport.errorFallback': 'ग्रह व्याख्या लोड करने में विफल',
+
+  'lalkitab.debtsTitle': 'लाल किताब ऋण (रिण)',
+  'lalkitab.debtsSubtitle': 'चार्ट के ग्रह संयोजनों से संकेतित कर्म ऋण',
+  'lalkitab.noDebts': 'कोई ऋण (कर्म ऋण) संयोजन नहीं मिला।',
+  'lalkitab.remediesTitle': 'लाल किताब उपाय',
+  'lalkitab.remediesSubtitle': 'ग्रह अनुसार भाव स्थिति और उपाय',
+  'lalkitab.pick': 'लाल किताब उपाय देखने के लिए एक ग्रह चुनें।',
+  'lalkitab.placement': '{house} भाव में {planet}: {desc}',
+  'lalkitab.errorFallback': 'लाल किताब उपाय लोड करने में विफल',
+
+  'gem.title': 'रत्न सुझाव',
+  'gem.life': 'जीवन रत्न',
+  'gem.lifeDesc': 'चार्ट के प्रमुख शासक ग्रह को मज़बूत करता है',
+  'gem.benefic': 'शुभ रत्न',
+  'gem.beneficDesc': 'चार्ट के सबसे शुभ ग्रह का समर्थन करता है',
+  'gem.lucky': 'भाग्य रत्न',
+  'gem.luckyDesc': 'सामान्य भाग्य और कल्याण',
+  'gem.metal': 'धातु',
+  'gem.finger': 'उंगली',
+  'gem.weight': 'वज़न',
+  'gem.day': 'दिन',
+  'gem.alternative': 'विकल्प',
+  'puja.title': 'पूजा सुझाव',
+  'puja.none': 'इस चार्ट के लिए कोई पूजा सिफारिश नहीं है।',
+  'puja.priority': 'प्राथमिकता {n}',
+  'rudraksha.title': 'रुद्राक्ष सुझाव',
+  'sadhesatiRemedies.title': 'साढ़ेसाती उपाय',
+
+  'match.ashtakootScore': 'अष्टकूट अंक',
+  'match.goodMatch': 'अच्छा मिलान',
+  'match.belowMinimum': 'अनुशंसित न्यूनतम से कम',
+  'match.kootaBreakdown': 'कूट विवरण',
+  'match.koota': 'कूट',
+  'match.groom': 'वर',
+  'match.bride': 'वधू',
+  'match.points': 'अंक',
+  'match.manglikGroom': 'मांगलिक – वर',
+  'match.manglikBride': 'मांगलिक – वधू',
+  'match.overallConclusion': 'समग्र निष्कर्ष',
+  'match.rajjuDosha': 'रज्जु दोष {status}',
+  'match.vedhaDosha': 'वेध दोष {status}',
+  'match.present': 'मौजूद',
+  'match.absent': 'अनुपस्थित',
+  'match.koot.varna': 'वर्ण',
+  'match.koot.vashya': 'वश्य',
+  'match.koot.tara': 'तारा',
+  'match.koot.yoni': 'योनि',
+  'match.koot.maitri': 'मैत्री',
+  'match.koot.gan': 'गण',
+  'match.koot.bhakut': 'भकूट',
+  'match.koot.nadi': 'नाड़ी',
+
+  'panchangView.tithi': 'तिथि',
+  'panchangView.nakshatra': 'नक्षत्र',
+  'panchangView.yog': 'योग',
+  'panchangView.karan': 'करण',
+  'panchangView.paksha': 'पक्ष',
+  'panchangView.ritu': 'ऋतु',
+  'panchangView.sunSign': 'सूर्य राशि',
+  'panchangView.moonSign': 'चंद्र राशि',
+  'panchangView.ayana': 'अयन',
+  'panchangView.sunrise': 'सूर्योदय',
+  'panchangView.sunset': 'सूर्यास्त',
+  'panchangView.moonrise': 'चंद्रोदय',
+  'panchangView.muhurtaWindows': 'मुहूर्त काल',
+  'panchangView.muhurtaSubtitle': 'दिन के शुभ और अशुभ काल',
+  'panchangView.abhijit': 'अभिजित',
+  'panchangView.rahukaal': 'राहुकाल',
+  'panchangView.gulikaal': 'गुलिककाल',
+  'panchangView.yamghantKaal': 'यमघंट काल',
+
+  'choghadiya.dayTitle': 'दिन चौघड़िया',
+  'choghadiya.daySubtitle': 'सूर्योदय से सूर्यास्त तक',
+  'choghadiya.nightTitle': 'रात्रि चौघड़िया',
+  'choghadiya.nightSubtitle': 'सूर्यास्त से अगले सूर्योदय तक',
+  'choghadiya.auspicious': 'शुभ',
+  'choghadiya.avoid': 'अशुभ',
+
+  'transitsView.ascendant': 'लग्न: {sign}',
+  'transitsView.none': 'इस महीने कोई गोचर पहलू नहीं है।',
+};
+
+const DICTS: Record<'en' | 'hi', Dict> = { en: EN, hi: HI };
+
+/** Narrows the site's 8-language cookie value to what this dictionary actually has: English or Hindi, defaulting to English. */
+function dictLang(lang: Lang): 'en' | 'hi' {
+  return lang === 'hi' ? 'hi' : 'en';
+}
+
+/**
+ * Looks up a static UI string, optionally interpolating `{token}` placeholders. Falls back to the English
+ * string (and then to the raw key) if a translation is missing, so a typo never renders blank.
+ */
+export function t(lang: Lang, key: keyof typeof EN, vars?: Record<string, string | number>): string {
+  let template = DICTS[dictLang(lang)][key] ?? EN[key] ?? key;
+  if (vars) {
+    for (const [k, v] of Object.entries(vars)) {
+      template = template.replaceAll(`{${k}}`, String(v));
+    }
+  }
+  return template;
+}
+
+/** The nine grahas plus Ascendant and the three outer Western planets AstrologyAPI's tropical endpoints return. */
+const PLANET_NAMES_HI: Dict = {
+  Sun: 'सूर्य',
+  Moon: 'चंद्र',
+  Mars: 'मंगल',
+  Mercury: 'बुध',
+  Jupiter: 'बृहस्पति',
+  Venus: 'शुक्र',
+  Saturn: 'शनि',
+  Rahu: 'राहु',
+  Ketu: 'केतु',
+  Ascendant: 'लग्न',
+  Uranus: 'यूरेनस',
+  Neptune: 'नेप्च्यून',
+  Pluto: 'प्लूटो',
+};
+
+/** Translates a vendor planet name (as returned verbatim by AstrologyAPI, e.g. `"Saturn"`) for display. */
+export function translatePlanetName(lang: Lang, name: string): string {
+  if (dictLang(lang) !== 'hi') return name;
+  return PLANET_NAMES_HI[name] ?? name;
+}
+
+const SIGN_NAMES_HI: Dict = {
+  Aries: 'मेष',
+  Taurus: 'वृषभ',
+  Gemini: 'मिथुन',
+  Cancer: 'कर्क',
+  Leo: 'सिंह',
+  Virgo: 'कन्या',
+  Libra: 'तुला',
+  Scorpio: 'वृश्चिक',
+  Sagittarius: 'धनु',
+  Capricorn: 'मकर',
+  Aquarius: 'कुंभ',
+  Pisces: 'मीन',
+};
+
+/** Translates a vendor zodiac sign name (title-case, e.g. `"Scorpio"`), case-insensitively. */
+export function translateSignName(lang: Lang, name: string): string {
+  if (dictLang(lang) !== 'hi') return name;
+  const key = name.charAt(0).toUpperCase() + name.slice(1).toLowerCase();
+  return SIGN_NAMES_HI[key] ?? name;
+}
+
+const WEEKDAY_NAMES_HI: Dict = {
+  Sunday: 'रविवार',
+  Monday: 'सोमवार',
+  Tuesday: 'मंगलवार',
+  Wednesday: 'बुधवार',
+  Thursday: 'गुरुवार',
+  Friday: 'शुक्रवार',
+  Saturday: 'शनिवार',
+};
+
+/** Translates a vendor weekday name (e.g. `advanced_panchang`'s `day` field, `"Tuesday"`). */
+export function translateWeekday(lang: Lang, name: string): string {
+  if (dictLang(lang) !== 'hi') return name;
+  return WEEKDAY_NAMES_HI[name] ?? name;
+}
+
+const ORDINAL_HOUSE_NAMES_HI: Dict = {
+  First: 'पहले',
+  Second: 'दूसरे',
+  Third: 'तीसरे',
+  Fourth: 'चौथे',
+  Fifth: 'पांचवें',
+  Sixth: 'छठे',
+  Seventh: 'सातवें',
+  Eighth: 'आठवें',
+  Ninth: 'नौवें',
+  Tenth: 'दसवें',
+  Eleventh: 'ग्यारहवें',
+  Twelfth: 'बारहवें',
+};
+
+/** Translates `lalkitab_remedies`' ordinal house name (e.g. `"Third"`). */
+export function translateOrdinalHouse(lang: Lang, name: string): string {
+  if (dictLang(lang) !== 'hi') return name;
+  return ORDINAL_HOUSE_NAMES_HI[name] ?? name;
+}
+
+const MUHURTA_NAMES_HI: Dict = {
+  Rog: 'रोग',
+  Udveg: 'उद्वेग',
+  Char: 'चर',
+  Labh: 'लाभ',
+  Amrit: 'अमृत',
+  Kaal: 'काल',
+  Shubh: 'शुभ',
+};
+
+/** Translates a `chaughadiya_muhurta` period name (e.g. `"Amrit"`). */
+export function translateMuhurta(lang: Lang, name: string): string {
+  if (dictLang(lang) !== 'hi') return name;
+  return MUHURTA_NAMES_HI[name] ?? name;
+}

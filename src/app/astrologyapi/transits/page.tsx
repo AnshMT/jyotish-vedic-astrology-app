@@ -1,6 +1,8 @@
 import type { Metadata } from 'next';
 import { hasAstrologyApiKey, astrologyApiRequest } from '@/lib/astrologyapi/client';
 import { tryUnwrap } from '@/lib/astrologyapi/guard';
+import { t } from '@/lib/astrologyapi/i18n';
+import { getLang } from '@/lib/lang.server';
 import { DEFAULT_CITY } from '@/lib/location';
 import { AstrologyApiKeyMissing } from '@/components/astrologyapi/api-key-missing';
 import { AstrologyApiDataError } from '@/components/astrologyapi/data-error';
@@ -34,6 +36,7 @@ export default async function AstrologyApiTransitsPage({
 }) {
   if (!hasAstrologyApiKey) return <AstrologyApiKeyMissing />;
 
+  const lang = await getLang();
   const now = new Date();
   const params = await searchParams;
   const month = intParam(params.month, now.getMonth() + 1);
@@ -54,15 +57,12 @@ export default async function AstrologyApiTransitsPage({
 
   return (
     <div className="space-y-8">
-      <PageHeader
-        title="Transits"
-        subtitle="Monthly tropical transit-to-natal aspects, relative to noon on the 1st at the default city"
-      />
+      <PageHeader title={t(lang, 'transits.title')} subtitle={t(lang, 'transits.subtitle')} />
       <MonthYearControls month={month} year={year} />
       {'error' in transits ? (
         <AstrologyApiDataError message={transits.error} />
       ) : (
-        <AstrologyApiTransitsView data={transits.data} />
+        <AstrologyApiTransitsView data={transits.data} lang={lang} />
       )}
     </div>
   );

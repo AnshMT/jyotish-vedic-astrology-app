@@ -29,6 +29,8 @@ import {
   AstrologyApiLalkitabRemedySection,
 } from '@/components/astrologyapi/lalkitab';
 import { DEFAULT_CITY, todayString, type City, type Coords } from '@/lib/location';
+import { t } from '@/lib/astrologyapi/i18n';
+import type { Lang } from '@/lib/lang';
 import { generateAstrologyApiKundli } from './actions';
 
 type Kundli = Awaited<ReturnType<typeof generateAstrologyApiKundli>>;
@@ -36,9 +38,10 @@ type Kundli = Awaited<ReturnType<typeof generateAstrologyApiKundli>>;
 /**
  * AstrologyAPI-backed Kundli generator. Same shape as `@/app/kundali/kundali-client`: a Server Action fans
  * one birth input out to every endpoint, this client renders each typed response with a bespoke component
- * (AstrologyAPI's response schema has no matching pre-built UI kit).
+ * (AstrologyAPI's response schema has no matching pre-built UI kit). `lang` only drives this app's own
+ * labels — AstrologyAPI's endpoints have no `lang` parameter, so the vendor data itself stays in English.
  */
-export function AstrologyApiKundliClient() {
+export function AstrologyApiKundliClient({ lang }: { lang: Lang }) {
   const [date, setDate] = useState(todayString());
   const [time, setTime] = useState('10:00');
   const [coords, setCoords] = useState<Coords>(DEFAULT_CITY);
@@ -59,7 +62,7 @@ export function AstrologyApiKundliClient() {
       try {
         setResult(await generateAstrologyApiKundli({ date, time, ...coords }));
       } catch (err) {
-        setError(err instanceof Error ? err.message : 'Failed to generate kundli');
+        setError(err instanceof Error ? err.message : t(lang, 'kundli.errorFallback'));
         setResult(null);
       }
     });
@@ -68,36 +71,34 @@ export function AstrologyApiKundliClient() {
   return (
     <div className="space-y-10">
       <div className="text-center">
-        <h1 className="text-3xl font-semibold tracking-tight text-foreground">Kundli</h1>
-        <p className="mt-2 text-muted-foreground">
-          Vedic birth chart with planetary positions, dasha, doshas, and strength &mdash; via AstrologyAPI
-        </p>
+        <h1 className="text-3xl font-semibold tracking-tight text-foreground">{t(lang, 'kundli.title')}</h1>
+        <p className="mt-2 text-muted-foreground">{t(lang, 'kundli.subtitle')}</p>
       </div>
 
       <Card className="overflow-visible">
         <CardHeader>
-          <CardTitle>Birth Details</CardTitle>
-          <CardDescription>Enter your date, time, and place of birth</CardDescription>
+          <CardTitle>{t(lang, 'kundli.birthDetailsTitle')}</CardTitle>
+          <CardDescription>{t(lang, 'kundli.birthDetailsDesc')}</CardDescription>
         </CardHeader>
         <CardContent>
           <form onSubmit={submit}>
             <div className="grid grid-cols-1 gap-5 sm:grid-cols-3">
               <div className="space-y-2">
-                <Label htmlFor="aa-date">Date of Birth</Label>
+                <Label htmlFor="aa-date">{t(lang, 'common.dateOfBirth')}</Label>
                 <Input id="aa-date" type="date" value={date} onChange={(e) => setDate(e.target.value)} required />
               </div>
               <div className="space-y-2">
-                <Label htmlFor="aa-time">Time of Birth</Label>
+                <Label htmlFor="aa-time">{t(lang, 'common.timeOfBirth')}</Label>
                 <Input id="aa-time" type="time" value={time} onChange={(e) => setTime(e.target.value)} required />
               </div>
               <div className="space-y-2">
-                <Label>City</Label>
+                <Label>{t(lang, 'common.city')}</Label>
                 <CitySearch onSelect={onCity} defaultValue={DEFAULT_CITY.label} />
               </div>
             </div>
             <div className="mt-6">
               <Button type="submit" size="lg" disabled={pending} className="w-full sm:w-auto">
-                {pending ? 'Generating...' : 'Generate Kundli'}
+                {pending ? t(lang, 'kundli.generating') : t(lang, 'kundli.generate')}
               </Button>
             </div>
             {error && <p className="mt-4 text-sm text-destructive">{error}</p>}
@@ -109,57 +110,57 @@ export function AstrologyApiKundliClient() {
         <Tabs defaultValue="chart">
           <div className="overflow-x-auto">
             <TabsList className="w-full min-w-max">
-              <TabsTrigger value="chart">Rashi (D1)</TabsTrigger>
-              <TabsTrigger value="planets">Planets</TabsTrigger>
-              <TabsTrigger value="dasha">Dasha</TabsTrigger>
-              <TabsTrigger value="doshas">Doshas</TabsTrigger>
-              <TabsTrigger value="strength">Strength</TabsTrigger>
-              <TabsTrigger value="interpretation">Interpretation</TabsTrigger>
-              <TabsTrigger value="remedies">Remedies</TabsTrigger>
-              <TabsTrigger value="lalkitab">Lal Kitab</TabsTrigger>
+              <TabsTrigger value="chart">{t(lang, 'kundli.tab.chart')}</TabsTrigger>
+              <TabsTrigger value="planets">{t(lang, 'kundli.tab.planets')}</TabsTrigger>
+              <TabsTrigger value="dasha">{t(lang, 'kundli.tab.dasha')}</TabsTrigger>
+              <TabsTrigger value="doshas">{t(lang, 'kundli.tab.doshas')}</TabsTrigger>
+              <TabsTrigger value="strength">{t(lang, 'kundli.tab.strength')}</TabsTrigger>
+              <TabsTrigger value="interpretation">{t(lang, 'kundli.tab.interpretation')}</TabsTrigger>
+              <TabsTrigger value="remedies">{t(lang, 'kundli.tab.remedies')}</TabsTrigger>
+              <TabsTrigger value="lalkitab">{t(lang, 'kundli.tab.lalkitab')}</TabsTrigger>
             </TabsList>
           </div>
 
           <TabsContent value="chart" className="mt-6">
-            <AstrologyApiChart houses={result.chart} />
+            <AstrologyApiChart houses={result.chart} lang={lang} />
           </TabsContent>
 
           <TabsContent value="planets" className="mt-6">
-            <AstrologyApiPlanetsTable planets={result.planets} />
+            <AstrologyApiPlanetsTable planets={result.planets} lang={lang} />
           </TabsContent>
 
           <TabsContent value="dasha" className="mt-6">
-            <AstrologyApiDashaTimeline periods={result.dashas} />
+            <AstrologyApiDashaTimeline periods={result.dashas} lang={lang} />
           </TabsContent>
 
           <TabsContent value="doshas" className="mt-6 space-y-6">
-            <AstrologyApiKalsarpaCard data={result.kalsarpa} />
-            <AstrologyApiSadhesatiCard data={result.sadhesati} />
+            <AstrologyApiKalsarpaCard data={result.kalsarpa} lang={lang} />
+            <AstrologyApiSadhesatiCard data={result.sadhesati} lang={lang} />
           </TabsContent>
 
           <TabsContent value="strength" className="mt-6 space-y-6">
-            <AstrologyApiAshtakavargaGrid data={result.ashtakavarga} />
-            <AstrologyApiShadbalaTable data={result.shadbala} />
+            <AstrologyApiAshtakavargaGrid data={result.ashtakavarga} lang={lang} />
+            <AstrologyApiShadbalaTable data={result.shadbala} lang={lang} />
           </TabsContent>
 
           <TabsContent value="interpretation" className="mt-6 space-y-6">
-            <AstrologyApiAscendantCard data={result.ascendantReport} />
-            <AstrologyApiNakshatraCard data={result.nakshatraReport} />
-            <AstrologyApiPlanetReportSection birth={birth} />
-            <AstrologyApiPitraDoshaCard data={result.pitraDosha} />
+            <AstrologyApiAscendantCard data={result.ascendantReport} lang={lang} />
+            <AstrologyApiNakshatraCard data={result.nakshatraReport} lang={lang} />
+            <AstrologyApiPlanetReportSection birth={birth} lang={lang} />
+            <AstrologyApiPitraDoshaCard data={result.pitraDosha} lang={lang} />
           </TabsContent>
 
           <TabsContent value="remedies" className="mt-6 space-y-6">
-            <AstrologyApiGemSuggestionGrid data={result.gemSuggestion} />
-            <AstrologyApiPujaSuggestionList data={result.pujaSuggestion} />
-            <AstrologyApiRudrakshaCard data={result.rudrakshaSuggestion} />
-            <AstrologyApiSadhesatiRemediesCard data={result.sadhesatiRemedies} />
+            <AstrologyApiGemSuggestionGrid data={result.gemSuggestion} lang={lang} />
+            <AstrologyApiPujaSuggestionList data={result.pujaSuggestion} lang={lang} />
+            <AstrologyApiRudrakshaCard data={result.rudrakshaSuggestion} lang={lang} />
+            <AstrologyApiSadhesatiRemediesCard data={result.sadhesatiRemedies} lang={lang} />
           </TabsContent>
 
           <TabsContent value="lalkitab" className="mt-6 space-y-6">
-            <AstrologyApiChart houses={result.lalkitabChart} />
-            <AstrologyApiLalkitabDebtsList data={result.lalkitabDebts} />
-            <AstrologyApiLalkitabRemedySection birth={birth} />
+            <AstrologyApiChart houses={result.lalkitabChart} lang={lang} />
+            <AstrologyApiLalkitabDebtsList data={result.lalkitabDebts} lang={lang} />
+            <AstrologyApiLalkitabRemedySection birth={birth} lang={lang} />
           </TabsContent>
         </Tabs>
       )}
