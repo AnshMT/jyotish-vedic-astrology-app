@@ -17,6 +17,15 @@ const NAV_LINKS = [
   { href: '/transits', label: 'Transits' },
 ];
 
+/** Same five pages, sourced from AstrologyAPI instead of RoxyAPI (see `src/app/astrologyapi/`). */
+const ASTROLOGYAPI_NAV_LINKS = [
+  { href: '/astrologyapi/panchang', label: 'Panchang' },
+  { href: '/astrologyapi/choghadiya', label: 'Choghadiya' },
+  { href: '/astrologyapi/kundli', label: 'Kundli' },
+  { href: '/astrologyapi/matching', label: 'Matching' },
+  { href: '/astrologyapi/transits', label: 'Transits' },
+];
+
 function isActive(pathname: string, href: string): boolean {
   return href === '/' ? pathname === '/' : pathname.startsWith(href);
 }
@@ -51,6 +60,35 @@ export function Navbar({ lang }: { lang: Lang }) {
               </Link>
             </li>
           ))}
+          <li>
+            <details className="group relative">
+              <summary
+                className={`flex cursor-pointer list-none items-center gap-1 rounded-lg px-3 py-2 text-sm font-medium transition-colors hover:bg-muted hover:text-foreground [&::-webkit-details-marker]:hidden ${
+                  ASTROLOGYAPI_NAV_LINKS.some((l) => isActive(pathname, l.href))
+                    ? 'bg-muted text-foreground'
+                    : 'text-muted-foreground'
+                }`}
+              >
+                AstrologyAPI
+              </summary>
+              <ul className="absolute right-0 z-10 mt-1 w-44 rounded-lg border border-border bg-popover p-1 shadow-md">
+                {ASTROLOGYAPI_NAV_LINKS.map((link) => (
+                  <li key={link.href}>
+                    <Link
+                      href={link.href}
+                      className={`block rounded-md px-3 py-2 text-sm font-medium transition-colors hover:bg-muted hover:text-foreground ${
+                        isActive(pathname, link.href)
+                          ? 'bg-muted text-foreground'
+                          : 'text-muted-foreground'
+                      }`}
+                    >
+                      {link.label}
+                    </Link>
+                  </li>
+                ))}
+              </ul>
+            </details>
+          </li>
         </ul>
 
         <div className="flex items-center gap-1">
@@ -73,6 +111,27 @@ export function Navbar({ lang }: { lang: Lang }) {
         <div className="border-t border-border/40 bg-background px-4 pb-4 md:hidden">
           <ul className="flex flex-col gap-1 pt-2">
             {NAV_LINKS.map((link) => (
+              <li key={link.href}>
+                <Link
+                  href={link.href}
+                  onClick={() => setMobileOpen(false)}
+                  className={`block rounded-lg px-3 py-2.5 text-sm font-medium transition-colors hover:bg-muted hover:text-foreground ${
+                    isActive(pathname, link.href)
+                      ? 'bg-muted text-foreground'
+                      : 'text-muted-foreground'
+                  }`}
+                >
+                  {link.label}
+                </Link>
+              </li>
+            ))}
+          </ul>
+
+          <p className="mt-3 px-3 pt-3 text-xs font-medium uppercase tracking-wide text-muted-foreground border-t border-border/40">
+            AstrologyAPI
+          </p>
+          <ul className="flex flex-col gap-1 pt-1">
+            {ASTROLOGYAPI_NAV_LINKS.map((link) => (
               <li key={link.href}>
                 <Link
                   href={link.href}
