@@ -1,0 +1,1375 @@
+{
+  "info": {
+    "name": "Jyotish Kundli — AstrologyAPI",
+    "description": "Every AstrologyAPI endpoint used by the Kundli page (src/app/astrologyapi/kundli/actions.ts) in the jyotish-vedic-astrology-app repo. See docs/astrologyapi-kundli-endpoints.md for the full write-up.\n\nSet the `astrologyApiKey` collection variable to a real AstrologyAPI access token before sending requests. No endpoint here accepts a lang parameter, and none of these requests set ayanamsha (so every response uses the vendor's Lahiri default).",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "auth": {
+    "type": "apikey",
+    "apikey": [
+      {
+        "key": "key",
+        "value": "x-astrologyapi-key",
+        "type": "string"
+      },
+      {
+        "key": "value",
+        "value": "{{astrologyApiKey}}",
+        "type": "string"
+      },
+      {
+        "key": "in",
+        "value": "header",
+        "type": "string"
+      }
+    ]
+  },
+  "variable": [
+    {
+      "key": "baseUrl",
+      "value": "https://json.astrologyapi.com/v1",
+      "type": "string"
+    },
+    {
+      "key": "astrologyApiKey",
+      "value": "YOUR_ASTROLOGYAPI_ACCESS_TOKEN",
+      "type": "string"
+    }
+  ],
+  "item": [
+    {
+      "name": "1. Planets",
+      "request": {
+        "method": "POST",
+        "header": [],
+        "body": {
+          "mode": "urlencoded",
+          "urlencoded": [
+            {
+              "key": "day",
+              "value": "10",
+              "type": "text"
+            },
+            {
+              "key": "month",
+              "value": "5",
+              "type": "text"
+            },
+            {
+              "key": "year",
+              "value": "1990",
+              "type": "text"
+            },
+            {
+              "key": "hour",
+              "value": "19",
+              "type": "text"
+            },
+            {
+              "key": "min",
+              "value": "55",
+              "type": "text"
+            },
+            {
+              "key": "lat",
+              "value": "19.20",
+              "type": "text"
+            },
+            {
+              "key": "lon",
+              "value": "72.88",
+              "type": "text"
+            },
+            {
+              "key": "tzone",
+              "value": "5.5",
+              "type": "text"
+            }
+          ]
+        },
+        "url": {
+          "raw": "{{baseUrl}}/planets",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "planets"
+          ]
+        },
+        "description": "Powers AstrologyApiPlanetsTable (Planets tab). Returns the 9 grahas plus a synthetic Ascendant row."
+      },
+      "response": []
+    },
+    {
+      "name": "2. Birth chart (D1 Rashi)",
+      "request": {
+        "method": "POST",
+        "header": [],
+        "body": {
+          "mode": "urlencoded",
+          "urlencoded": [
+            {
+              "key": "day",
+              "value": "10",
+              "type": "text"
+            },
+            {
+              "key": "month",
+              "value": "5",
+              "type": "text"
+            },
+            {
+              "key": "year",
+              "value": "1990",
+              "type": "text"
+            },
+            {
+              "key": "hour",
+              "value": "19",
+              "type": "text"
+            },
+            {
+              "key": "min",
+              "value": "55",
+              "type": "text"
+            },
+            {
+              "key": "lat",
+              "value": "19.20",
+              "type": "text"
+            },
+            {
+              "key": "lon",
+              "value": "72.88",
+              "type": "text"
+            },
+            {
+              "key": "tzone",
+              "value": "5.5",
+              "type": "text"
+            }
+          ]
+        },
+        "url": {
+          "raw": "{{baseUrl}}/horo_chart/D1",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "horo_chart",
+            "D1"
+          ]
+        },
+        "description": "Powers AstrologyApiChart (Rashi (D1) tab). chartId can be D1 or any of D2,D3,D4,D7,D9,D10,D12,D16,D20,D24,D27,D30,D40,D45,D60 for the Varga tab — swap the last path segment."
+      },
+      "response": []
+    },
+    {
+      "name": "2b. Divisional chart (D9 Navamsa example)",
+      "request": {
+        "method": "POST",
+        "header": [],
+        "body": {
+          "mode": "urlencoded",
+          "urlencoded": [
+            {
+              "key": "day",
+              "value": "10",
+              "type": "text"
+            },
+            {
+              "key": "month",
+              "value": "5",
+              "type": "text"
+            },
+            {
+              "key": "year",
+              "value": "1990",
+              "type": "text"
+            },
+            {
+              "key": "hour",
+              "value": "19",
+              "type": "text"
+            },
+            {
+              "key": "min",
+              "value": "55",
+              "type": "text"
+            },
+            {
+              "key": "lat",
+              "value": "19.20",
+              "type": "text"
+            },
+            {
+              "key": "lon",
+              "value": "72.88",
+              "type": "text"
+            },
+            {
+              "key": "tzone",
+              "value": "5.5",
+              "type": "text"
+            }
+          ]
+        },
+        "url": {
+          "raw": "{{baseUrl}}/horo_chart/D9",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "horo_chart",
+            "D9"
+          ]
+        },
+        "description": "Same endpoint as #2 with a different chartId — verified live that every division returns genuinely distinct data, not a silent fallback to D1."
+      },
+      "response": []
+    },
+    {
+      "name": "3. Rendered chart diagram (SVG)",
+      "request": {
+        "method": "POST",
+        "header": [],
+        "body": {
+          "mode": "urlencoded",
+          "urlencoded": [
+            {
+              "key": "day",
+              "value": "10",
+              "type": "text"
+            },
+            {
+              "key": "month",
+              "value": "5",
+              "type": "text"
+            },
+            {
+              "key": "year",
+              "value": "1990",
+              "type": "text"
+            },
+            {
+              "key": "hour",
+              "value": "19",
+              "type": "text"
+            },
+            {
+              "key": "min",
+              "value": "55",
+              "type": "text"
+            },
+            {
+              "key": "lat",
+              "value": "19.20",
+              "type": "text"
+            },
+            {
+              "key": "lon",
+              "value": "72.88",
+              "type": "text"
+            },
+            {
+              "key": "tzone",
+              "value": "5.5",
+              "type": "text"
+            },
+            {
+              "key": "chartType",
+              "value": "north",
+              "type": "text"
+            }
+          ]
+        },
+        "url": {
+          "raw": "{{baseUrl}}/horo_chart_image/D1",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "horo_chart_image",
+            "D1"
+          ]
+        },
+        "description": "Powers AstrologyApiChartImage. Returns {\"svg\": \"<svg ...>\"} — a complete North/South Indian diamond-chart diagram. chartType can be north, south, or east."
+      },
+      "response": []
+    },
+    {
+      "name": "4. Vimshottari major dashas",
+      "request": {
+        "method": "POST",
+        "header": [],
+        "body": {
+          "mode": "urlencoded",
+          "urlencoded": [
+            {
+              "key": "day",
+              "value": "10",
+              "type": "text"
+            },
+            {
+              "key": "month",
+              "value": "5",
+              "type": "text"
+            },
+            {
+              "key": "year",
+              "value": "1990",
+              "type": "text"
+            },
+            {
+              "key": "hour",
+              "value": "19",
+              "type": "text"
+            },
+            {
+              "key": "min",
+              "value": "55",
+              "type": "text"
+            },
+            {
+              "key": "lat",
+              "value": "19.20",
+              "type": "text"
+            },
+            {
+              "key": "lon",
+              "value": "72.88",
+              "type": "text"
+            },
+            {
+              "key": "tzone",
+              "value": "5.5",
+              "type": "text"
+            }
+          ]
+        },
+        "url": {
+          "raw": "{{baseUrl}}/major_vdasha",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "major_vdasha"
+          ]
+        },
+        "description": "Powers AstrologyApiDashaTimeline (Dasha tab)."
+      },
+      "response": []
+    },
+    {
+      "name": "5. Kalsarpa dosha",
+      "request": {
+        "method": "POST",
+        "header": [],
+        "body": {
+          "mode": "urlencoded",
+          "urlencoded": [
+            {
+              "key": "day",
+              "value": "10",
+              "type": "text"
+            },
+            {
+              "key": "month",
+              "value": "5",
+              "type": "text"
+            },
+            {
+              "key": "year",
+              "value": "1990",
+              "type": "text"
+            },
+            {
+              "key": "hour",
+              "value": "19",
+              "type": "text"
+            },
+            {
+              "key": "min",
+              "value": "55",
+              "type": "text"
+            },
+            {
+              "key": "lat",
+              "value": "19.20",
+              "type": "text"
+            },
+            {
+              "key": "lon",
+              "value": "72.88",
+              "type": "text"
+            },
+            {
+              "key": "tzone",
+              "value": "5.5",
+              "type": "text"
+            }
+          ]
+        },
+        "url": {
+          "raw": "{{baseUrl}}/kalsarpa_details",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "kalsarpa_details"
+          ]
+        },
+        "description": "Powers AstrologyApiKalsarpaCard (Doshas tab)."
+      },
+      "response": []
+    },
+    {
+      "name": "6. Sadhesati current status",
+      "request": {
+        "method": "POST",
+        "header": [],
+        "body": {
+          "mode": "urlencoded",
+          "urlencoded": [
+            {
+              "key": "day",
+              "value": "10",
+              "type": "text"
+            },
+            {
+              "key": "month",
+              "value": "5",
+              "type": "text"
+            },
+            {
+              "key": "year",
+              "value": "1990",
+              "type": "text"
+            },
+            {
+              "key": "hour",
+              "value": "19",
+              "type": "text"
+            },
+            {
+              "key": "min",
+              "value": "55",
+              "type": "text"
+            },
+            {
+              "key": "lat",
+              "value": "19.20",
+              "type": "text"
+            },
+            {
+              "key": "lon",
+              "value": "72.88",
+              "type": "text"
+            },
+            {
+              "key": "tzone",
+              "value": "5.5",
+              "type": "text"
+            }
+          ]
+        },
+        "url": {
+          "raw": "{{baseUrl}}/sadhesati_current_status",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "sadhesati_current_status"
+          ]
+        },
+        "description": "Powers AstrologyApiSadhesatiCard (Doshas tab)."
+      },
+      "response": []
+    },
+    {
+      "name": "7. Sarvashtakavarga",
+      "request": {
+        "method": "POST",
+        "header": [],
+        "body": {
+          "mode": "urlencoded",
+          "urlencoded": [
+            {
+              "key": "day",
+              "value": "10",
+              "type": "text"
+            },
+            {
+              "key": "month",
+              "value": "5",
+              "type": "text"
+            },
+            {
+              "key": "year",
+              "value": "1990",
+              "type": "text"
+            },
+            {
+              "key": "hour",
+              "value": "19",
+              "type": "text"
+            },
+            {
+              "key": "min",
+              "value": "55",
+              "type": "text"
+            },
+            {
+              "key": "lat",
+              "value": "19.20",
+              "type": "text"
+            },
+            {
+              "key": "lon",
+              "value": "72.88",
+              "type": "text"
+            },
+            {
+              "key": "tzone",
+              "value": "5.5",
+              "type": "text"
+            }
+          ]
+        },
+        "url": {
+          "raw": "{{baseUrl}}/sarvashtak",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "sarvashtak"
+          ]
+        },
+        "description": "Powers AstrologyApiAshtakavargaGrid (Strength tab). Total bindu points (max 337) per sign."
+      },
+      "response": []
+    },
+    {
+      "name": "8. Shadbala",
+      "request": {
+        "method": "POST",
+        "header": [],
+        "body": {
+          "mode": "urlencoded",
+          "urlencoded": [
+            {
+              "key": "day",
+              "value": "10",
+              "type": "text"
+            },
+            {
+              "key": "month",
+              "value": "5",
+              "type": "text"
+            },
+            {
+              "key": "year",
+              "value": "1990",
+              "type": "text"
+            },
+            {
+              "key": "hour",
+              "value": "19",
+              "type": "text"
+            },
+            {
+              "key": "min",
+              "value": "55",
+              "type": "text"
+            },
+            {
+              "key": "lat",
+              "value": "19.20",
+              "type": "text"
+            },
+            {
+              "key": "lon",
+              "value": "72.88",
+              "type": "text"
+            },
+            {
+              "key": "tzone",
+              "value": "5.5",
+              "type": "text"
+            }
+          ]
+        },
+        "url": {
+          "raw": "{{baseUrl}}/shadbala",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "shadbala"
+          ]
+        },
+        "description": "Powers AstrologyApiShadbalaTable (Strength tab)."
+      },
+      "response": []
+    },
+    {
+      "name": "9. Ascendant reading",
+      "request": {
+        "method": "POST",
+        "header": [],
+        "body": {
+          "mode": "urlencoded",
+          "urlencoded": [
+            {
+              "key": "day",
+              "value": "10",
+              "type": "text"
+            },
+            {
+              "key": "month",
+              "value": "5",
+              "type": "text"
+            },
+            {
+              "key": "year",
+              "value": "1990",
+              "type": "text"
+            },
+            {
+              "key": "hour",
+              "value": "19",
+              "type": "text"
+            },
+            {
+              "key": "min",
+              "value": "55",
+              "type": "text"
+            },
+            {
+              "key": "lat",
+              "value": "19.20",
+              "type": "text"
+            },
+            {
+              "key": "lon",
+              "value": "72.88",
+              "type": "text"
+            },
+            {
+              "key": "tzone",
+              "value": "5.5",
+              "type": "text"
+            }
+          ]
+        },
+        "url": {
+          "raw": "{{baseUrl}}/general_ascendant_report",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "general_ascendant_report"
+          ]
+        },
+        "description": "Powers AstrologyApiAscendantCard (Interpretation tab). Prose reading of the Lagna sign."
+      },
+      "response": []
+    },
+    {
+      "name": "10. Nakshatra reading",
+      "request": {
+        "method": "POST",
+        "header": [],
+        "body": {
+          "mode": "urlencoded",
+          "urlencoded": [
+            {
+              "key": "day",
+              "value": "10",
+              "type": "text"
+            },
+            {
+              "key": "month",
+              "value": "5",
+              "type": "text"
+            },
+            {
+              "key": "year",
+              "value": "1990",
+              "type": "text"
+            },
+            {
+              "key": "hour",
+              "value": "19",
+              "type": "text"
+            },
+            {
+              "key": "min",
+              "value": "55",
+              "type": "text"
+            },
+            {
+              "key": "lat",
+              "value": "19.20",
+              "type": "text"
+            },
+            {
+              "key": "lon",
+              "value": "72.88",
+              "type": "text"
+            },
+            {
+              "key": "tzone",
+              "value": "5.5",
+              "type": "text"
+            }
+          ]
+        },
+        "url": {
+          "raw": "{{baseUrl}}/general_nakshatra_report",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "general_nakshatra_report"
+          ]
+        },
+        "description": "Powers AstrologyApiNakshatraCard (Interpretation tab). Prose grouped by physical/character/education/family/health."
+      },
+      "response": []
+    },
+    {
+      "name": "11. Rashi (sign placement) reading, by planet",
+      "request": {
+        "method": "POST",
+        "header": [],
+        "body": {
+          "mode": "urlencoded",
+          "urlencoded": [
+            {
+              "key": "day",
+              "value": "10",
+              "type": "text"
+            },
+            {
+              "key": "month",
+              "value": "5",
+              "type": "text"
+            },
+            {
+              "key": "year",
+              "value": "1990",
+              "type": "text"
+            },
+            {
+              "key": "hour",
+              "value": "19",
+              "type": "text"
+            },
+            {
+              "key": "min",
+              "value": "55",
+              "type": "text"
+            },
+            {
+              "key": "lat",
+              "value": "19.20",
+              "type": "text"
+            },
+            {
+              "key": "lon",
+              "value": "72.88",
+              "type": "text"
+            },
+            {
+              "key": "tzone",
+              "value": "5.5",
+              "type": "text"
+            }
+          ]
+        },
+        "url": {
+          "raw": "{{baseUrl}}/general_rashi_report/moon",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "general_rashi_report",
+            "moon"
+          ]
+        },
+        "description": "Powers AstrologyApiPlanetReportSection, fetched on demand per selected planet. planet_name is lowercase (sun, moon, mars, mercury, jupiter, venus, saturn, rahu, ketu). Rahu/Ketu return no rashi_report field."
+      },
+      "response": []
+    },
+    {
+      "name": "12. House placement reading, by planet",
+      "request": {
+        "method": "POST",
+        "header": [],
+        "body": {
+          "mode": "urlencoded",
+          "urlencoded": [
+            {
+              "key": "day",
+              "value": "10",
+              "type": "text"
+            },
+            {
+              "key": "month",
+              "value": "5",
+              "type": "text"
+            },
+            {
+              "key": "year",
+              "value": "1990",
+              "type": "text"
+            },
+            {
+              "key": "hour",
+              "value": "19",
+              "type": "text"
+            },
+            {
+              "key": "min",
+              "value": "55",
+              "type": "text"
+            },
+            {
+              "key": "lat",
+              "value": "19.20",
+              "type": "text"
+            },
+            {
+              "key": "lon",
+              "value": "72.88",
+              "type": "text"
+            },
+            {
+              "key": "tzone",
+              "value": "5.5",
+              "type": "text"
+            }
+          ]
+        },
+        "url": {
+          "raw": "{{baseUrl}}/general_house_report/moon",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "general_house_report",
+            "moon"
+          ]
+        },
+        "description": "Powers AstrologyApiPlanetReportSection, same on-demand fetch as #11. Rahu/Ketu return \"Not available\" instead of an error."
+      },
+      "response": []
+    },
+    {
+      "name": "13. Pitra dosha",
+      "request": {
+        "method": "POST",
+        "header": [],
+        "body": {
+          "mode": "urlencoded",
+          "urlencoded": [
+            {
+              "key": "day",
+              "value": "10",
+              "type": "text"
+            },
+            {
+              "key": "month",
+              "value": "5",
+              "type": "text"
+            },
+            {
+              "key": "year",
+              "value": "1990",
+              "type": "text"
+            },
+            {
+              "key": "hour",
+              "value": "19",
+              "type": "text"
+            },
+            {
+              "key": "min",
+              "value": "55",
+              "type": "text"
+            },
+            {
+              "key": "lat",
+              "value": "19.20",
+              "type": "text"
+            },
+            {
+              "key": "lon",
+              "value": "72.88",
+              "type": "text"
+            },
+            {
+              "key": "tzone",
+              "value": "5.5",
+              "type": "text"
+            }
+          ]
+        },
+        "url": {
+          "raw": "{{baseUrl}}/pitra_dosha_report",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "pitra_dosha_report"
+          ]
+        },
+        "description": "Powers AstrologyApiPitraDoshaCard (Interpretation tab)."
+      },
+      "response": []
+    },
+    {
+      "name": "14. Gemstone suggestion",
+      "request": {
+        "method": "POST",
+        "header": [],
+        "body": {
+          "mode": "urlencoded",
+          "urlencoded": [
+            {
+              "key": "day",
+              "value": "10",
+              "type": "text"
+            },
+            {
+              "key": "month",
+              "value": "5",
+              "type": "text"
+            },
+            {
+              "key": "year",
+              "value": "1990",
+              "type": "text"
+            },
+            {
+              "key": "hour",
+              "value": "19",
+              "type": "text"
+            },
+            {
+              "key": "min",
+              "value": "55",
+              "type": "text"
+            },
+            {
+              "key": "lat",
+              "value": "19.20",
+              "type": "text"
+            },
+            {
+              "key": "lon",
+              "value": "72.88",
+              "type": "text"
+            },
+            {
+              "key": "tzone",
+              "value": "5.5",
+              "type": "text"
+            }
+          ]
+        },
+        "url": {
+          "raw": "{{baseUrl}}/basic_gem_suggestion",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "basic_gem_suggestion"
+          ]
+        },
+        "description": "Powers AstrologyApiGemSuggestionGrid (Remedies tab). Returns LIFE, BENEFIC, LUCKY categories."
+      },
+      "response": []
+    },
+    {
+      "name": "15. Puja suggestion",
+      "request": {
+        "method": "POST",
+        "header": [],
+        "body": {
+          "mode": "urlencoded",
+          "urlencoded": [
+            {
+              "key": "day",
+              "value": "10",
+              "type": "text"
+            },
+            {
+              "key": "month",
+              "value": "5",
+              "type": "text"
+            },
+            {
+              "key": "year",
+              "value": "1990",
+              "type": "text"
+            },
+            {
+              "key": "hour",
+              "value": "19",
+              "type": "text"
+            },
+            {
+              "key": "min",
+              "value": "55",
+              "type": "text"
+            },
+            {
+              "key": "lat",
+              "value": "19.20",
+              "type": "text"
+            },
+            {
+              "key": "lon",
+              "value": "72.88",
+              "type": "text"
+            },
+            {
+              "key": "tzone",
+              "value": "5.5",
+              "type": "text"
+            }
+          ]
+        },
+        "url": {
+          "raw": "{{baseUrl}}/puja_suggestion",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "puja_suggestion"
+          ]
+        },
+        "description": "Powers AstrologyApiPujaSuggestionList (Remedies tab)."
+      },
+      "response": []
+    },
+    {
+      "name": "16. Rudraksha suggestion",
+      "request": {
+        "method": "POST",
+        "header": [],
+        "body": {
+          "mode": "urlencoded",
+          "urlencoded": [
+            {
+              "key": "day",
+              "value": "10",
+              "type": "text"
+            },
+            {
+              "key": "month",
+              "value": "5",
+              "type": "text"
+            },
+            {
+              "key": "year",
+              "value": "1990",
+              "type": "text"
+            },
+            {
+              "key": "hour",
+              "value": "19",
+              "type": "text"
+            },
+            {
+              "key": "min",
+              "value": "55",
+              "type": "text"
+            },
+            {
+              "key": "lat",
+              "value": "19.20",
+              "type": "text"
+            },
+            {
+              "key": "lon",
+              "value": "72.88",
+              "type": "text"
+            },
+            {
+              "key": "tzone",
+              "value": "5.5",
+              "type": "text"
+            }
+          ]
+        },
+        "url": {
+          "raw": "{{baseUrl}}/rudraksha_suggestion",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "rudraksha_suggestion"
+          ]
+        },
+        "description": "Powers AstrologyApiRudrakshaCard (Remedies tab)."
+      },
+      "response": []
+    },
+    {
+      "name": "17. Sadhesati remedies",
+      "request": {
+        "method": "POST",
+        "header": [],
+        "body": {
+          "mode": "urlencoded",
+          "urlencoded": [
+            {
+              "key": "day",
+              "value": "10",
+              "type": "text"
+            },
+            {
+              "key": "month",
+              "value": "5",
+              "type": "text"
+            },
+            {
+              "key": "year",
+              "value": "1990",
+              "type": "text"
+            },
+            {
+              "key": "hour",
+              "value": "19",
+              "type": "text"
+            },
+            {
+              "key": "min",
+              "value": "55",
+              "type": "text"
+            },
+            {
+              "key": "lat",
+              "value": "19.20",
+              "type": "text"
+            },
+            {
+              "key": "lon",
+              "value": "72.88",
+              "type": "text"
+            },
+            {
+              "key": "tzone",
+              "value": "5.5",
+              "type": "text"
+            }
+          ]
+        },
+        "url": {
+          "raw": "{{baseUrl}}/sadhesati_remedies",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "sadhesati_remedies"
+          ]
+        },
+        "description": "Powers AstrologyApiSadhesatiRemediesCard (Remedies tab). General remedies, independent of whether Sadhesati is currently active."
+      },
+      "response": []
+    },
+    {
+      "name": "18. Lal Kitab chart",
+      "request": {
+        "method": "POST",
+        "header": [],
+        "body": {
+          "mode": "urlencoded",
+          "urlencoded": [
+            {
+              "key": "day",
+              "value": "10",
+              "type": "text"
+            },
+            {
+              "key": "month",
+              "value": "5",
+              "type": "text"
+            },
+            {
+              "key": "year",
+              "value": "1990",
+              "type": "text"
+            },
+            {
+              "key": "hour",
+              "value": "19",
+              "type": "text"
+            },
+            {
+              "key": "min",
+              "value": "55",
+              "type": "text"
+            },
+            {
+              "key": "lat",
+              "value": "19.20",
+              "type": "text"
+            },
+            {
+              "key": "lon",
+              "value": "72.88",
+              "type": "text"
+            },
+            {
+              "key": "tzone",
+              "value": "5.5",
+              "type": "text"
+            }
+          ]
+        },
+        "url": {
+          "raw": "{{baseUrl}}/lalkitab_horoscope",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "lalkitab_horoscope"
+          ]
+        },
+        "description": "Powers the Lal Kitab tab chart grid (reuses AstrologyApiChart). Lal Kitab always shows Aries as house 1 regardless of ascendant."
+      },
+      "response": []
+    },
+    {
+      "name": "19. Lal Kitab debts (Rin)",
+      "request": {
+        "method": "POST",
+        "header": [],
+        "body": {
+          "mode": "urlencoded",
+          "urlencoded": [
+            {
+              "key": "day",
+              "value": "10",
+              "type": "text"
+            },
+            {
+              "key": "month",
+              "value": "5",
+              "type": "text"
+            },
+            {
+              "key": "year",
+              "value": "1990",
+              "type": "text"
+            },
+            {
+              "key": "hour",
+              "value": "19",
+              "type": "text"
+            },
+            {
+              "key": "min",
+              "value": "55",
+              "type": "text"
+            },
+            {
+              "key": "lat",
+              "value": "19.20",
+              "type": "text"
+            },
+            {
+              "key": "lon",
+              "value": "72.88",
+              "type": "text"
+            },
+            {
+              "key": "tzone",
+              "value": "5.5",
+              "type": "text"
+            }
+          ]
+        },
+        "url": {
+          "raw": "{{baseUrl}}/lalkitab_debts",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "lalkitab_debts"
+          ]
+        },
+        "description": "Powers AstrologyApiLalkitabDebtsList (Lal Kitab tab)."
+      },
+      "response": []
+    },
+    {
+      "name": "20. Lal Kitab remedies, by planet",
+      "request": {
+        "method": "POST",
+        "header": [],
+        "body": {
+          "mode": "urlencoded",
+          "urlencoded": [
+            {
+              "key": "day",
+              "value": "10",
+              "type": "text"
+            },
+            {
+              "key": "month",
+              "value": "5",
+              "type": "text"
+            },
+            {
+              "key": "year",
+              "value": "1990",
+              "type": "text"
+            },
+            {
+              "key": "hour",
+              "value": "19",
+              "type": "text"
+            },
+            {
+              "key": "min",
+              "value": "55",
+              "type": "text"
+            },
+            {
+              "key": "lat",
+              "value": "19.20",
+              "type": "text"
+            },
+            {
+              "key": "lon",
+              "value": "72.88",
+              "type": "text"
+            },
+            {
+              "key": "tzone",
+              "value": "5.5",
+              "type": "text"
+            }
+          ]
+        },
+        "url": {
+          "raw": "{{baseUrl}}/lalkitab_remedies/saturn",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "lalkitab_remedies",
+            "saturn"
+          ]
+        },
+        "description": "Powers AstrologyApiLalkitabRemedySection, fetched on demand per selected planet. Returns the planet's Lal Kitab house placement (ordinal, e.g. \"Third\"), a description, and a remedies list."
+      },
+      "response": []
+    }
+  ]
+}
