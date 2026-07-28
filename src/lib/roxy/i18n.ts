@@ -15,6 +15,13 @@ import type { Lang } from '@/lib/lang';
 type Dict = Record<string, string>;
 
 const EN: Dict = {
+  'common.house': 'House {n}',
+  'common.retrograde': 'Rx',
+  'common.pada': 'pada {n}',
+  'common.strong': 'Strong',
+  'common.weak': 'Weak',
+  'common.ascendant': 'Asc',
+
   'panchang.title': 'Panchang',
 
   'choghadiya.pageTitle': 'Choghadiya and Hora',
@@ -91,6 +98,27 @@ const EN: Dict = {
   'varga.d60.name': 'D60 Shashtiamsa',
   'varga.d60.desc': 'Past karma',
 
+  'planetsTable.planet': 'Planet',
+  'planetsTable.sign': 'Sign',
+  'planetsTable.house': 'House',
+  'planetsTable.nakshatra': 'Nakshatra',
+  'planetsTable.degree': 'Degree',
+
+  'dasha.title': 'Vimshottari Mahadasha',
+  'dasha.subtitle': 'Major planetary periods across the lifetime',
+  'dasha.moonNakshatra': 'Moon nakshatra: {name} (lord {lord})',
+  'dasha.birthBalance': '{years}y {months}m {days}d of the {lord} Mahadasha remained at birth',
+
+  'ashtakavarga.title': 'Sarvashtakavarga',
+  'ashtakavarga.subtitle': 'Total bindu strength points by sign (max 337 across the zodiac)',
+  'shadbala.title': 'Shadbala',
+  'shadbala.subtitle': 'Six-fold planetary strength vs. the minimum required',
+  'shadbala.planet': 'Planet',
+  'shadbala.strength': 'Strength (Rupas)',
+  'shadbala.minimum': 'Minimum required',
+  'shadbala.percentOfMinimum': '% of minimum',
+  'shadbala.verdict': 'Verdict',
+
   'doshas.manglik.title': 'Mangal Dosha',
   'doshas.kalsarpa.title': 'Kaal Sarp Dosha',
   'doshas.sadhesati.title': 'Sade Sati',
@@ -155,6 +183,13 @@ const EN: Dict = {
 };
 
 const HI: Dict = {
+  'common.house': 'भवन {n}',
+  'common.retrograde': 'वक्री',
+  'common.pada': 'पद {n}',
+  'common.strong': 'मज़बूत',
+  'common.weak': 'कमज़ोर',
+  'common.ascendant': 'लग्न',
+
   'panchang.title': 'पंचांग',
 
   'choghadiya.pageTitle': 'चौघड़िया और होरा',
@@ -230,6 +265,27 @@ const HI: Dict = {
   'varga.d45.desc': 'चरित्र',
   'varga.d60.name': 'D60 षष्ट्यंश',
   'varga.d60.desc': 'पूर्व कर्म',
+
+  'planetsTable.planet': 'ग्रह',
+  'planetsTable.sign': 'राशि',
+  'planetsTable.house': 'भवन',
+  'planetsTable.nakshatra': 'नक्षत्र',
+  'planetsTable.degree': 'अंश',
+
+  'dasha.title': 'विंशोत्तरी महादशा',
+  'dasha.subtitle': 'जीवनभर के प्रमुख ग्रह काल',
+  'dasha.moonNakshatra': 'चंद्र नक्षत्र: {name} (स्वामी {lord})',
+  'dasha.birthBalance': 'जन्म के समय {lord} महादशा की {years} वर्ष {months} माह {days} दिन शेष थी',
+
+  'ashtakavarga.title': 'सर्वाष्टकवर्ग',
+  'ashtakavarga.subtitle': 'राशि अनुसार कुल बिंदु शक्ति अंक (राशिचक्र में अधिकतम 337)',
+  'shadbala.title': 'षड्बल',
+  'shadbala.subtitle': 'न्यूनतम आवश्यकता की तुलना में छह-गुना ग्रह शक्ति',
+  'shadbala.planet': 'ग्रह',
+  'shadbala.strength': 'शक्ति (रूप)',
+  'shadbala.minimum': 'न्यूनतम आवश्यक',
+  'shadbala.percentOfMinimum': 'न्यूनतम का %',
+  'shadbala.verdict': 'निर्णय',
 
   'doshas.manglik.title': 'मंगल दोष',
   'doshas.kalsarpa.title': 'कालसर्प दोष',
@@ -328,6 +384,7 @@ const PLANET_NAMES_HI: Dict = {
   Saturn: 'शनि',
   Rahu: 'राहु',
   Ketu: 'केतु',
+  Lagna: 'लग्न',
 };
 
 /** Translates a vendor planet name (e.g. `"Saturn"`) for display. */
