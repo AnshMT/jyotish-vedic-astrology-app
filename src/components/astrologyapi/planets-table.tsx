@@ -1,6 +1,6 @@
 import { Card, CardContent } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
-import { t, translatePlanetName, translateSignName } from '@/lib/astrologyapi/i18n';
+import { t, translatePlanetName, translateSignName, translateNakshatra } from '@/lib/astrologyapi/i18n';
 import type { Lang } from '@/lib/lang';
 import type { AstrologyApiPlanet } from '@/lib/astrologyapi/types';
 
@@ -8,11 +8,7 @@ function isRetrograde(planet: AstrologyApiPlanet): boolean {
   return planet.isRetro === true || planet.isRetro === 'true';
 }
 
-/**
- * Planetary positions table from `POST /planets`: sign, house, nakshatra, and retrograde status per graha.
- * Planet and sign names are translated (a small closed vocabulary); nakshatra names are left in the
- * vendor's English/Romanized form since AstrologyAPI returns 27 of them with no localization to draw from.
- */
+/** Planetary positions table from `POST /planets`: sign, house, nakshatra, and retrograde status per graha. */
 export function AstrologyApiPlanetsTable({ planets, lang }: { planets: AstrologyApiPlanet[]; lang: Lang }) {
   return (
     <Card>
@@ -43,7 +39,7 @@ export function AstrologyApiPlanetsTable({ planets, lang }: { planets: Astrology
                 <td className="py-2 text-foreground">{translateSignName(lang, p.sign)}</td>
                 <td className="py-2 text-muted-foreground">{p.house}</td>
                 <td className="py-2 text-muted-foreground">
-                  {p.nakshatra} {p.nakshatra_pad ? t(lang, 'common.pada', { n: p.nakshatra_pad }) : ''}
+                  {translateNakshatra(lang, p.nakshatra)} {p.nakshatra_pad ? t(lang, 'common.pada', { n: p.nakshatra_pad }) : ''}
                 </td>
                 <td className="py-2 tabular-nums text-muted-foreground">
                   {p.normDegree.toFixed(2)}&deg;

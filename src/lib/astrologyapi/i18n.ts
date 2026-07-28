@@ -891,3 +891,182 @@ export function translateDuration(lang: Lang, duration: string): string {
   if (dictLang(lang) !== 'hi') return duration;
   return DURATION_UNIT_HI.reduce((s, [re, hi]) => s.replace(re, hi), duration);
 }
+
+/**
+ * The 27 nakshatras, keyed by a normalized (lowercased, space-stripped) form of every spelling variant seen
+ * across AstrologyAPI endpoints — the vendor is inconsistent even within its own responses (e.g. `"Purva
+ * Shadha"` vs. `"Uttra Shadha"` for the two halves of Ashadha, `"Hast"` vs. `"Hasta"`, `"Shatbhisha"` vs. the
+ * canonical `"Shatabhisha"`).
+ */
+const NAKSHATRA_NAMES_HI: Dict = {
+  ashwini: 'अश्विनी',
+  bharani: 'भरणी',
+  krittika: 'कृत्तिका',
+  kritika: 'कृत्तिका',
+  rohini: 'रोहिणी',
+  mrigasira: 'मृगशिरा',
+  mrigashira: 'मृगशिरा',
+  mrigshira: 'मृगशिरा',
+  mriga: 'मृगशिरा',
+  ardra: 'आर्द्रा',
+  ardhra: 'आर्द्रा',
+  punarvasu: 'पुनर्वसु',
+  pushya: 'पुष्य',
+  pushyami: 'पुष्य',
+  ashlesha: 'आश्लेषा',
+  aslesha: 'आश्लेषा',
+  magha: 'मघा',
+  purvaphalguni: 'पूर्वा फाल्गुनी',
+  pphalguni: 'पूर्वा फाल्गुनी',
+  uttaraphalguni: 'उत्तरा फाल्गुनी',
+  uttraphalguni: 'उत्तरा फाल्गुनी',
+  uphalguni: 'उत्तरा फाल्गुनी',
+  hasta: 'हस्त',
+  hast: 'हस्त',
+  chitra: 'चित्रा',
+  chitta: 'चित्रा',
+  swati: 'स्वाति',
+  swathi: 'स्वाति',
+  vishakha: 'विशाखा',
+  visakha: 'विशाखा',
+  anuradha: 'अनुराधा',
+  jyeshtha: 'ज्येष्ठा',
+  jyeshta: 'ज्येष्ठा',
+  mula: 'मूल',
+  moola: 'मूल',
+  mool: 'मूल',
+  purvaashadha: 'पूर्वाषाढ़ा',
+  purvashadha: 'पूर्वाषाढ़ा',
+  pashadha: 'पूर्वाषाढ़ा',
+  uttaraashadha: 'उत्तराषाढ़ा',
+  uttrashadha: 'उत्तराषाढ़ा',
+  uashadha: 'उत्तराषाढ़ा',
+  shravana: 'श्रवण',
+  shravan: 'श्रवण',
+  dhanishta: 'धनिष्ठा',
+  dhanishtha: 'धनिष्ठा',
+  shatabhisha: 'शतभिषा',
+  shatbhisha: 'शतभिषा',
+  satabhisha: 'शतभिषा',
+  purvabhadrapada: 'पूर्वा भाद्रपद',
+  purvabhadrapad: 'पूर्वा भाद्रपद',
+  uttarabhadrapada: 'उत्तरा भाद्रपद',
+  uttarabhadrapad: 'उत्तरा भाद्रपद',
+  uttrabhadrapad: 'उत्तरा भाद्रपद',
+  revati: 'रेवती',
+};
+
+/** Normalizes a nakshatra name for lookup: lowercase, strip spaces (`"Purva Phalguni"` → `"purvaphalguni"`). */
+function normalizeNakshatraKey(name: string): string {
+  return name.toLowerCase().replace(/\s+/g, '');
+}
+
+/** Translates a vendor nakshatra name, tolerant of the vendor's inconsistent spelling across endpoints. */
+export function translateNakshatra(lang: Lang, name: string): string {
+  if (dictLang(lang) !== 'hi') return name;
+  return NAKSHATRA_NAMES_HI[normalizeNakshatraKey(name)] ?? name;
+}
+
+const LALKITAB_POSITION_HI: Dict = {
+  'Own Sign': 'स्व राशि',
+  'Friend Sign': 'मित्र राशि',
+  'Neutral Sign': 'सम राशि',
+  'Enemy Sign': 'शत्रु राशि',
+  Exalted: 'उच्च',
+  Debilitated: 'नीच',
+  '-': '-',
+};
+
+/** Translates a `lalkitab_planets` `position` value (e.g. `"Own Sign"`, `"Exalted"`). */
+export function translateLalkitabPosition(lang: Lang, position: string): string {
+  if (dictLang(lang) !== 'hi') return position;
+  return LALKITAB_POSITION_HI[position] ?? position;
+}
+
+/** The nine gemstones AstrologyAPI's `basic_gem_suggestion` recommends, as both primary `name` and `semi_gem` alternative. */
+const GEM_NAMES_HI: Dict = {
+  Ruby: 'माणिक्य',
+  Pearl: 'मोती',
+  'Red Coral': 'मूंगा',
+  Coral: 'मूंगा',
+  Emerald: 'पन्ना',
+  'Yellow Sapphire': 'पुखराज',
+  Diamond: 'हीरा',
+  'Blue Sapphire': 'नीलम',
+  Hessonite: 'गोमेद',
+  "Cat's Eye": 'लहसुनिया',
+  Onyx: 'ओनिक्स',
+  Amethyst: 'एमेथिस्ट',
+  'White Sapphire': 'सफेद पुखराज',
+  'Opal': 'ओपल',
+};
+
+/** Translates a gemstone name from `basic_gem_suggestion` (`name` or `semi_gem`). */
+export function translateGemName(lang: Lang, name: string): string {
+  if (dictLang(lang) !== 'hi') return name;
+  return GEM_NAMES_HI[name] ?? name;
+}
+
+const METAL_NAMES_HI: Dict = {
+  Gold: 'सोना',
+  Silver: 'चांदी',
+  Copper: 'तांबा',
+  Panchdhatu: 'पंचधातु',
+  Platinum: 'प्लेटिनम',
+};
+
+/** Translates a `basic_gem_suggestion` `wear_metal` value (e.g. `"Gold"`, `"Silver"`). */
+export function translateMetal(lang: Lang, metal: string): string {
+  if (dictLang(lang) !== 'hi') return metal;
+  return METAL_NAMES_HI[metal] ?? metal;
+}
+
+const FINGER_NAMES_HI: Dict = {
+  Thumb: 'अंगूठा',
+  Index: 'तर्जनी',
+  Middle: 'मध्यमा',
+  Ring: 'अनामिका',
+  Little: 'कनिष्ठा',
+  'Little Finger': 'कनिष्ठा',
+};
+
+/** Translates a `basic_gem_suggestion` `wear_finger` value (e.g. `"Little"`, `"Ring"`). */
+export function translateFinger(lang: Lang, finger: string): string {
+  if (dictLang(lang) !== 'hi') return finger;
+  return FINGER_NAMES_HI[finger] ?? finger;
+}
+
+/** The 12 Kaal Sarp Yog names, one per house Rahu occupies from Lagna, from `kalsarpa_details`' `name` field. */
+const KALSARPA_NAMES_HI: Dict = {
+  'Anant Kaal Sarp Yog': 'अनंत काल सर्प योग',
+  'Kulik Kaal Sarp Yog': 'कुलिक काल सर्प योग',
+  'Vasuki Kaal Sarp Yog': 'वासुकी काल सर्प योग',
+  'Shankhpal Kaal Sarp Yog': 'शंखपाल काल सर्प योग',
+  'Padma Kaal Sarp Yog': 'पद्म काल सर्प योग',
+  'Mahapadma Kaal Sarp Yog': 'महापद्म काल सर्प योग',
+  'Takshak Kaal Sarp Yog': 'तक्षक काल सर्प योग',
+  'Karkotak Kaal Sarp Yog': 'कर्कोटक काल सर्प योग',
+  'Shankhchur Kaal Sarp Yog': 'शंखचूड़ काल सर्प योग',
+  'Ghatak Kaal Sarp Yog': 'घातक काल सर्प योग',
+  'Vishdhar Kaal Sarp Yog': 'विषधर काल सर्प योग',
+  'Sheshnag Kaal Sarp Yog': 'शेषनाग काल सर्प योग',
+};
+
+/** Translates a `kalsarpa_details` `name` value (e.g. `"Mahapadma Kaal Sarp Yog"`), one of the fixed 12. */
+export function translateKalsarpaName(lang: Lang, name: string): string {
+  if (dictLang(lang) !== 'hi') return name;
+  return KALSARPA_NAMES_HI[name] ?? name;
+}
+
+const KALSARPA_TYPE_WORDS_HI: Array<[RegExp, string]> = [
+  [/\bFull\b/gi, 'पूर्ण'],
+  [/\bPartial\b/gi, 'आंशिक'],
+  [/\bAscending\b/gi, 'आरोही'],
+  [/\bDescending\b/gi, 'अवरोही'],
+];
+
+/** Translates a `kalsarpa_details` `type` value (e.g. `"Partial Descending"`) word-by-word. */
+export function translateKalsarpaType(lang: Lang, type: string): string {
+  if (dictLang(lang) !== 'hi') return type;
+  return KALSARPA_TYPE_WORDS_HI.reduce((s, [re, hi]) => s.replace(re, hi), type);
+}
