@@ -24,9 +24,11 @@ import {
 } from '@/components/ui/select';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { CitySearch } from '@/components/city-search';
+import { RoxyRemediesView } from '@/components/roxy/remedies';
 import { DEFAULT_CITY, todayString, type City, type Coords } from '@/lib/location';
+import { findMoonPlacement, findWeakestPlanet } from '@/lib/roxy/remedies';
 import type { Lang } from '@/lib/lang';
-import { generateKundali, fetchDivisionalChart } from './actions';
+import { generateKundali, fetchDivisionalChart, fetchRoxyRemedies } from './actions';
 
 type Kundali = Awaited<ReturnType<typeof generateKundali>>;
 
@@ -63,6 +65,10 @@ export function KundaliClient({ lang }: { lang: Lang }) {
   const [varga, setVarga] = useState<RoxyDivisionalChartProps['data']>(undefined);
   const [vargaPending, startVarga] = useTransition();
 
+  const [remedies, setRemedies] = useState<Awaited<ReturnType<typeof fetchRoxyRemedies>> | null>(null);
+  const [remediesError, setRemediesError] = useState<string | null>(null);
+  const [remediesPending, startRemedies] = useTransition();
+
   function onCity(city: City) {
     setCoords({ latitude: city.latitude, longitude: city.longitude, timezone: city.utcOffset });
   }
@@ -76,6 +82,8 @@ export function KundaliClient({ lang }: { lang: Lang }) {
         setResult(data);
         setVarga(data.navamsa);
         setDivision(9);
+        setRemedies(null);
+        setRemediesError(null);
       } catch (err) {
         setError(err instanceof Error ? err.message : 'Failed to generate kundali');
         setResult(null);
@@ -90,6 +98,20 @@ export function KundaliClient({ lang }: { lang: Lang }) {
         setVarga(await fetchDivisionalChart({ date, time: `${time}:00`, ...coords, division: next }));
       } catch {
         setVarga(undefined);
+      }
+    });
+  }
+
+  /** Loads Vedic remedies the first time the Remedies tab is opened, deriving the Moon sign/nakshatra/weakest planet from the already-generated chart and shadbala rather than re-fetching them. */
+  function onTabChange(value: string) {
+    if (value !== 'remedies' || remedies || remediesPending || !result) return;
+    startRemedies(async () => {
+      try {
+        const { moonSign, nakshatraKey } = findMoonPlacement(result.chart);
+        const weakPlanet = findWeakestPlanet(result.shadbala);
+        setRemedies(await fetchRoxyRemedies({ nakshatraKey, moonSign, weakPlanet, lang }));
+      } catch (err) {
+        setRemediesError(err instanceof Error ? err.message : 'Failed to load remedies');
       }
     });
   }
@@ -135,15 +157,18 @@ export function KundaliClient({ lang }: { lang: Lang }) {
       </Card>
 
       {result && (
-        <Tabs defaultValue="chart">
-          <TabsList className="w-full">
-            <TabsTrigger value="chart">Rashi (D1)</TabsTrigger>
-            <TabsTrigger value="planets">Planets</TabsTrigger>
-            <TabsTrigger value="varga">Varga</TabsTrigger>
-            <TabsTrigger value="dasha">Dasha</TabsTrigger>
-            <TabsTrigger value="doshas">Doshas</TabsTrigger>
-            <TabsTrigger value="strength">Strength</TabsTrigger>
-          </TabsList>
+        <Tabs defaultValue="chart" onValueChange={onTabChange}>
+          <div className="overflow-x-auto">
+            <TabsList className="w-full min-w-max">
+              <TabsTrigger value="chart">Rashi (D1)</TabsTrigger>
+              <TabsTrigger value="planets">Planets</TabsTrigger>
+              <TabsTrigger value="varga">Varga</TabsTrigger>
+              <TabsTrigger value="dasha">Dasha</TabsTrigger>
+              <TabsTrigger value="doshas">Doshas</TabsTrigger>
+              <TabsTrigger value="strength">Strength</TabsTrigger>
+              <TabsTrigger value="remedies">Remedies</TabsTrigger>
+            </TabsList>
+          </div>
 
           <TabsContent value="chart" className="mt-6">
             <RoxyVedicKundli data={result.chart} />
@@ -197,6 +222,19 @@ export function KundaliClient({ lang }: { lang: Lang }) {
           <TabsContent value="strength" className="mt-6 space-y-6">
             <RoxyAshtakavargaGrid data={result.ashtakavarga} />
             <RoxyShadbalaTable data={result.shadbala} />
+          </TabsContent>
+
+          <TabsContent value="remedies" className="mt-6 space-y-6">
+            {remediesPending && <p className="py-8 text-center text-muted-foreground">Loading remedies...</p>}
+            {remediesError && <p className="text-center text-sm text-destructive">{remediesError}</p>}
+            {remedies && (
+              <RoxyRemediesView
+                nakshatra={remedies.nakshatra}
+                moonSignCrystals={remedies.moonSignCrystals}
+                planetCrystals={remedies.planetCrystals}
+                weakPlanet={findWeakestPlanet(result.shadbala)}
+              />
+            )}
           </TabsContent>
         </Tabs>
       )}
