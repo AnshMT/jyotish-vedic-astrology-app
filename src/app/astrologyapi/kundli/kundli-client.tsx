@@ -8,6 +8,7 @@ import { Label } from '@/components/ui/label';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { CitySearch } from '@/components/city-search';
 import { AstrologyApiChart } from '@/components/astrologyapi/chart';
+import { AstrologyApiChartImage } from '@/components/astrologyapi/chart-image';
 import { AstrologyApiPlanetsTable } from '@/components/astrologyapi/planets-table';
 import { AstrologyApiDashaTimeline } from '@/components/astrologyapi/dasha-timeline';
 import { AstrologyApiKalsarpaCard, AstrologyApiSadhesatiCard } from '@/components/astrologyapi/dosha-cards';
@@ -121,7 +122,8 @@ export function AstrologyApiKundliClient({ lang }: { lang: Lang }) {
             </TabsList>
           </div>
 
-          <TabsContent value="chart" className="mt-6">
+          <TabsContent value="chart" className="mt-6 space-y-6">
+            <AstrologyApiChartImage data={result.chartImage} />
             <AstrologyApiChart houses={result.chart} lang={lang} />
           </TabsContent>
 
