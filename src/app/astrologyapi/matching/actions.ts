@@ -7,6 +7,8 @@ import type {
   AstrologyApiMatchMakingReport,
   AstrologyApiMatchAshtakoot,
   AstrologyApiMatchManglik,
+  AstrologyApiMatchDashakoot,
+  AstrologyApiMatchPercentage,
 } from '@/lib/astrologyapi/types';
 
 /** Prefixes both birth inputs' AstrologyAPI date params with `m_`/`f_`, as `match_*` endpoints expect. */
@@ -22,9 +24,12 @@ function toMatchParams(person1: BirthInput, person2: BirthInput) {
 }
 
 /**
- * Fans out two birth inputs to AstrologyAPI's three Gun Milan endpoints in parallel: the overall
- * match-making report, the 8-koota Ashtakoot breakdown, and the per-person Manglik report. Mirrors
- * `@/app/matching/actions`'s `calculateMatch`, sourced from AstrologyAPI instead of RoxyAPI.
+ * Fans out two birth inputs to AstrologyAPI's Gun Milan endpoints in parallel: the overall match-making
+ * report, the 8-koota Ashtakoot breakdown, the 10-koota Dashakoot breakdown, the per-person Manglik report,
+ * and the single compatibility-percentage summary. Mirrors `@/app/matching/actions`'s `calculateMatch`,
+ * sourced from AstrologyAPI instead of RoxyAPI. `match_making_detailed_report` is deliberately not called
+ * here — it just re-bundles `match_ashtakoot_points` and `match_manglik_report` into one response, both of
+ * which are already fetched directly.
  */
 export async function calculateAstrologyApiMatch({
   person1,
@@ -35,11 +40,13 @@ export async function calculateAstrologyApiMatch({
 }) {
   const params = toMatchParams(person1, person2);
 
-  const [makingReport, ashtakoot, manglik] = await Promise.all([
+  const [makingReport, ashtakoot, dashakoot, manglik, percentage] = await Promise.all([
     unwrap(() => astrologyApiRequest<AstrologyApiMatchMakingReport>('match_making_report', params)),
     unwrap(() => astrologyApiRequest<AstrologyApiMatchAshtakoot>('match_ashtakoot_points', params)),
+    unwrap(() => astrologyApiRequest<AstrologyApiMatchDashakoot>('match_dashakoot_points', params)),
     unwrap(() => astrologyApiRequest<AstrologyApiMatchManglik>('match_manglik_report', params)),
+    unwrap(() => astrologyApiRequest<AstrologyApiMatchPercentage>('match_percentage', params)),
   ]);
 
-  return { makingReport, ashtakoot, manglik };
+  return { makingReport, ashtakoot, dashakoot, manglik, percentage };
 }
