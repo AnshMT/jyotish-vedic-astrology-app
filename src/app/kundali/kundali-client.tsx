@@ -16,7 +16,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { CitySearch } from '@/components/city-search';
 import { RoxyRemediesView } from '@/components/roxy/remedies';
 import { RoxyManglikCard, RoxyKalsarpaCard, RoxySadhesatiCard } from '@/components/roxy/dosha-cards';
-import { RoxyChartGrid } from '@/components/roxy/chart-grid';
+import { RoxyChartDiagram } from '@/components/roxy/chart-diagram';
 import { RoxyPlanetsTable } from '@/components/roxy/planets-table';
 import { RoxyDashaTimeline } from '@/components/roxy/dasha-timeline';
 import { RoxyAshtakavargaGrid, RoxyShadbalaTable } from '@/components/roxy/strength';
@@ -166,7 +166,7 @@ export function KundaliClient({ lang }: { lang: Lang }) {
           </div>
 
           <TabsContent value="chart" className="mt-6">
-            <RoxyChartGrid meta={result.chart.meta} lang={lang} />
+            <RoxyChartDiagram meta={result.chart.meta} lang={lang} />
           </TabsContent>
 
           <TabsContent value="planets" className="mt-6">
@@ -200,7 +200,7 @@ export function KundaliClient({ lang }: { lang: Lang }) {
             {vargaPending ? (
               <p className="py-8 text-center text-muted-foreground">{t(lang, 'varga.loading')}</p>
             ) : (
-              varga && <RoxyChartGrid meta={varga.chart.meta} lang={lang} />
+              varga && <RoxyChartDiagram meta={varga.chart.meta} lang={lang} />
             )}
           </TabsContent>
 
