@@ -4,6 +4,8 @@ import { useState, useTransition } from 'react';
 import { Badge } from '@/components/ui/badge';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { PlanetSelect } from '@/components/astrologyapi/planet-select';
+import { t, translateSignName } from '@/lib/astrologyapi/i18n';
+import type { Lang } from '@/lib/lang';
 import type { BirthInput } from '@/lib/astrologyapi/params';
 import type {
   AstrologyApiAscendantReport,
@@ -12,12 +14,12 @@ import type {
 } from '@/lib/astrologyapi/types';
 import { fetchAstrologyApiPlanetReport } from '@/app/astrologyapi/kundli/actions';
 
-export function AstrologyApiAscendantCard({ data }: { data: AstrologyApiAscendantReport }) {
+export function AstrologyApiAscendantCard({ data, lang }: { data: AstrologyApiAscendantReport; lang: Lang }) {
   return (
     <Card>
       <CardHeader>
-        <CardTitle>Ascendant Reading</CardTitle>
-        <CardDescription>Lagna: {data.asc_report.ascendant}</CardDescription>
+        <CardTitle>{t(lang, 'ascendant.title')}</CardTitle>
+        <CardDescription>{t(lang, 'ascendant.lagna', { sign: translateSignName(lang, data.asc_report.ascendant) })}</CardDescription>
       </CardHeader>
       <CardContent>
         <p className="text-sm text-muted-foreground">{data.asc_report.report}</p>
@@ -27,27 +29,27 @@ export function AstrologyApiAscendantCard({ data }: { data: AstrologyApiAscendan
 }
 
 const NAKSHATRA_SECTIONS = [
-  ['physical', 'Physical'],
-  ['character', 'Character'],
-  ['education', 'Education & Career'],
-  ['family', 'Family'],
-  ['health', 'Health'],
+  ['physical', 'nakshatraReport.physical'],
+  ['character', 'nakshatraReport.character'],
+  ['education', 'nakshatraReport.education'],
+  ['family', 'nakshatraReport.family'],
+  ['health', 'nakshatraReport.health'],
 ] as const;
 
-export function AstrologyApiNakshatraCard({ data }: { data: AstrologyApiNakshatraReport }) {
+export function AstrologyApiNakshatraCard({ data, lang }: { data: AstrologyApiNakshatraReport; lang: Lang }) {
   return (
     <Card>
       <CardHeader>
-        <CardTitle>Nakshatra Reading</CardTitle>
-        <CardDescription>Birth-star interpretation by life area</CardDescription>
+        <CardTitle>{t(lang, 'nakshatraReport.title')}</CardTitle>
+        <CardDescription>{t(lang, 'nakshatraReport.subtitle')}</CardDescription>
       </CardHeader>
       <CardContent className="space-y-4">
-        {NAKSHATRA_SECTIONS.map(([key, label]) => {
+        {NAKSHATRA_SECTIONS.map(([key, labelKey]) => {
           const paragraphs = data[key];
           if (!paragraphs || paragraphs.length === 0) return null;
           return (
             <div key={key}>
-              <h3 className="mb-1 text-sm font-semibold text-foreground">{label}</h3>
+              <h3 className="mb-1 text-sm font-semibold text-foreground">{t(lang, labelKey)}</h3>
               {paragraphs.map((p, i) => (
                 <p key={i} className="text-sm text-muted-foreground">
                   {p}
@@ -61,14 +63,14 @@ export function AstrologyApiNakshatraCard({ data }: { data: AstrologyApiNakshatr
   );
 }
 
-export function AstrologyApiPitraDoshaCard({ data }: { data: AstrologyApiPitraDosha }) {
+export function AstrologyApiPitraDoshaCard({ data, lang }: { data: AstrologyApiPitraDosha; lang: Lang }) {
   return (
     <Card>
       <CardHeader>
         <div className="flex items-center justify-between">
-          <CardTitle>Pitra Dosha</CardTitle>
+          <CardTitle>{t(lang, 'pitraDosha.title')}</CardTitle>
           <Badge variant={data.is_pitri_dosha_present ? 'destructive' : 'secondary'}>
-            {data.is_pitri_dosha_present ? 'Present' : 'Not present'}
+            {data.is_pitri_dosha_present ? t(lang, 'common.present') : t(lang, 'common.notPresent')}
           </Badge>
         </div>
       </CardHeader>
@@ -93,7 +95,7 @@ export function AstrologyApiPitraDoshaCard({ data }: { data: AstrologyApiPitraDo
  * (they have no owned sign in classical Vedic astrology) and `"Not available"` for the house reading;
  * both are rendered as-is rather than treated as errors.
  */
-export function AstrologyApiPlanetReportSection({ birth }: { birth: BirthInput }) {
+export function AstrologyApiPlanetReportSection({ birth, lang }: { birth: BirthInput; lang: Lang }) {
   const [planet, setPlanet] = useState('moon');
   const [result, setResult] = useState<Awaited<ReturnType<typeof fetchAstrologyApiPlanetReport>> | null>(null);
   const [error, setError] = useState<string | null>(null);
@@ -107,7 +109,7 @@ export function AstrologyApiPlanetReportSection({ birth }: { birth: BirthInput }
         setResult(await fetchAstrologyApiPlanetReport({ ...birth, planet: nextPlanet }));
       } catch (err) {
         setResult(null);
-        setError(err instanceof Error ? err.message : 'Failed to load planet reading');
+        setError(err instanceof Error ? err.message : t(lang, 'planetReport.errorFallback'));
       }
     });
   }
@@ -115,27 +117,27 @@ export function AstrologyApiPlanetReportSection({ birth }: { birth: BirthInput }
   return (
     <Card>
       <CardHeader>
-        <CardTitle>Rashi &amp; House Reading</CardTitle>
-        <CardDescription>Sign and house placement interpretation, by planet</CardDescription>
+        <CardTitle>{t(lang, 'planetReport.title')}</CardTitle>
+        <CardDescription>{t(lang, 'planetReport.subtitle')}</CardDescription>
       </CardHeader>
       <CardContent className="space-y-4">
-        <PlanetSelect value={planet} onChange={load} disabled={pending} />
-        {pending && <p className="text-sm text-muted-foreground">Loading...</p>}
+        <PlanetSelect value={planet} onChange={load} disabled={pending} lang={lang} />
+        {pending && <p className="text-sm text-muted-foreground">{t(lang, 'common.loading')}</p>}
         {error && <p className="text-sm text-destructive">{error}</p>}
         {!pending && !error && (
           <>
             {!result ? (
-              <p className="text-sm text-muted-foreground">Pick a planet to see its reading.</p>
+              <p className="text-sm text-muted-foreground">{t(lang, 'planetReport.pick')}</p>
             ) : (
               <div className="space-y-3">
                 <div>
-                  <h3 className="mb-1 text-sm font-semibold text-foreground">Sign placement</h3>
+                  <h3 className="mb-1 text-sm font-semibold text-foreground">{t(lang, 'planetReport.signPlacement')}</h3>
                   <p className="text-sm text-muted-foreground">
-                    {result.rashi.rashi_report ?? 'No reading available for this placement.'}
+                    {result.rashi.rashi_report ?? t(lang, 'planetReport.noReading')}
                   </p>
                 </div>
                 <div>
-                  <h3 className="mb-1 text-sm font-semibold text-foreground">House placement</h3>
+                  <h3 className="mb-1 text-sm font-semibold text-foreground">{t(lang, 'planetReport.housePlacement')}</h3>
                   <p className="text-sm text-muted-foreground">{result.house.house_report}</p>
                 </div>
               </div>

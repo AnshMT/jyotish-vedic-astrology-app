@@ -2,6 +2,8 @@ import type { Metadata } from 'next';
 import { hasAstrologyApiKey, astrologyApiRequest } from '@/lib/astrologyapi/client';
 import { tryUnwrap } from '@/lib/astrologyapi/guard';
 import { toDateParams } from '@/lib/astrologyapi/params';
+import { t } from '@/lib/astrologyapi/i18n';
+import { getLang } from '@/lib/lang.server';
 import { resolveDateAndLocation } from '@/lib/location';
 import { formatDate } from '@/lib/format';
 import { AstrologyApiKeyMissing } from '@/components/astrologyapi/api-key-missing';
@@ -25,6 +27,7 @@ export default async function AstrologyApiPanchangPage({
 }) {
   if (!hasAstrologyApiKey) return <AstrologyApiKeyMissing />;
 
+  const lang = await getLang();
   const { date, label, coords } = resolveDateAndLocation(await searchParams);
   const params = toDateParams({ date, time: '06:00', ...coords });
 
@@ -35,11 +38,11 @@ export default async function AstrologyApiPanchangPage({
   return (
     <div className="space-y-8">
       <DateLocationControls date={date} label={label} />
-      <PageHeader title="Panchang" subtitle={formatDate(date)} badge={label} />
+      <PageHeader title={t(lang, 'panchang.title')} subtitle={formatDate(date)} badge={label} />
       {'error' in panchang ? (
         <AstrologyApiDataError message={panchang.error} />
       ) : (
-        <AstrologyApiPanchangView data={panchang.data} />
+        <AstrologyApiPanchangView data={panchang.data} lang={lang} />
       )}
     </div>
   );

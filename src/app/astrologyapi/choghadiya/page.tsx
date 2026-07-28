@@ -2,6 +2,8 @@ import type { Metadata } from 'next';
 import { hasAstrologyApiKey, astrologyApiRequest } from '@/lib/astrologyapi/client';
 import { tryUnwrap } from '@/lib/astrologyapi/guard';
 import { toDateParams } from '@/lib/astrologyapi/params';
+import { t } from '@/lib/astrologyapi/i18n';
+import { getLang } from '@/lib/lang.server';
 import { resolveDateAndLocation } from '@/lib/location';
 import { formatDate } from '@/lib/format';
 import { AstrologyApiKeyMissing } from '@/components/astrologyapi/api-key-missing';
@@ -24,6 +26,7 @@ export default async function AstrologyApiChoghadiyaPage({
 }) {
   if (!hasAstrologyApiKey) return <AstrologyApiKeyMissing />;
 
+  const lang = await getLang();
   const { date, label, coords } = resolveDateAndLocation(await searchParams);
   const params = toDateParams({ date, time: '06:00', ...coords });
 
@@ -34,11 +37,11 @@ export default async function AstrologyApiChoghadiyaPage({
   return (
     <div className="space-y-8">
       <DateLocationControls date={date} label={label} />
-      <PageHeader title="Choghadiya" subtitle={formatDate(date)} badge={label} />
+      <PageHeader title={t(lang, 'choghadiya.title')} subtitle={formatDate(date)} badge={label} />
       {'error' in choghadiya ? (
         <AstrologyApiDataError message={choghadiya.error} />
       ) : (
-        <AstrologyApiChoghadiyaView data={choghadiya.data} />
+        <AstrologyApiChoghadiyaView data={choghadiya.data} lang={lang} />
       )}
     </div>
   );

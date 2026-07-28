@@ -1,5 +1,7 @@
 import { Badge } from '@/components/ui/badge';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { t } from '@/lib/astrologyapi/i18n';
+import type { Lang } from '@/lib/lang';
 import type {
   AstrologyApiGemSuggestion,
   AstrologyApiPujaSuggestion,
@@ -8,44 +10,44 @@ import type {
 } from '@/lib/astrologyapi/types';
 
 const GEM_CATEGORIES = [
-  ['LIFE', 'Life stone', 'Strengthens the chart’s primary ruling planet'],
-  ['BENEFIC', 'Benefic stone', 'Supports the most benefic planet in the chart'],
-  ['LUCKY', 'Lucky stone', 'General luck and well-being'],
+  ['LIFE', 'gem.life', 'gem.lifeDesc'],
+  ['BENEFIC', 'gem.benefic', 'gem.beneficDesc'],
+  ['LUCKY', 'gem.lucky', 'gem.luckyDesc'],
 ] as const;
 
-export function AstrologyApiGemSuggestionGrid({ data }: { data: AstrologyApiGemSuggestion }) {
+export function AstrologyApiGemSuggestionGrid({ data, lang }: { data: AstrologyApiGemSuggestion; lang: Lang }) {
   return (
     <Card>
       <CardHeader>
-        <CardTitle>Gemstone Suggestions</CardTitle>
+        <CardTitle>{t(lang, 'gem.title')}</CardTitle>
       </CardHeader>
       <CardContent className="grid grid-cols-1 gap-4 sm:grid-cols-3">
-        {GEM_CATEGORIES.map(([key, label, desc]) => {
+        {GEM_CATEGORIES.map(([key, labelKey, descKey]) => {
           const gem = data[key];
           return (
             <div key={key} className="rounded-lg border border-border bg-muted/30 p-3">
-              <p className="text-xs text-muted-foreground">{label}</p>
+              <p className="text-xs text-muted-foreground">{t(lang, labelKey)}</p>
               <p className="mt-1 font-medium text-foreground">{gem.name}</p>
-              <p className="mt-1 text-xs text-muted-foreground">{desc}</p>
+              <p className="mt-1 text-xs text-muted-foreground">{t(lang, descKey)}</p>
               <dl className="mt-3 space-y-1 text-xs text-muted-foreground">
                 <div className="flex justify-between">
-                  <dt>Metal</dt>
+                  <dt>{t(lang, 'gem.metal')}</dt>
                   <dd className="text-foreground">{gem.wear_metal}</dd>
                 </div>
                 <div className="flex justify-between">
-                  <dt>Finger</dt>
+                  <dt>{t(lang, 'gem.finger')}</dt>
                   <dd className="text-foreground">{gem.wear_finger}</dd>
                 </div>
                 <div className="flex justify-between">
-                  <dt>Weight</dt>
+                  <dt>{t(lang, 'gem.weight')}</dt>
                   <dd className="text-foreground">{gem.weight_caret} ct</dd>
                 </div>
                 <div className="flex justify-between">
-                  <dt>Day</dt>
+                  <dt>{t(lang, 'gem.day')}</dt>
                   <dd className="text-foreground">{gem.wear_day}</dd>
                 </div>
                 <div className="flex justify-between">
-                  <dt>Alternative</dt>
+                  <dt>{t(lang, 'gem.alternative')}</dt>
                   <dd className="text-foreground">{gem.semi_gem}</dd>
                 </div>
               </dl>
@@ -57,24 +59,24 @@ export function AstrologyApiGemSuggestionGrid({ data }: { data: AstrologyApiGemS
   );
 }
 
-export function AstrologyApiPujaSuggestionList({ data }: { data: AstrologyApiPujaSuggestion }) {
+export function AstrologyApiPujaSuggestionList({ data, lang }: { data: AstrologyApiPujaSuggestion; lang: Lang }) {
   const active = data.suggestions.filter((s) => s.status).sort((a, b) => b.priority - a.priority);
   return (
     <Card>
       <CardHeader>
-        <CardTitle>Puja Suggestions</CardTitle>
+        <CardTitle>{t(lang, 'puja.title')}</CardTitle>
         <CardDescription>{data.summary}</CardDescription>
       </CardHeader>
       <CardContent>
         {active.length === 0 ? (
-          <p className="text-sm text-muted-foreground">No puja recommendations for this chart.</p>
+          <p className="text-sm text-muted-foreground">{t(lang, 'puja.none')}</p>
         ) : (
           <div className="space-y-4">
             {active.map((s) => (
               <div key={s.puja_id} className="rounded-lg border border-border p-3">
                 <div className="mb-1 flex items-center justify-between gap-2">
                   <span className="font-medium text-foreground">{s.title}</span>
-                  <Badge variant="outline">Priority {s.priority}</Badge>
+                  <Badge variant="outline">{t(lang, 'puja.priority', { n: s.priority })}</Badge>
                 </div>
                 <p className="text-sm text-muted-foreground">{s.one_line}</p>
               </div>
@@ -86,11 +88,11 @@ export function AstrologyApiPujaSuggestionList({ data }: { data: AstrologyApiPuj
   );
 }
 
-export function AstrologyApiRudrakshaCard({ data }: { data: AstrologyApiRudrakshaSuggestion }) {
+export function AstrologyApiRudrakshaCard({ data, lang }: { data: AstrologyApiRudrakshaSuggestion; lang: Lang }) {
   return (
     <Card>
       <CardHeader>
-        <CardTitle>Rudraksha Suggestion</CardTitle>
+        <CardTitle>{t(lang, 'rudraksha.title')}</CardTitle>
         <CardDescription>{data.name}</CardDescription>
       </CardHeader>
       <CardContent className="space-y-2">
@@ -101,11 +103,11 @@ export function AstrologyApiRudrakshaCard({ data }: { data: AstrologyApiRudraksh
   );
 }
 
-export function AstrologyApiSadhesatiRemediesCard({ data }: { data: AstrologyApiSadhesatiRemedies }) {
+export function AstrologyApiSadhesatiRemediesCard({ data, lang }: { data: AstrologyApiSadhesatiRemedies; lang: Lang }) {
   return (
     <Card>
       <CardHeader>
-        <CardTitle>Sadhesati Remedies</CardTitle>
+        <CardTitle>{t(lang, 'sadhesatiRemedies.title')}</CardTitle>
       </CardHeader>
       <CardContent>
         <ul className="list-inside list-disc space-y-1 text-sm text-muted-foreground">
