@@ -20,12 +20,14 @@ import { RoxyChartDiagram } from '@/components/roxy/chart-diagram';
 import { RoxyPlanetsTable } from '@/components/roxy/planets-table';
 import { RoxyDashaTimeline } from '@/components/roxy/dasha-timeline';
 import { RoxyAshtakavargaGrid, RoxyShadbalaTable } from '@/components/roxy/strength';
+import { RoxyAscendantCard, RoxyNakshatraReadingCard, RoxyYogasCard } from '@/components/roxy/interpretation';
 import { DEFAULT_CITY, todayString, type City, type Coords } from '@/lib/location';
 import { findMoonPlacement, findWeakestPlanet } from '@/lib/roxy/remedies';
+import { findLagnaRashi } from '@/lib/roxy/interpretation';
 import type { Lang } from '@/lib/lang';
 import { t } from '@/lib/roxy/i18n';
 import { t as tCommon } from '@/lib/i18n/common';
-import { generateKundali, fetchDivisionalChart, fetchRoxyRemedies } from './actions';
+import { generateKundali, fetchDivisionalChart, fetchRoxyRemedies, fetchRoxyInterpretation } from './actions';
 
 type Kundali = Awaited<ReturnType<typeof generateKundali>>;
 
@@ -66,6 +68,12 @@ export function KundaliClient({ lang }: { lang: Lang }) {
   const [remediesError, setRemediesError] = useState<string | null>(null);
   const [remediesPending, startRemedies] = useTransition();
 
+  const [interpretation, setInterpretation] = useState<Awaited<ReturnType<typeof fetchRoxyInterpretation>> | null>(
+    null,
+  );
+  const [interpretationError, setInterpretationError] = useState<string | null>(null);
+  const [interpretationPending, startInterpretation] = useTransition();
+
   function onCity(city: City) {
     setCoords({ latitude: city.latitude, longitude: city.longitude, timezone: city.utcOffset });
   }
@@ -81,6 +89,8 @@ export function KundaliClient({ lang }: { lang: Lang }) {
         setDivision(9);
         setRemedies(null);
         setRemediesError(null);
+        setInterpretation(null);
+        setInterpretationError(null);
       } catch (err) {
         setError(err instanceof Error ? err.message : t(lang, 'kundali.errorFallback'));
         setResult(null);
@@ -101,16 +111,37 @@ export function KundaliClient({ lang }: { lang: Lang }) {
 
   /** Loads Vedic remedies the first time the Remedies tab is opened, deriving the Moon sign/nakshatra/weakest planet from the already-generated chart and shadbala rather than re-fetching them. */
   function onTabChange(value: string) {
-    if (value !== 'remedies' || remedies || remediesPending || !result) return;
-    startRemedies(async () => {
-      try {
-        const { moonSign, nakshatraKey } = findMoonPlacement(result.chart);
-        const weakPlanet = findWeakestPlanet(result.shadbala);
-        setRemedies(await fetchRoxyRemedies({ nakshatraKey, moonSign, weakPlanet, lang }));
-      } catch (err) {
-        setRemediesError(err instanceof Error ? err.message : t(lang, 'remedies.errorFallback'));
-      }
-    });
+    if (value === 'remedies' && !remedies && !remediesPending && result) {
+      startRemedies(async () => {
+        try {
+          const { moonSign, nakshatraKey } = findMoonPlacement(result.chart);
+          const weakPlanet = findWeakestPlanet(result.shadbala);
+          setRemedies(await fetchRoxyRemedies({ nakshatraKey, moonSign, weakPlanet, lang }));
+        } catch (err) {
+          setRemediesError(err instanceof Error ? err.message : t(lang, 'remedies.errorFallback'));
+        }
+      });
+    }
+    if (value === 'interpretation' && !interpretation && !interpretationPending && result) {
+      startInterpretation(async () => {
+        try {
+          const lagnaRashi = findLagnaRashi(result.chart);
+          const { nakshatraKey } = findMoonPlacement(result.chart);
+          setInterpretation(
+            await fetchRoxyInterpretation({
+              date,
+              time: `${time}:00`,
+              ...coords,
+              lagnaRashi,
+              nakshatraKey,
+              lang,
+            }),
+          );
+        } catch (err) {
+          setInterpretationError(err instanceof Error ? err.message : t(lang, 'interpretation.errorFallback'));
+        }
+      });
+    }
   }
 
   return (
@@ -161,6 +192,7 @@ export function KundaliClient({ lang }: { lang: Lang }) {
               <TabsTrigger value="dasha">{t(lang, 'kundali.tab.dasha')}</TabsTrigger>
               <TabsTrigger value="doshas">{t(lang, 'kundali.tab.doshas')}</TabsTrigger>
               <TabsTrigger value="strength">{t(lang, 'kundali.tab.strength')}</TabsTrigger>
+              <TabsTrigger value="interpretation">{t(lang, 'kundali.tab.interpretation')}</TabsTrigger>
               <TabsTrigger value="remedies">{t(lang, 'kundali.tab.remedies')}</TabsTrigger>
             </TabsList>
           </div>
@@ -217,6 +249,20 @@ export function KundaliClient({ lang }: { lang: Lang }) {
           <TabsContent value="strength" className="mt-6 space-y-6">
             <RoxyAshtakavargaGrid data={result.ashtakavarga} lang={lang} />
             <RoxyShadbalaTable data={result.shadbala} lang={lang} />
+          </TabsContent>
+
+          <TabsContent value="interpretation" className="mt-6 space-y-6">
+            {interpretationPending && (
+              <p className="py-8 text-center text-muted-foreground">{t(lang, 'interpretation.loading')}</p>
+            )}
+            {interpretationError && <p className="text-center text-sm text-destructive">{interpretationError}</p>}
+            {interpretation && (
+              <>
+                <RoxyAscendantCard data={interpretation.rashi} lang={lang} />
+                <RoxyNakshatraReadingCard data={interpretation.nakshatra} lang={lang} />
+                <RoxyYogasCard data={interpretation.yogas} lang={lang} />
+              </>
+            )}
           </TabsContent>
 
           <TabsContent value="remedies" className="mt-6 space-y-6">

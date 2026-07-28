@@ -50,6 +50,16 @@ const NAKSHATRA_SLUGS = [
   'purva-bhadrapada', 'uttara-bhadrapada', 'revati',
 ] as const;
 
+const RASHI_SLUGS = [
+  'mesha', 'vrishabha', 'mithun', 'karka', 'simha', 'kanya',
+  'tula', 'vrischika', 'dhanu', 'makar', 'kumbha', 'meen',
+] as const;
+
+const ZODIAC_TITLE_CASE = [
+  'Aries', 'Taurus', 'Gemini', 'Cancer', 'Leo', 'Virgo',
+  'Libra', 'Scorpio', 'Sagittarius', 'Capricorn', 'Aquarius', 'Pisces',
+];
+
 /**
  * Vedic remedies for an already-generated kundali: the birth nakshatra's traditional remedies (mantras,
  * gemstones, rituals), healing crystals for the Moon sign, and healing crystals for the weakest Shadbala
@@ -81,4 +91,38 @@ export async function fetchRoxyRemedies({
   ]);
 
   return { nakshatra, moonSignCrystals, planetCrystals };
+}
+
+/**
+ * RoxyAPI has no equivalents to AstrologyAPI's ascendant/nakshatra/pitra-dosha prose reports, so this
+ * assembles the closest available substitute for an already-generated kundali: the Lagna sign's reference
+ * characteristics (`GET /vedic-astrology/rashis/:id`) standing in for an ascendant reading, the birth
+ * nakshatra's characteristics (same lookup the Remedies tab uses), and the 12 classical yogas
+ * (`POST /vedic-astrology/yoga/detect`) — the one genuinely chart-driven interpretive endpoint RoxyAPI does
+ * offer, which this app doesn't otherwise surface. Takes already-derived scalars (via
+ * `findLagnaRashi`/`findMoonPlacement` in `@/lib/roxy/interpretation` and `@/lib/roxy/remedies`) since the
+ * chart is already in the browser from `generateKundali`.
+ */
+export async function fetchRoxyInterpretation({
+  date,
+  time,
+  latitude,
+  longitude,
+  timezone,
+  lagnaRashi,
+  nakshatraKey,
+  lang,
+}: BirthInput & { lagnaRashi: string; nakshatraKey: number }) {
+  const body = { date, time, latitude, longitude, timezone };
+  const rashiIndex = ZODIAC_TITLE_CASE.findIndex((z) => z.toLowerCase() === lagnaRashi.toLowerCase());
+  const rashiId = RASHI_SLUGS[rashiIndex] ?? RASHI_SLUGS[0];
+  const nakshatraId = NAKSHATRA_SLUGS[nakshatraKey - 1];
+
+  const [rashi, nakshatra, yogas] = await Promise.all([
+    unwrap(roxy.vedicAstrology.getRashi({ path: { id: rashiId }, query: { lang } })),
+    unwrap(roxy.vedicAstrology.getNakshatra({ path: { id: nakshatraId }, query: { lang } })),
+    unwrap(roxy.vedicAstrology.detectYogas({ query: { lang }, body })),
+  ]);
+
+  return { rashi, nakshatra, yogas };
 }
