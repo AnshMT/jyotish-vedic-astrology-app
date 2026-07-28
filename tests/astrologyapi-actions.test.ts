@@ -29,7 +29,7 @@ afterEach(() => {
 });
 
 describe('generateAstrologyApiKundli', () => {
-  it('fans out to all sixteen endpoints with split day/month/year params', async () => {
+  it('fans out to all seventeen endpoints with split day/month/year params', async () => {
     const { generateAstrologyApiKundli } = await import('@/app/astrologyapi/kundli/actions');
 
     await generateAstrologyApiKundli(birth);
@@ -39,6 +39,7 @@ describe('generateAstrologyApiKundli', () => {
       expect.arrayContaining([
         'https://json.astrologyapi.com/v1/planets',
         'https://json.astrologyapi.com/v1/horo_chart/D1',
+        'https://json.astrologyapi.com/v1/horo_chart_image/D1',
         'https://json.astrologyapi.com/v1/major_vdasha',
         'https://json.astrologyapi.com/v1/kalsarpa_details',
         'https://json.astrologyapi.com/v1/sadhesati_current_status',
@@ -55,7 +56,7 @@ describe('generateAstrologyApiKundli', () => {
         'https://json.astrologyapi.com/v1/lalkitab_debts',
       ]),
     );
-    expect(fetchMock.mock.calls).toHaveLength(16);
+    expect(fetchMock.mock.calls).toHaveLength(17);
 
     const [, options] = fetchMock.mock.calls[0];
     expect(options.headers['x-astrologyapi-key']).toBe('test-token');

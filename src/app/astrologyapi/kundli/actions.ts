@@ -6,6 +6,7 @@ import { toDateParams, type BirthInput } from '@/lib/astrologyapi/params';
 import type {
   AstrologyApiPlanet,
   AstrologyApiChartHouse,
+  AstrologyApiChartImage,
   AstrologyApiDashaPeriod,
   AstrologyApiKalsarpaDosha,
   AstrologyApiSadhesati,
@@ -26,10 +27,11 @@ import type {
 
 /**
  * Fans out one birth input to AstrologyAPI's kundli-equivalent endpoints in parallel: planets, the D1
- * birth chart, Vimshottari major dashas, kalsarpa and sadhesati dosha, sarvashtakavarga, shadbala, the
- * Lagna/nakshatra/pitra-dosha prose readings, the gemstone/puja/rudraksha/sadhesati remedy suggestions,
- * and the Lal Kitab chart and debts. Mirrors `@/app/kundali/actions`'s `generateKundali`, sourced from
- * AstrologyAPI instead of RoxyAPI.
+ * birth chart (both the JSON house data and a rendered SVG diagram via `horo_chart_image`, matching the
+ * visual chart RoxyAPI's `RoxyVedicKundli` renders), Vimshottari major dashas, kalsarpa and sadhesati
+ * dosha, sarvashtakavarga, shadbala, the Lagna/nakshatra/pitra-dosha prose readings, the
+ * gemstone/puja/rudraksha/sadhesati remedy suggestions, and the Lal Kitab chart and debts. Mirrors
+ * `@/app/kundali/actions`'s `generateKundali`, sourced from AstrologyAPI instead of RoxyAPI.
  */
 export async function generateAstrologyApiKundli(input: BirthInput) {
   const params = toDateParams(input);
@@ -37,6 +39,7 @@ export async function generateAstrologyApiKundli(input: BirthInput) {
   const [
     planets,
     chart,
+    chartImage,
     dashas,
     kalsarpa,
     sadhesati,
@@ -54,6 +57,7 @@ export async function generateAstrologyApiKundli(input: BirthInput) {
   ] = await Promise.all([
     unwrap(() => astrologyApiRequest<AstrologyApiPlanet[]>('planets', params)),
     unwrap(() => astrologyApiRequest<AstrologyApiChartHouse[]>('horo_chart/D1', params)),
+    unwrap(() => astrologyApiRequest<AstrologyApiChartImage>('horo_chart_image/D1', { ...params, chartType: 'north' })),
     unwrap(() => astrologyApiRequest<AstrologyApiDashaPeriod[]>('major_vdasha', params)),
     unwrap(() => astrologyApiRequest<AstrologyApiKalsarpaDosha>('kalsarpa_details', params)),
     unwrap(() => astrologyApiRequest<AstrologyApiSadhesati>('sadhesati_current_status', params)),
@@ -73,6 +77,7 @@ export async function generateAstrologyApiKundli(input: BirthInput) {
   return {
     planets,
     chart,
+    chartImage,
     dashas,
     kalsarpa,
     sadhesati,
