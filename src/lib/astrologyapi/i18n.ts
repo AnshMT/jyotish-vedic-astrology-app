@@ -241,6 +241,126 @@ const EN: Dict = {
 
   'transitsView.ascendant': 'Ascendant: {sign}',
   'transitsView.none': 'No transit aspects this month.',
+
+  'kundli.tab.advanced': 'Advanced',
+
+  'ghatChakra.title': 'Ghat Chakra',
+  'ghatChakra.subtitle': 'Birth-moment anga snapshot: lunar month, tithi, weekday, nakshatra, yog, karan, pahar, and Moon sign',
+  'ghatChakra.month': 'Month',
+  'ghatChakra.tithi': 'Tithi',
+  'ghatChakra.day': 'Day',
+  'ghatChakra.nakshatra': 'Nakshatra',
+  'ghatChakra.yog': 'Yog',
+  'ghatChakra.karan': 'Karan',
+  'ghatChakra.pahar': 'Pahar',
+  'ghatChakra.moon': 'Moon sign',
+
+  'currentDasha.title': 'Current Period (All Levels)',
+  'currentDasha.subtitle': 'The active Vimshottari period at every depth, as of today',
+  'currentDasha.level.maha': 'Mahadasha',
+  'currentDasha.level.antar': 'Antardasha',
+  'currentDasha.level.pratyantar': 'Pratyantardasha',
+  'currentDasha.level.sookshma': 'Sookshma Dasha',
+  'currentDasha.level.prana': 'Prana Dasha',
+
+  'bhavabala.title': 'Bhavabala',
+  'bhavabala.subtitle': 'Per-house strength, the Bhava counterpart to Shadbala',
+  'bhavabala.house': 'House',
+  'bhavabala.sign': 'Sign',
+  'bhavabala.strength': 'Strength (virupa)',
+  'bhavabala.percentOfBaseline': '% of baseline',
+  'bhavabala.strongest': 'Strongest: House {n}',
+  'bhavabala.weakest': 'Weakest: House {n}',
+
+  'maitri.title': 'Panchadha Maitri',
+  'maitri.subtitle': 'Five-fold planetary friendship: natural, temporary, and the combined verdict',
+  'maitri.natural': 'Natural Friendship',
+  'maitri.temporary': 'Temporary Friendship',
+  'maitri.combined': 'Combined (Panchadha) Verdict',
+  'maitri.towards': 'Toward →',
+
+  'lalkitab.housesTitle': 'Lal Kitab Houses',
+  'lalkitab.housesSubtitle': "Each khana's ruler, pakka ghar, kismat, and exaltation/debilitation",
+  'lalkitab.maalik': 'Ruler (Maalik)',
+  'lalkitab.pakkaGhar': 'Pakka Ghar',
+  'lalkitab.kismat': 'Kismat',
+  'lalkitab.exalted': 'Exalted',
+  'lalkitab.debilitated': 'Debilitated',
+  'lalkitab.none': 'None',
+  'lalkitab.planetsTitle': 'Lal Kitab Planets',
+  'lalkitab.planetsSubtitle': "Each graha's Lal Kitab sign placement, state, and nature",
+  'lalkitab.rashi': 'Rashi',
+  'lalkitab.position': 'Position',
+  'lalkitab.nature': 'Nature',
+  'lalkitab.state': 'State',
+  'lalkitab.awake': 'Awake',
+  'lalkitab.sleeping': 'Sleeping (Soya)',
+  'lalkitab.natureMalefic': 'Malefic',
+  'lalkitab.natureBenefic': 'Benefic',
+
+  'charDasha.title': 'Char Dasha (Jaimini)',
+  'charDasha.subtitle': 'Sign-based dasha system, an alternative to Vimshottari',
+  'charDasha.currentTitle': 'Current Period',
+  'charDasha.level.maha': 'Mahadasha',
+  'charDasha.level.antar': 'Antardasha',
+  'charDasha.level.pratyantar': 'Pratyantardasha',
+  'charDasha.lifetimeTitle': 'Lifetime Sequence',
+
+  'yoginiDasha.title': 'Yogini Dasha',
+  'yoginiDasha.subtitle': 'An 8-planet, 36-year repeating dasha cycle keyed to the birth nakshatra',
+  'yoginiDasha.currentTitle': 'Current Period',
+  'yoginiDasha.level.maha': 'Mahadasha',
+  'yoginiDasha.level.antar': 'Antardasha',
+  'yoginiDasha.level.pratyantar': 'Pratyantardasha',
+  'yoginiDasha.lifetimeTitle': 'Lifetime Cycle',
+
+  'kp.title': 'KP System',
+  'kp.subtitle': 'Krishnamurti Paddhati: sub-lorded planet positions and house cusps',
+  'kp.planetsTitle': 'KP Planets',
+  'kp.planet': 'Planet',
+  'kp.sign': 'Sign',
+  'kp.house': 'House',
+  'kp.nakshatra': 'Nakshatra',
+  'kp.subLord': 'Sub Lord',
+  'kp.subSubLord': 'Sub-Sub Lord',
+  'kp.cuspsTitle': 'House Cusps',
+  'kp.cuspDegree': 'Cusp Degree',
+
+  'kundli.tab.varshaphal': 'Varshaphal',
+  'varshaphal.title': 'Varshaphal',
+  'varshaphal.subtitle': 'The annual solar-return chart (Tajik system) for a chosen year',
+  'varshaphal.yearLabel': 'Year',
+  'varshaphal.generate': 'Generate',
+  'varshaphal.generating': 'Generating...',
+  'varshaphal.errorFallback': 'Failed to generate Varshaphal',
+  'varshaphal.yearLord': 'Year Lord: {planet}',
+  'varshaphal.date': 'Varshaphal moment: {date}',
+  'varshaphal.munthaTitle': 'Muntha',
+  'varshaphal.munthaDesc': 'Muntha sign for this year: {sign}',
+  'varshaphal.muddaDashaTitle': 'Mudda Dasha',
+  'varshaphal.muddaDashaSubtitle': "The annual chart's own proportional dasha sequence",
+  'varshaphal.yogaTitle': 'Active Yogas',
+  'varshaphal.yogaSubtitle': 'Yogas active for this Varshaphal year',
+  'varshaphal.yogaNone': 'No Varshaphal yogas active this year.',
+  'varshaphal.planetsTitle': 'Varshaphal Planets',
+
+  'match.dashakootScore': 'Dashakoot Score',
+  'match.dashakootBreakdown': 'Dashakoot Breakdown',
+  'match.koot.dina': 'Dina',
+  'match.koot.rashi': 'Rashi',
+  'match.koot.rasyadhipati': 'Rasyadhipati',
+  'match.koot.rajju': 'Rajju',
+  'match.koot.vedha': 'Vedha',
+  'match.koot.mahendra': 'Mahendra',
+  'match.koot.streeDeergha': 'Stree Deergha',
+  'match.percentageTitle': 'Compatibility Percentage',
+  'match.percentage.ashtakoota': 'Ashtakoota',
+  'match.percentage.manglik': 'Manglik',
+  'match.percentage.rajju': 'Rajju',
+  'match.percentage.vedha': 'Vedha',
+  'match.percentage.overall': 'Overall',
+  'match.goodOverall': 'Good overall match',
+  'match.notGoodOverall': 'Not a recommended match',
 };
 
 const HI: Dict = {
@@ -470,6 +590,126 @@ const HI: Dict = {
 
   'transitsView.ascendant': 'लग्न: {sign}',
   'transitsView.none': 'इस महीने कोई गोचर पहलू नहीं है।',
+
+  'kundli.tab.advanced': 'उन्नत',
+
+  'ghatChakra.title': 'घट चक्र',
+  'ghatChakra.subtitle': 'जन्म-क्षण की झलक: चंद्र मास, तिथि, वार, नक्षत्र, योग, करण, पहर और चंद्र राशि',
+  'ghatChakra.month': 'मास',
+  'ghatChakra.tithi': 'तिथि',
+  'ghatChakra.day': 'दिन',
+  'ghatChakra.nakshatra': 'नक्षत्र',
+  'ghatChakra.yog': 'योग',
+  'ghatChakra.karan': 'करण',
+  'ghatChakra.pahar': 'पहर',
+  'ghatChakra.moon': 'चंद्र राशि',
+
+  'currentDasha.title': 'वर्तमान काल (सभी स्तर)',
+  'currentDasha.subtitle': 'आज तक हर स्तर पर सक्रिय विंशोत्तरी काल',
+  'currentDasha.level.maha': 'महादशा',
+  'currentDasha.level.antar': 'अंतर्दशा',
+  'currentDasha.level.pratyantar': 'प्रत्यंतर्दशा',
+  'currentDasha.level.sookshma': 'सूक्ष्म दशा',
+  'currentDasha.level.prana': 'प्राण दशा',
+
+  'bhavabala.title': 'भावबल',
+  'bhavabala.subtitle': 'भाव अनुसार शक्ति — षड्बल का भाव-केंद्रित समकक्ष',
+  'bhavabala.house': 'भवन',
+  'bhavabala.sign': 'राशि',
+  'bhavabala.strength': 'शक्ति (विरुपा)',
+  'bhavabala.percentOfBaseline': '% आधार रेखा का',
+  'bhavabala.strongest': 'सबसे मज़बूत: भवन {n}',
+  'bhavabala.weakest': 'सबसे कमज़ोर: भवन {n}',
+
+  'maitri.title': 'पंचधा मैत्री',
+  'maitri.subtitle': 'पंचगुणित ग्रह मैत्री: नैसर्गिक, तात्कालिक, और संयुक्त निर्णय',
+  'maitri.natural': 'नैसर्गिक मैत्री',
+  'maitri.temporary': 'तात्कालिक मैत्री',
+  'maitri.combined': 'संयुक्त (पंचधा) निर्णय',
+  'maitri.towards': 'की ओर →',
+
+  'lalkitab.housesTitle': 'लाल किताब भवन',
+  'lalkitab.housesSubtitle': 'प्रत्येक खाने का मालिक, पक्का घर, किस्मत और उच्च/नीच स्थिति',
+  'lalkitab.maalik': 'मालिक',
+  'lalkitab.pakkaGhar': 'पक्का घर',
+  'lalkitab.kismat': 'किस्मत',
+  'lalkitab.exalted': 'उच्च',
+  'lalkitab.debilitated': 'नीच',
+  'lalkitab.none': 'कोई नहीं',
+  'lalkitab.planetsTitle': 'लाल किताब ग्रह',
+  'lalkitab.planetsSubtitle': 'प्रत्येक ग्रह की लाल किताब राशि स्थिति, अवस्था और प्रकृति',
+  'lalkitab.rashi': 'राशि',
+  'lalkitab.position': 'स्थिति',
+  'lalkitab.nature': 'प्रकृति',
+  'lalkitab.state': 'अवस्था',
+  'lalkitab.awake': 'जागृत',
+  'lalkitab.sleeping': 'सोया हुआ',
+  'lalkitab.natureMalefic': 'पाप ग्रह',
+  'lalkitab.natureBenefic': 'शुभ ग्रह',
+
+  'charDasha.title': 'चर दशा (जैमिनी)',
+  'charDasha.subtitle': 'राशि-आधारित दशा प्रणाली, विंशोत्तरी का एक विकल्प',
+  'charDasha.currentTitle': 'वर्तमान काल',
+  'charDasha.level.maha': 'महादशा',
+  'charDasha.level.antar': 'अंतर्दशा',
+  'charDasha.level.pratyantar': 'प्रत्यंतर्दशा',
+  'charDasha.lifetimeTitle': 'जीवनभर का क्रम',
+
+  'yoginiDasha.title': 'योगिनी दशा',
+  'yoginiDasha.subtitle': 'जन्म नक्षत्र पर आधारित 8-ग्रह, 36-वर्षीय पुनरावर्ती दशा चक्र',
+  'yoginiDasha.currentTitle': 'वर्तमान काल',
+  'yoginiDasha.level.maha': 'महादशा',
+  'yoginiDasha.level.antar': 'अंतर्दशा',
+  'yoginiDasha.level.pratyantar': 'प्रत्यंतर्दशा',
+  'yoginiDasha.lifetimeTitle': 'जीवनभर का चक्र',
+
+  'kp.title': 'केपी प्रणाली',
+  'kp.subtitle': 'कृष्णमूर्ति पद्धति: उप-स्वामी सहित ग्रह स्थिति और भाव कस्प',
+  'kp.planetsTitle': 'केपी ग्रह',
+  'kp.planet': 'ग्रह',
+  'kp.sign': 'राशि',
+  'kp.house': 'भवन',
+  'kp.nakshatra': 'नक्षत्र',
+  'kp.subLord': 'उप-स्वामी',
+  'kp.subSubLord': 'उप-उप-स्वामी',
+  'kp.cuspsTitle': 'भाव कस्प',
+  'kp.cuspDegree': 'कस्प अंश',
+
+  'kundli.tab.varshaphal': 'वर्षफल',
+  'varshaphal.title': 'वर्षफल',
+  'varshaphal.subtitle': 'चुने गए वर्ष के लिए वार्षिक सौर-प्रत्यागमन चार्ट (ताजिक प्रणाली)',
+  'varshaphal.yearLabel': 'वर्ष',
+  'varshaphal.generate': 'बनाएं',
+  'varshaphal.generating': 'बन रहा है...',
+  'varshaphal.errorFallback': 'वर्षफल बनाने में विफल',
+  'varshaphal.yearLord': 'वर्षेश: {planet}',
+  'varshaphal.date': 'वर्षफल क्षण: {date}',
+  'varshaphal.munthaTitle': 'मुंथा',
+  'varshaphal.munthaDesc': 'इस वर्ष की मुंथा राशि: {sign}',
+  'varshaphal.muddaDashaTitle': 'मुद्दा दशा',
+  'varshaphal.muddaDashaSubtitle': 'वार्षिक चार्ट का अपना आनुपातिक दशा क्रम',
+  'varshaphal.yogaTitle': 'सक्रिय योग',
+  'varshaphal.yogaSubtitle': 'इस वर्षफल वर्ष के लिए सक्रिय योग',
+  'varshaphal.yogaNone': 'इस वर्ष कोई वर्षफल योग सक्रिय नहीं है।',
+  'varshaphal.planetsTitle': 'वर्षफल ग्रह',
+
+  'match.dashakootScore': 'दशकूट अंक',
+  'match.dashakootBreakdown': 'दशकूट विवरण',
+  'match.koot.dina': 'दिन',
+  'match.koot.rashi': 'राशि',
+  'match.koot.rasyadhipati': 'राश्यधिपति',
+  'match.koot.rajju': 'रज्जु',
+  'match.koot.vedha': 'वेध',
+  'match.koot.mahendra': 'महेंद्र',
+  'match.koot.streeDeergha': 'स्त्री दीर्घ',
+  'match.percentageTitle': 'अनुकूलता प्रतिशत',
+  'match.percentage.ashtakoota': 'अष्टकूट',
+  'match.percentage.manglik': 'मांगलिक',
+  'match.percentage.rajju': 'रज्जु',
+  'match.percentage.vedha': 'वेध',
+  'match.percentage.overall': 'समग्र',
+  'match.goodOverall': 'समग्र रूप से अच्छा मिलान',
+  'match.notGoodOverall': 'अनुशंसित मिलान नहीं',
 };
 
 const DICTS: Record<'en' | 'hi', Dict> = { en: EN, hi: HI };
@@ -606,4 +846,48 @@ const MUHURTA_NAMES_HI: Dict = {
 export function translateMuhurta(lang: Lang, name: string): string {
   if (dictLang(lang) !== 'hi') return name;
   return MUHURTA_NAMES_HI[name] ?? name;
+}
+
+const FRIENDSHIP_LEVEL_HI: Dict = {
+  '--': '--',
+  Friend: 'मित्र',
+  Enemy: 'शत्रु',
+  Neutral: 'सम',
+  Intimate: 'घनिष्ठ',
+  Bitter: 'शत्रुवत्',
+};
+
+/** Translates a `panchadha_maitri` cell value (e.g. `"Friend"`, `"Intimate"`, or the self-pair `"--"`). */
+export function translateFriendshipLevel(lang: Lang, level: string): string {
+  if (dictLang(lang) !== 'hi') return level;
+  return FRIENDSHIP_LEVEL_HI[level] ?? level;
+}
+
+const YOGINI_DASHA_NAMES_HI: Dict = {
+  Mangla: 'मंगला',
+  Pingla: 'पिंगला',
+  Dhanya: 'धन्या',
+  Bhramari: 'भ्रामरी',
+  Bhadrika: 'भद्रिका',
+  Ulka: 'उल्का',
+  Siddha: 'सिद्धा',
+  Sankata: 'संकटा',
+};
+
+/** Translates a `yogini_dasha` period name (e.g. `"Siddha"`), one of the fixed 8-name cycle. */
+export function translateYoginiDashaName(lang: Lang, name: string): string {
+  if (dictLang(lang) !== 'hi') return name;
+  return YOGINI_DASHA_NAMES_HI[name] ?? name;
+}
+
+const DURATION_UNIT_HI: Array<[RegExp, string]> = [
+  [/\bYears?\b/g, 'वर्ष'],
+  [/\bMonths?\b/g, 'महीने'],
+  [/\bDays?\b/g, 'दिन'],
+];
+
+/** Translates the unit words in a vendor duration string (e.g. `"8 Years"`, `"9 Months"`), digits unchanged. */
+export function translateDuration(lang: Lang, duration: string): string {
+  if (dictLang(lang) !== 'hi') return duration;
+  return DURATION_UNIT_HI.reduce((s, [re, hi]) => s.replace(re, hi), duration);
 }

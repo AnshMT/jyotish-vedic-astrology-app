@@ -29,7 +29,7 @@ afterEach(() => {
 });
 
 describe('generateAstrologyApiKundli', () => {
-  it('fans out to all seventeen endpoints (including the eager D9 navamsa) with split day/month/year params', async () => {
+  it('fans out to all twenty-nine endpoints (including the eager D9 navamsa and the Advanced-tab dasha/KP systems) with split day/month/year params', async () => {
     const { generateAstrologyApiKundli } = await import('@/app/astrologyapi/kundli/actions');
 
     await generateAstrologyApiKundli(birth);
@@ -41,22 +41,34 @@ describe('generateAstrologyApiKundli', () => {
         'https://json.astrologyapi.com/v1/horo_chart/D1',
         'https://json.astrologyapi.com/v1/horo_chart/D9',
         'https://json.astrologyapi.com/v1/major_vdasha',
+        'https://json.astrologyapi.com/v1/current_vdasha_all',
         'https://json.astrologyapi.com/v1/kalsarpa_details',
         'https://json.astrologyapi.com/v1/sadhesati_current_status',
         'https://json.astrologyapi.com/v1/sarvashtak',
         'https://json.astrologyapi.com/v1/shadbala',
+        'https://json.astrologyapi.com/v1/bhavabala',
+        'https://json.astrologyapi.com/v1/panchadha_maitri',
         'https://json.astrologyapi.com/v1/general_ascendant_report',
         'https://json.astrologyapi.com/v1/general_nakshatra_report',
         'https://json.astrologyapi.com/v1/pitra_dosha_report',
+        'https://json.astrologyapi.com/v1/ghat_chakra',
         'https://json.astrologyapi.com/v1/basic_gem_suggestion',
         'https://json.astrologyapi.com/v1/puja_suggestion',
         'https://json.astrologyapi.com/v1/rudraksha_suggestion',
         'https://json.astrologyapi.com/v1/sadhesati_remedies',
         'https://json.astrologyapi.com/v1/lalkitab_horoscope',
         'https://json.astrologyapi.com/v1/lalkitab_debts',
+        'https://json.astrologyapi.com/v1/lalkitab_houses',
+        'https://json.astrologyapi.com/v1/lalkitab_planets',
+        'https://json.astrologyapi.com/v1/current_chardasha',
+        'https://json.astrologyapi.com/v1/major_chardasha',
+        'https://json.astrologyapi.com/v1/current_yogini_dasha',
+        'https://json.astrologyapi.com/v1/major_yogini_dasha',
+        'https://json.astrologyapi.com/v1/kp_planets',
+        'https://json.astrologyapi.com/v1/kp_house_cusps',
       ]),
     );
-    expect(fetchMock.mock.calls).toHaveLength(17);
+    expect(fetchMock.mock.calls).toHaveLength(29);
 
     const [, options] = fetchMock.mock.calls[0];
     expect(options.headers['x-astrologyapi-key']).toBe('test-token');
@@ -123,7 +135,7 @@ describe('fetchAstrologyApiDivisionalChart', () => {
 });
 
 describe('calculateAstrologyApiMatch', () => {
-  it('calls all three match endpoints with m_/f_ prefixed params', async () => {
+  it('calls all five match endpoints with m_/f_ prefixed params', async () => {
     const { calculateAstrologyApiMatch } = await import('@/app/astrologyapi/matching/actions');
 
     const person1 = { ...birth };
@@ -135,7 +147,9 @@ describe('calculateAstrologyApiMatch', () => {
       expect.arrayContaining([
         'https://json.astrologyapi.com/v1/match_making_report',
         'https://json.astrologyapi.com/v1/match_ashtakoot_points',
+        'https://json.astrologyapi.com/v1/match_dashakoot_points',
         'https://json.astrologyapi.com/v1/match_manglik_report',
+        'https://json.astrologyapi.com/v1/match_percentage',
       ]),
     );
 

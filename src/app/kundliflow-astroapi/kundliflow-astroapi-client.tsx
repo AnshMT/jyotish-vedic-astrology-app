@@ -15,9 +15,14 @@ import {
 import { CitySearch } from '@/components/city-search';
 import { AstrologyApiChartDiagram } from '@/components/astrologyapi/chart-diagram';
 import { AstrologyApiPlanetsTable } from '@/components/astrologyapi/planets-table';
-import { AstrologyApiDashaTimeline } from '@/components/astrologyapi/dasha-timeline';
+import { AstrologyApiDashaTimeline, AstrologyApiCurrentDashaAllCard } from '@/components/astrologyapi/dasha-timeline';
 import { AstrologyApiKalsarpaCard, AstrologyApiSadhesatiCard } from '@/components/astrologyapi/dosha-cards';
-import { AstrologyApiAshtakavargaGrid, AstrologyApiShadbalaTable } from '@/components/astrologyapi/strength';
+import {
+  AstrologyApiAshtakavargaGrid,
+  AstrologyApiShadbalaTable,
+  AstrologyApiBhavabalaTable,
+  AstrologyApiPanchadhaMaitriCard,
+} from '@/components/astrologyapi/strength';
 import {
   AstrologyApiAscendantCard,
   AstrologyApiNakshatraCard,
@@ -33,7 +38,13 @@ import {
 import {
   AstrologyApiLalkitabDebtsList,
   AstrologyApiLalkitabRemedySection,
+  AstrologyApiLalkitabHousesTable,
+  AstrologyApiLalkitabPlanetsTable,
 } from '@/components/astrologyapi/lalkitab';
+import { AstrologyApiGhatChakraCard } from '@/components/astrologyapi/ghat-chakra';
+import { AstrologyApiCharDashaCard, AstrologyApiYoginiDashaCard } from '@/components/astrologyapi/char-yogini-dasha';
+import { AstrologyApiKpPlanetsTable, AstrologyApiKpCuspsTable } from '@/components/astrologyapi/kp-system';
+import { AstrologyApiVarshaphalSection } from '@/components/astrologyapi/varshaphal';
 import { DEFAULT_CITY, todayString, type City, type Coords } from '@/lib/location';
 import { t } from '@/lib/astrologyapi/i18n';
 import type { Lang } from '@/lib/lang';
@@ -173,6 +184,7 @@ export function KundliFlowAstroApiClient({ lang }: { lang: Lang }) {
             <h3 className="text-lg font-semibold text-foreground">{t(lang, 'kundli.tab.chart')}</h3>
             <AstrologyApiChartDiagram houses={result.chart} lang={lang} />
             <AstrologyApiPlanetsTable planets={result.planets} lang={lang} />
+            <AstrologyApiGhatChakraCard data={result.ghatChakra} lang={lang} />
           </div>
 
           <div className="space-y-6">
@@ -208,6 +220,7 @@ export function KundliFlowAstroApiClient({ lang }: { lang: Lang }) {
 
           <div className="space-y-6">
             <h3 className="text-lg font-semibold text-foreground">{t(lang, 'kundli.tab.dasha')}</h3>
+            <AstrologyApiCurrentDashaAllCard data={result.currentDashaAll} lang={lang} />
             <AstrologyApiDashaTimeline periods={result.dashas} lang={lang} />
           </div>
 
@@ -221,6 +234,8 @@ export function KundliFlowAstroApiClient({ lang }: { lang: Lang }) {
             <h3 className="text-lg font-semibold text-foreground">{t(lang, 'kundli.tab.strength')}</h3>
             <AstrologyApiAshtakavargaGrid data={result.ashtakavarga} lang={lang} />
             <AstrologyApiShadbalaTable data={result.shadbala} lang={lang} />
+            <AstrologyApiBhavabalaTable data={result.bhavabala} lang={lang} />
+            <AstrologyApiPanchadhaMaitriCard data={result.panchadhaMaitri} lang={lang} />
           </div>
 
           <div className="space-y-6">
@@ -243,7 +258,22 @@ export function KundliFlowAstroApiClient({ lang }: { lang: Lang }) {
             <h3 className="text-lg font-semibold text-foreground">{t(lang, 'kundli.tab.lalkitab')}</h3>
             <AstrologyApiChartDiagram houses={result.lalkitabChart} lang={lang} />
             <AstrologyApiLalkitabDebtsList data={result.lalkitabDebts} lang={lang} />
+            <AstrologyApiLalkitabHousesTable data={result.lalkitabHouses} lang={lang} />
+            <AstrologyApiLalkitabPlanetsTable data={result.lalkitabPlanets} lang={lang} />
             <AstrologyApiLalkitabRemedySection birth={birth} lang={lang} />
+          </div>
+
+          <div className="space-y-6">
+            <h3 className="text-lg font-semibold text-foreground">{t(lang, 'kundli.tab.advanced')}</h3>
+            <AstrologyApiCharDashaCard current={result.charDasha.current} major={result.charDasha.major} lang={lang} />
+            <AstrologyApiYoginiDashaCard current={result.yoginiDasha.current} major={result.yoginiDasha.major} lang={lang} />
+            <AstrologyApiKpPlanetsTable data={result.kp.planets} lang={lang} />
+            <AstrologyApiKpCuspsTable data={result.kp.cusps} lang={lang} />
+          </div>
+
+          <div className="space-y-6">
+            <h3 className="text-lg font-semibold text-foreground">{t(lang, 'kundli.tab.varshaphal')}</h3>
+            <AstrologyApiVarshaphalSection birth={birth} lang={lang} />
           </div>
         </div>
       )}

@@ -299,3 +299,218 @@ export interface AstrologyApiLalkitabRemedy {
   lal_kitab_desc: string;
   lal_kitab_remedies: string[];
 }
+
+/** `POST /lalkitab_houses`: one khana's ruling planets and exaltation/debilitation, all 12 houses. */
+export interface AstrologyApiLalkitabHouse {
+  khana_number: number;
+  maalik: string;
+  pakka_ghar: string;
+  kismat: string;
+  soya: boolean;
+  exalt: string[] | '-';
+  debilitated: string[] | '-';
+}
+
+/** `POST /lalkitab_planets`: each graha's Lal Kitab sign placement, "sleeping" state, and benefic/malefic nature. */
+export interface AstrologyApiLalkitabPlanet {
+  planet: string;
+  rashi: string;
+  soya: boolean;
+  position: string;
+  nature: string;
+}
+
+/**
+ * `POST /ghat_chakra`: despite its name this is a birth-moment anga snapshot (lunar month, tithi(s), weekday,
+ * nakshatra, yog, karan, which of the day's 8 pahars, and the Moon's sign id) used for Muhurta-style
+ * auspicious-timing checks — it is NOT the classical Avkahada Chakra table (Varna/Vashya/Yoni/Gana/Nadi/Paya),
+ * which AstrologyAPI has no dedicated endpoint for.
+ */
+export interface AstrologyApiGhatChakra {
+  month: string;
+  tithi: string;
+  day: string;
+  nakshatra: string;
+  yog: string;
+  karan: string;
+  pahar: string;
+  moon: string;
+}
+
+/**
+ * `POST /current_vdasha_all`: the active Vimshottari period at every depth in one call. `major` is the full
+ * lifetime Mahadasha list (same as `major_vdasha`); each deeper level's `dasha_period` is the sub-period
+ * breakdown of whichever parent period is active right now, and `planet` names that active parent chain.
+ */
+export interface AstrologyApiCurrentVdashaAll {
+  major: { dasha_period: AstrologyApiDashaPeriod[] };
+  minor: { planet: { major: string }; dasha_period: AstrologyApiDashaPeriod[] };
+  sub_minor: { planet: { major: string; minor: string }; dasha_period: AstrologyApiDashaPeriod[] };
+  sub_sub_minor: { planet: { major: string; minor: string; sub_minor: string }; dasha_period: AstrologyApiDashaPeriod[] };
+  sub_sub_sub_minor: {
+    planet: { major: string; minor: string; sub_minor: string; sub_sub_minor: string };
+    dasha_period: AstrologyApiDashaPeriod[];
+  };
+}
+
+interface BhavabalaComponents {
+  bhava_dikbala: number;
+  bhava_drigbala: number;
+  bhava_kalabala: number;
+  bhava_yuti_bala: number;
+  bhavanatha_bala: number;
+}
+
+/** `POST /bhavabala`: per-house strength, the Bhava-focused counterpart to `/shadbala`'s per-graha strength. */
+export interface AstrologyApiBhavabala {
+  summary: { strongest_house_id: number; weakest_house_id: number; ranked_house_ids_desc: number[] };
+  houses: Array<{
+    id: number;
+    name: string;
+    bhava_sign: string;
+    bhavamadhya_longitude: number;
+    strength_percent_of_baseline: number;
+    total_bhavabala_rupa: number;
+    total_bhavabala_virupa: number;
+    components: BhavabalaComponents;
+  }>;
+}
+
+/** One planet's friendship rating toward the other six grahas (index order: Sun, Moon, Mars, Mercury, Jupiter, Venus, Saturn). */
+type MaitriRow = [string, string, string, string, string, string, string];
+
+/**
+ * `POST /panchadha_maitri`: the five-fold friendship table — natural, temporary, and the combined
+ * (panchadha) verdict each derive from the other two.
+ */
+export interface AstrologyApiPanchadhaMaitri {
+  naturalFriendship: Record<string, MaitriRow>;
+  temporaryFriendship: Record<string, MaitriRow>;
+  panchandhaChakra: Record<string, MaitriRow>;
+}
+
+/** `POST /current_chardasha`: the active Jaimini Char Dasha period at all three depths, as of today. */
+export interface AstrologyApiCharDashaCurrent {
+  dasha_date: string;
+  major_dasha: { sign_id: number; sign_name: string; duration: string; start_date: string; end_date: string };
+  sub_dasha: { sign_id: number; sign_name: string; duration: string; start_date: string; end_date: string };
+  sub_sub_dasha: { sign_id: number; sign_name: string; start_date: string; end_date: string };
+}
+
+/** One period from `POST /major_chardasha`: the lifetime Jaimini Char Dasha sign sequence. */
+export interface AstrologyApiCharDashaPeriod {
+  sign_id: number;
+  sign_name: string;
+  duration: string;
+  start_date: string;
+  end_date: string;
+}
+
+/** `POST /current_yogini_dasha`: the active Yogini Dasha period at all three depths, as of today. */
+export interface AstrologyApiYoginiDashaCurrent {
+  major_dasha: { dasha_id: number; dasha_name: string; duration: string; start_date: string; end_date: string };
+  sub_dasha: { dasha_id: number; dasha_name: string; start_date: string; end_date: string };
+  sub_sub_dasha: { dasha_id: number; dasha_name: string; start_date: string; end_date: string };
+}
+
+/** One period from `POST /major_yogini_dasha`: the full birth-to-death 36-year Yogini Dasha cycle. */
+export interface AstrologyApiYoginiDashaPeriod {
+  dasha_id: number;
+  dasha_name: string;
+  start_date: string;
+  end_date: string;
+  start_ms: number;
+  end_ms: number;
+  duration: number;
+}
+
+/** One graha from `POST /kp_planets`: the KP system's sub-lord and sub-sub-lord layered onto the usual placement. */
+export interface AstrologyApiKpPlanet {
+  planet_id: number;
+  planet_name: string;
+  degree: number;
+  formatted_degree: string;
+  is_retro: boolean;
+  norm_degree: number;
+  formatted_norm_degree: string;
+  house: number;
+  sign: string;
+  sign_lord: string;
+  nakshatra: string;
+  nakshatra_lord: string;
+  charan: number;
+  sub_lord: string;
+  sub_sub_lord: string;
+}
+
+/** One house cusp from `POST /kp_house_cusps`: KP's finer-grained cusp degrees, each with its own sub-lord chain. */
+export interface AstrologyApiKpHouseCusp {
+  house_id: number;
+  cusp_full_degree: number;
+  formatted_degree: string;
+  sign_id: number;
+  sign: string;
+  sign_lord: string;
+  nakshatra: string;
+  nakshatra_lord: string;
+  sub_lord: string;
+  sub_sub_lord: string;
+}
+
+/** `POST /varshaphal_year_chart`: the solar-return (Varshaphal) chart for the requested `varshaphal_year`. */
+export interface AstrologyApiVarshaphalYearChart {
+  year_lord: string;
+  varshaphal_date: string;
+  chart: AstrologyApiChartHouse[];
+}
+
+/** One period from `POST /varshaphal_mudda_dasha`: the annual chart's own proportional dasha sequence. */
+export interface AstrologyApiVarshaphalMuddaDasha {
+  planet: string;
+  duration: number;
+  dasha_start: string;
+  dasha_end: string;
+}
+
+/** One entry from `POST /varshaphal_yoga`: a Varshaphal-specific yoga, present only if `is_yog_happening`. */
+export interface AstrologyApiVarshaphalYoga {
+  yog_name: string;
+  yog_description: string;
+  is_yog_happening: boolean;
+  powerfullness_percentage: string;
+  yog_prediction: string;
+  planets?: string[][];
+}
+
+interface DashakootKoot {
+  description: string;
+  male_koot_attribute: string;
+  female_koot_attribute: string;
+  total_points: number;
+  received_points: number;
+}
+
+/** `POST /match_dashakoot_points`: the 10-koota Dashakoot Milan breakdown, the North Indian counterpart to Ashtakoot. */
+export interface AstrologyApiMatchDashakoot {
+  dina: DashakootKoot;
+  gana: DashakootKoot;
+  yoni: DashakootKoot;
+  rashi: DashakootKoot;
+  rasyadhipati: DashakootKoot;
+  rajju: DashakootKoot;
+  vedha: DashakootKoot;
+  vashya: DashakootKoot;
+  mahendra: DashakootKoot;
+  streeDeergha: DashakootKoot;
+  total: { total_points: number; received_points: number; minimum_required: number };
+}
+
+/** `POST /match_percentage`: a single compatibility-percentage summary across all four checked dimensions. */
+export interface AstrologyApiMatchPercentage {
+  ashtakoota_percentage: number;
+  manglik_match_percentage: number;
+  rajju_match_percentage: number;
+  vedha_match_percentage: number;
+  match_percentage: number;
+  is_match_good: boolean;
+}

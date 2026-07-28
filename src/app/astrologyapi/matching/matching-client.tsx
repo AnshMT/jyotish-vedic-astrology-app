@@ -128,7 +128,9 @@ export function AstrologyApiMatchingClient({ lang }: { lang: Lang }) {
           <AstrologyApiMatchReport
             makingReport={result.makingReport}
             ashtakoot={result.ashtakoot}
+            dashakoot={result.dashakoot}
             manglik={result.manglik}
+            percentage={result.percentage}
             lang={lang}
           />
         </div>
