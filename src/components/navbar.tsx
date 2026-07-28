@@ -8,23 +8,7 @@ import { LanguageSwitcher } from '@/components/language-switcher';
 import { ThemeToggle } from '@/components/theme-toggle';
 import { Button } from '@/components/ui/button';
 import type { Lang } from '@/lib/lang';
-
-const NAV_LINKS = [
-  { href: '/', label: 'Panchang' },
-  { href: '/choghadiya', label: 'Choghadiya' },
-  { href: '/kundali', label: 'Kundali' },
-  { href: '/matching', label: 'Matching' },
-  { href: '/transits', label: 'Transits' },
-];
-
-/** Same five pages, sourced from AstrologyAPI instead of RoxyAPI (see `src/app/astrologyapi/`). */
-const ASTROLOGYAPI_NAV_LINKS = [
-  { href: '/astrologyapi/panchang', label: 'Panchang' },
-  { href: '/astrologyapi/choghadiya', label: 'Choghadiya' },
-  { href: '/astrologyapi/kundli', label: 'Kundli' },
-  { href: '/astrologyapi/matching', label: 'Matching' },
-  { href: '/astrologyapi/transits', label: 'Transits' },
-];
+import { t } from '@/lib/i18n/common';
 
 function isActive(pathname: string, href: string): boolean {
   return href === '/' ? pathname === '/' : pathname.startsWith(href);
@@ -33,6 +17,23 @@ function isActive(pathname: string, href: string): boolean {
 export function Navbar({ lang }: { lang: Lang }) {
   const pathname = usePathname();
   const [mobileOpen, setMobileOpen] = useState(false);
+
+  const NAV_LINKS = [
+    { href: '/', label: t(lang, 'nav.panchang') },
+    { href: '/choghadiya', label: t(lang, 'nav.choghadiya') },
+    { href: '/kundali', label: t(lang, 'nav.kundali') },
+    { href: '/matching', label: t(lang, 'nav.matching') },
+    { href: '/transits', label: t(lang, 'nav.transits') },
+  ];
+
+  /** Same five pages, sourced from AstrologyAPI instead of RoxyAPI (see `src/app/astrologyapi/`). */
+  const ASTROLOGYAPI_NAV_LINKS = [
+    { href: '/astrologyapi/panchang', label: t(lang, 'nav.panchang') },
+    { href: '/astrologyapi/choghadiya', label: t(lang, 'nav.choghadiya') },
+    { href: '/astrologyapi/kundli', label: t(lang, 'nav.kundli') },
+    { href: '/astrologyapi/matching', label: t(lang, 'nav.matching') },
+    { href: '/astrologyapi/transits', label: t(lang, 'nav.transits') },
+  ];
 
   return (
     <header className="sticky top-0 z-50 border-b border-border/40 bg-background/80 backdrop-blur-lg">
@@ -100,7 +101,7 @@ export function Navbar({ lang }: { lang: Lang }) {
             size="icon"
             className="md:hidden"
             onClick={() => setMobileOpen((v) => !v)}
-            aria-label="Toggle menu"
+            aria-label={t(lang, 'nav.toggleMenu')}
           >
             {mobileOpen ? <X className="size-4" /> : <Menu className="size-4" />}
           </Button>

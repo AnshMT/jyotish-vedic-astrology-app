@@ -6,6 +6,7 @@ import { Globe } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { setLang } from '@/app/actions/lang';
 import { LANGUAGES, type Lang } from '@/lib/lang';
+import { t } from '@/lib/i18n/common';
 
 /**
  * Language selector. Writes the lang cookie through the {@link setLang} Server Action, then refreshes the router so every Server Component re-fetches its interpretation in the chosen language. The active language is supplied by the server layout, so the first paint is already correct (no flash, no client provider).
@@ -31,7 +32,7 @@ export function LanguageSwitcher({ current }: { current: Lang }) {
         size="icon"
         onClick={() => setOpen((v) => !v)}
         disabled={pending}
-        aria-label="Change language"
+        aria-label={t(current, 'nav.changeLanguage')}
       >
         <Globe className="size-4" />
       </Button>

@@ -24,9 +24,9 @@ export default async function AstrologyApiChoghadiyaPage({
 }: {
   searchParams: Promise<Record<string, string | string[] | undefined>>;
 }) {
-  if (!hasAstrologyApiKey) return <AstrologyApiKeyMissing />;
-
   const lang = await getLang();
+  if (!hasAstrologyApiKey) return <AstrologyApiKeyMissing lang={lang} />;
+
   const { date, label, coords } = resolveDateAndLocation(await searchParams);
   const params = toDateParams({ date, time: '06:00', ...coords });
 
@@ -36,10 +36,10 @@ export default async function AstrologyApiChoghadiyaPage({
 
   return (
     <div className="space-y-8">
-      <DateLocationControls date={date} label={label} />
+      <DateLocationControls date={date} label={label} lang={lang} />
       <PageHeader title={t(lang, 'choghadiya.title')} subtitle={formatDate(date)} badge={label} />
       {'error' in choghadiya ? (
-        <AstrologyApiDataError message={choghadiya.error} />
+        <AstrologyApiDataError message={choghadiya.error} lang={lang} />
       ) : (
         <AstrologyApiChoghadiyaView data={choghadiya.data} lang={lang} />
       )}

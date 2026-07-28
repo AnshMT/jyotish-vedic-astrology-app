@@ -14,7 +14,7 @@ export const metadata: Metadata = {
  * Matching route. Server Component boundary: checks the key and reads the active language, then renders the client form. Submitting runs a Server Action that calls Gun Milan.
  */
 export default async function MatchingPage() {
-  if (!hasApiKey) return <ApiKeyMissing />;
   const lang = await getLang();
+  if (!hasApiKey) return <ApiKeyMissing lang={lang} />;
   return <MatchingClient lang={lang} />;
 }

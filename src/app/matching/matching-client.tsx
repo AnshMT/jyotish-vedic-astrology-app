@@ -10,6 +10,8 @@ import { Separator } from '@/components/ui/separator';
 import { CitySearch } from '@/components/city-search';
 import { DEFAULT_CITY, type City, type Coords } from '@/lib/location';
 import type { Lang } from '@/lib/lang';
+import { t } from '@/lib/roxy/i18n';
+import { t as tCommon } from '@/lib/i18n/common';
 import { calculateMatch } from './actions';
 
 interface PersonState extends Coords {
@@ -31,11 +33,13 @@ function PersonForm({
   defaultCity,
   value,
   onChange,
+  lang,
 }: {
   label: string;
   defaultCity: string;
   value: PersonState;
   onChange: (next: PersonState) => void;
+  lang: Lang;
 }) {
   function onCity(city: City) {
     onChange({ ...value, latitude: city.latitude, longitude: city.longitude, timezone: city.utcOffset });
@@ -44,20 +48,20 @@ function PersonForm({
     <Card className="overflow-visible">
       <CardHeader>
         <CardTitle>{label}</CardTitle>
-        <CardDescription>Enter birth details</CardDescription>
+        <CardDescription>{t(lang, 'matching.enterBirthDetails')}</CardDescription>
       </CardHeader>
       <CardContent className="space-y-4">
         <div className="space-y-2">
-          <Label>Birth Date</Label>
+          <Label>{t(lang, 'matching.birthDate')}</Label>
           <Input type="date" value={value.date} onChange={(e) => onChange({ ...value, date: e.target.value })} />
         </div>
         <div className="space-y-2">
-          <Label>Birth Time</Label>
+          <Label>{t(lang, 'matching.birthTime')}</Label>
           <Input type="time" value={value.time} onChange={(e) => onChange({ ...value, time: e.target.value })} />
         </div>
         <div className="space-y-2">
-          <Label>City</Label>
-          <CitySearch onSelect={onCity} defaultValue={defaultCity} />
+          <Label>{tCommon(lang, 'city')}</Label>
+          <CitySearch onSelect={onCity} defaultValue={defaultCity} lang={lang} />
         </div>
       </CardContent>
     </Card>
@@ -85,7 +89,7 @@ export function MatchingClient({ lang }: { lang: Lang }) {
         });
         setResult(data);
       } catch (err) {
-        setError(err instanceof Error ? err.message : 'Failed to calculate compatibility');
+        setError(err instanceof Error ? err.message : t(lang, 'matching.errorFallback'));
         setResult(undefined);
       }
     });
@@ -94,18 +98,18 @@ export function MatchingClient({ lang }: { lang: Lang }) {
   return (
     <div className="space-y-8">
       <div className="text-center">
-        <h1 className="text-3xl font-semibold tracking-tight text-foreground">Kundali Matching</h1>
-        <p className="mt-2 text-muted-foreground">Ashtakoot Gun Milan compatibility analysis</p>
+        <h1 className="text-3xl font-semibold tracking-tight text-foreground">{t(lang, 'matching.title')}</h1>
+        <p className="mt-2 text-muted-foreground">{t(lang, 'matching.subtitle')}</p>
       </div>
 
       <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
-        <PersonForm label="Person 1" defaultCity="Mumbai, India" value={person1} onChange={setPerson1} />
-        <PersonForm label="Person 2" defaultCity="Delhi, India" value={person2} onChange={setPerson2} />
+        <PersonForm label={t(lang, 'matching.person1')} defaultCity={t(lang, 'matching.defaultCity1')} value={person1} onChange={setPerson1} lang={lang} />
+        <PersonForm label={t(lang, 'matching.person2')} defaultCity={t(lang, 'matching.defaultCity2')} value={person2} onChange={setPerson2} lang={lang} />
       </div>
 
       <div className="flex justify-center">
         <Button size="lg" onClick={submit} disabled={pending}>
-          {pending ? 'Calculating...' : 'Check Compatibility'}
+          {pending ? t(lang, 'matching.calculating') : t(lang, 'matching.check')}
         </Button>
       </div>
 

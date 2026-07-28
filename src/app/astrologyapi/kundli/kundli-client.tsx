@@ -45,21 +45,21 @@ type Kundli = Awaited<ReturnType<typeof generateAstrologyApiKundli>>;
 type DivisionalChart = Awaited<ReturnType<typeof fetchAstrologyApiDivisionalChart>>;
 
 const VARGA_CHARTS = [
-  { division: 9, name: 'D9 Navamsa', desc: 'Marriage and dharma' },
-  { division: 2, name: 'D2 Hora', desc: 'Wealth' },
-  { division: 3, name: 'D3 Drekkana', desc: 'Siblings' },
-  { division: 4, name: 'D4 Chaturthamsa', desc: 'Property' },
-  { division: 7, name: 'D7 Saptamsa', desc: 'Children' },
-  { division: 10, name: 'D10 Dasamsa', desc: 'Career' },
-  { division: 12, name: 'D12 Dwadasamsa', desc: 'Parents' },
-  { division: 16, name: 'D16 Shodasamsa', desc: 'Vehicles' },
-  { division: 20, name: 'D20 Vimsamsa', desc: 'Spirituality' },
-  { division: 24, name: 'D24 Chaturvimsamsa', desc: 'Education' },
-  { division: 27, name: 'D27 Bhamsa', desc: 'Strengths' },
-  { division: 30, name: 'D30 Trimsamsa', desc: 'Misfortunes' },
-  { division: 40, name: 'D40 Khavedamsa', desc: 'Maternal legacy' },
-  { division: 45, name: 'D45 Akshavedamsa', desc: 'Character' },
-  { division: 60, name: 'D60 Shashtiamsa', desc: 'Past karma' },
+  { division: 9, nameKey: 'varga.d9.name', descKey: 'varga.d9.desc' },
+  { division: 2, nameKey: 'varga.d2.name', descKey: 'varga.d2.desc' },
+  { division: 3, nameKey: 'varga.d3.name', descKey: 'varga.d3.desc' },
+  { division: 4, nameKey: 'varga.d4.name', descKey: 'varga.d4.desc' },
+  { division: 7, nameKey: 'varga.d7.name', descKey: 'varga.d7.desc' },
+  { division: 10, nameKey: 'varga.d10.name', descKey: 'varga.d10.desc' },
+  { division: 12, nameKey: 'varga.d12.name', descKey: 'varga.d12.desc' },
+  { division: 16, nameKey: 'varga.d16.name', descKey: 'varga.d16.desc' },
+  { division: 20, nameKey: 'varga.d20.name', descKey: 'varga.d20.desc' },
+  { division: 24, nameKey: 'varga.d24.name', descKey: 'varga.d24.desc' },
+  { division: 27, nameKey: 'varga.d27.name', descKey: 'varga.d27.desc' },
+  { division: 30, nameKey: 'varga.d30.name', descKey: 'varga.d30.desc' },
+  { division: 40, nameKey: 'varga.d40.name', descKey: 'varga.d40.desc' },
+  { division: 45, nameKey: 'varga.d45.name', descKey: 'varga.d45.desc' },
+  { division: 60, nameKey: 'varga.d60.name', descKey: 'varga.d60.desc' },
 ] as const;
 
 /**
@@ -138,7 +138,7 @@ export function AstrologyApiKundliClient({ lang }: { lang: Lang }) {
               </div>
               <div className="space-y-2">
                 <Label>{t(lang, 'common.city')}</Label>
-                <CitySearch onSelect={onCity} defaultValue={DEFAULT_CITY.label} />
+                <CitySearch onSelect={onCity} defaultValue={DEFAULT_CITY.label} lang={lang} />
               </div>
             </div>
             <div className="mt-6">
@@ -192,7 +192,7 @@ export function AstrologyApiKundliClient({ lang }: { lang: Lang }) {
                     <SelectContent>
                       {VARGA_CHARTS.map((v) => (
                         <SelectItem key={v.division} value={String(v.division)}>
-                          {v.name} - {v.desc}
+                          {t(lang, v.nameKey)} - {t(lang, v.descKey)}
                         </SelectItem>
                       ))}
                     </SelectContent>

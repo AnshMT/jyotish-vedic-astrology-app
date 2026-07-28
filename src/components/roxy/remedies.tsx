@@ -5,6 +5,8 @@ import type {
   GetCrystalsZodiacBySignResponse,
   GetCrystalsResponse,
 } from '@roxyapi/sdk';
+import type { Lang } from '@/lib/lang';
+import { t } from '@/lib/roxy/i18n';
 
 /** The fields both `GET /crystals/zodiac/:sign` and `GET /crystals` summaries share (the latter also has `chakras`, unused here). */
 interface CrystalSummary {
@@ -14,9 +16,9 @@ interface CrystalSummary {
   colors: string[];
 }
 
-function CrystalGrid({ crystals }: { crystals: CrystalSummary[] }) {
+function CrystalGrid({ crystals, lang }: { crystals: CrystalSummary[]; lang: Lang }) {
   if (crystals.length === 0) {
-    return <p className="text-sm text-muted-foreground">No matching crystals found.</p>;
+    return <p className="text-sm text-muted-foreground">{t(lang, 'remedies.noCrystals')}</p>;
   }
   return (
     <div className="grid grid-cols-2 gap-3 sm:grid-cols-3">
@@ -54,34 +56,40 @@ export function RoxyRemediesView({
   moonSignCrystals,
   planetCrystals,
   weakPlanet,
+  lang,
 }: {
   nakshatra: GetVedicAstrologyNakshatrasByIdResponse;
   moonSignCrystals: GetCrystalsZodiacBySignResponse;
   planetCrystals: GetCrystalsResponse;
   weakPlanet: string;
+  lang: Lang;
 }) {
   return (
     <div className="space-y-6">
       <Card>
         <CardHeader>
-          <CardTitle>Birth Nakshatra: {nakshatra.name}</CardTitle>
+          <CardTitle>{t(lang, 'remedies.birthNakshatra', { name: nakshatra.name })}</CardTitle>
           <CardDescription>
-            Ruled by {nakshatra.lord} &middot; deity {nakshatra.deity} &middot; symbol {nakshatra.symbol}
+            {t(lang, 'remedies.ruledBy', {
+              lord: nakshatra.lord,
+              deity: nakshatra.deity,
+              symbol: nakshatra.symbol,
+            })}
           </CardDescription>
         </CardHeader>
         <CardContent className="space-y-4">
           <p className="text-sm text-muted-foreground">{nakshatra.characteristics}</p>
           <div className="grid grid-cols-1 gap-3 sm:grid-cols-3">
             <div className="rounded-lg bg-muted px-3 py-2">
-              <p className="text-xs text-muted-foreground">Mantras</p>
+              <p className="text-xs text-muted-foreground">{t(lang, 'remedies.mantras')}</p>
               <p className="text-sm text-foreground">{nakshatra.remedies.mantras}</p>
             </div>
             <div className="rounded-lg bg-muted px-3 py-2">
-              <p className="text-xs text-muted-foreground">Gemstones</p>
+              <p className="text-xs text-muted-foreground">{t(lang, 'remedies.gemstones')}</p>
               <p className="text-sm text-foreground">{nakshatra.remedies.gemstones}</p>
             </div>
             <div className="rounded-lg bg-muted px-3 py-2">
-              <p className="text-xs text-muted-foreground">Rituals</p>
+              <p className="text-xs text-muted-foreground">{t(lang, 'remedies.rituals')}</p>
               <p className="text-sm text-foreground">{nakshatra.remedies.rituals}</p>
             </div>
           </div>
@@ -91,22 +99,24 @@ export function RoxyRemediesView({
       <Card>
         <CardHeader>
           <CardTitle>
-            Crystals for {moonSignCrystals.sign.charAt(0).toUpperCase() + moonSignCrystals.sign.slice(1)} Moon
+            {t(lang, 'remedies.crystalsForMoon', {
+              sign: moonSignCrystals.sign.charAt(0).toUpperCase() + moonSignCrystals.sign.slice(1),
+            })}
           </CardTitle>
-          <CardDescription>Healing crystals associated with your natal Moon sign</CardDescription>
+          <CardDescription>{t(lang, 'remedies.crystalsForMoonDesc')}</CardDescription>
         </CardHeader>
         <CardContent>
-          <CrystalGrid crystals={moonSignCrystals.crystals} />
+          <CrystalGrid crystals={moonSignCrystals.crystals} lang={lang} />
         </CardContent>
       </Card>
 
       <Card>
         <CardHeader>
-          <CardTitle>Crystals for {weakPlanet}</CardTitle>
-          <CardDescription>{`${weakPlanet} is your weakest planet by Shadbala — these crystals are traditionally associated with it`}</CardDescription>
+          <CardTitle>{t(lang, 'remedies.crystalsForPlanet', { planet: weakPlanet })}</CardTitle>
+          <CardDescription>{t(lang, 'remedies.weakestPlanetDesc', { planet: weakPlanet })}</CardDescription>
         </CardHeader>
         <CardContent>
-          <CrystalGrid crystals={planetCrystals.crystals} />
+          <CrystalGrid crystals={planetCrystals.crystals} lang={lang} />
         </CardContent>
       </Card>
     </div>

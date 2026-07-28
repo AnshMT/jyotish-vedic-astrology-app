@@ -12,7 +12,7 @@ export const metadata: Metadata = {
 
 /** AstrologyAPI-backed matching route. Same Server Component boundary as `@/app/matching/page`. */
 export default async function AstrologyApiMatchingPage() {
-  if (!hasAstrologyApiKey) return <AstrologyApiKeyMissing />;
   const lang = await getLang();
+  if (!hasAstrologyApiKey) return <AstrologyApiKeyMissing lang={lang} />;
   return <AstrologyApiMatchingClient lang={lang} />;
 }

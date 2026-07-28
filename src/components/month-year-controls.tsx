@@ -11,14 +11,11 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select';
-
-const MONTHS = [
-  'January', 'February', 'March', 'April', 'May', 'June',
-  'July', 'August', 'September', 'October', 'November', 'December',
-];
+import type { Lang } from '@/lib/lang';
+import { t, MONTHS, translateMonth } from '@/lib/i18n/common';
 
 /** Month and year picker for the transits page. Pushes the selection into the URL so the Server Component re-fetches. */
-export function MonthYearControls({ month, year }: { month: number; year: number }) {
+export function MonthYearControls({ month, year, lang }: { month: number; year: number; lang: Lang }) {
   const router = useRouter();
   const pathname = usePathname();
   const [m, setM] = useState(String(month));
@@ -36,7 +33,7 @@ export function MonthYearControls({ month, year }: { month: number; year: number
       <CardContent className="pt-4">
         <div className="flex flex-wrap items-end gap-3">
           <div className="space-y-1.5">
-            <span className="text-sm font-medium text-foreground">Month</span>
+            <span className="text-sm font-medium text-foreground">{t(lang, 'month')}</span>
             <Select value={m} onValueChange={setM}>
               <SelectTrigger className="w-36">
                 <SelectValue />
@@ -44,14 +41,14 @@ export function MonthYearControls({ month, year }: { month: number; year: number
               <SelectContent>
                 {MONTHS.map((name, i) => (
                   <SelectItem key={name} value={String(i + 1)}>
-                    {name}
+                    {translateMonth(lang, name)}
                   </SelectItem>
                 ))}
               </SelectContent>
             </Select>
           </div>
           <div className="space-y-1.5">
-            <span className="text-sm font-medium text-foreground">Year</span>
+            <span className="text-sm font-medium text-foreground">{t(lang, 'year')}</span>
             <Select value={y} onValueChange={setY}>
               <SelectTrigger className="w-24">
                 <SelectValue />
@@ -66,7 +63,7 @@ export function MonthYearControls({ month, year }: { month: number; year: number
             </Select>
           </div>
           <Button onClick={update} disabled={pending}>
-            {pending ? 'Loading...' : 'View Transits'}
+            {pending ? t(lang, 'loading') : t(lang, 'viewTransits')}
           </Button>
         </div>
       </CardContent>
